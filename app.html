@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BearOps Cloud</title>
+  <link rel="stylesheet" href="app.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <h1>BearOps Cloud</h1>
+    <p>Customers • Properties • Assessments • Work Orders</p>
+  </div>
+  <button id="logoutBtn" class="hidden">Log Out</button>
+</header>
+
+<main>
+  <section id="loginView" class="login-card">
+    <h2>Login</h2>
+    <p>Use your Supabase Auth user account.</p>
+    <label>Email<input id="loginEmail" type="email"></label>
+    <label>Password<input id="loginPassword" type="password"></label>
+    <button id="loginBtn">Log In</button>
+    <p id="loginMsg"></p>
+  </section>
+
+  <section id="appView" class="hidden">
+    <nav class="tabs">
+      <button data-tab="dashboard" class="active">Dashboard</button>
+      <button data-tab="customers">Customers</button>
+      <button data-tab="properties">Properties</button>
+      <button data-tab="assessments">Assessments</button>
+      <button data-tab="workorders">Work Orders</button>
+    </nav>
+
+    <section id="dashboard" class="tab active">
+      <div class="cards">
+        <div class="card"><span>Customers</span><strong id="customerCount">0</strong></div>
+        <div class="card"><span>Properties</span><strong id="propertyCount">0</strong></div>
+        <div class="card"><span>Assessments</span><strong id="assessmentCount">0</strong></div>
+        <div class="card"><span>Open Work Orders</span><strong id="workOrderCount">0</strong></div>
+      </div>
+    </section>
+
+    <section id="customers" class="tab">
+      <div class="panel">
+        <h2>Add Customer</h2>
+        <div class="grid">
+          <label>Full Name<input id="customerName"></label>
+          <label>Email<input id="customerEmail" type="email"></label>
+          <label>Phone<input id="customerPhone"></label>
+        </div>
+        <label>Notes<textarea id="customerNotes"></textarea></label>
+        <button id="addCustomerBtn">Save Customer</button>
+      </div>
+      <div class="panel"><h2>Customers</h2><div id="customerList"></div></div>
+    </section>
+
+    <section id="properties" class="tab">
+      <div class="panel">
+        <h2>Add Property</h2>
+        <div class="grid">
+          <label>Customer<select id="propertyCustomer"></select></label>
+          <label>Address<input id="propertyAddress"></label>
+          <label>City<input id="propertyCity"></label>
+          <label>State<input id="propertyState" value="FL"></label>
+          <label>Zip<input id="propertyZip"></label>
+          <label>Year Built<input id="propertyYear" type="number"></label>
+          <label>Square Feet<input id="propertySqft" type="number"></label>
+          <label>Type<input id="propertyType" placeholder="Single family, condo, townhome..."></label>
+        </div>
+        <label>Notes<textarea id="propertyNotes"></textarea></label>
+        <button id="addPropertyBtn">Save Property</button>
+      </div>
+      <div class="panel"><h2>Properties</h2><div id="propertyList"></div></div>
+    </section>
+
+    <section id="assessments" class="tab">
+      <div class="panel">
+        <h2>New Home Health Assessment</h2>
+        <div class="grid">
+          <label>Property<select id="assessmentProperty"></select></label>
+          <label>Technician<input id="assessmentTech"></label>
+          <label>Date<input id="assessmentDate" type="date"></label>
+          <label>Home Health Score<input id="assessmentScore" type="number" value="100"></label>
+          <label>Risk Index<select id="assessmentRisk"><option>Low</option><option>Moderate</option><option>High</option></select></label>
+          <label>Estimated Hours<input id="assessmentHours" type="number" step=".25" value="0"></label>
+        </div>
+        <label>Summary<textarea id="assessmentSummary"></textarea></label>
+        <button id="addAssessmentBtn">Save Assessment</button>
+      </div>
+      <div class="panel"><h2>Assessments</h2><div id="assessmentList"></div></div>
+    </section>
+
+    <section id="workorders" class="tab">
+      <div class="panel">
+        <h2>New Work Order</h2>
+        <div class="grid">
+          <label>Property<select id="workOrderProperty"></select></label>
+          <label>Title<input id="workOrderTitle"></label>
+          <label>Priority<select id="workOrderPriority"><option>normal</option><option>low</option><option>high</option><option>urgent</option></select></label>
+          <label>Status<select id="workOrderStatus"><option>open</option><option>scheduled</option><option>complete</option></select></label>
+          <label>Estimated Hours<input id="workOrderHours" type="number" step=".25"></label>
+          <label>Estimated Cost<input id="workOrderCost"></label>
+          <label>Assigned To<input id="workOrderAssigned"></label>
+          <label>Due Date<input id="workOrderDue" type="date"></label>
+        </div>
+        <label>Description<textarea id="workOrderDescription"></textarea></label>
+        <button id="addWorkOrderBtn">Save Work Order</button>
+      </div>
+      <div class="panel"><h2>Work Orders</h2><div id="workOrderList"></div></div>
+    </section>
+  </section>
+</main>
+
+<div id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
