@@ -1,4 +1,4 @@
-Bear Home Management Website - Version 1.0
+Bear Maintenance Website - Version 1.0
 
 How to open:
 1. Extract this ZIP file.
