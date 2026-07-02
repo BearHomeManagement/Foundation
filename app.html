@@ -43,6 +43,17 @@
         <div class="card"><span>Assessments</span><strong id="assessmentCount">0</strong></div>
         <div class="card"><span>Open Work Orders</span><strong id="workOrderCount">0</strong></div>
       </div>
+
+      <div class="quick-actions">
+        <a class="action-card primary" href="field-v2.html">
+          <strong>Start / Review Field Inspection</strong>
+          <span>Open the live Home Health Assessment workflow.</span>
+        </a>
+        <a class="action-card" href="field-v2.html">
+          <strong>Saved Assessments</strong>
+          <span>Review, edit, or delete existing assessments.</span>
+        </a>
+      </div>
     </section>
 
     <section id="customers" class="tab">
@@ -80,7 +91,7 @@
 
     <section id="assessments" class="tab">
       <div class="panel">
-        <h2>New Home Health Assessment</h2>
+        <div class="section-actions"><h2>New Home Health Assessment</h2><a class="small-link" href="field-v2.html">Open Field Inspection Tool</a></div>
         <div class="grid">
           <label>Property<select id="assessmentProperty"></select></label>
           <label>Technician<input id="assessmentTech"></label>
