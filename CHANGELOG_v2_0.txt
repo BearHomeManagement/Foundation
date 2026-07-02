@@ -1,0 +1,12 @@
+Bear Home Management v2.0
+
+Changed:
+- Kept the existing site as the base.
+- Preserved the working Netlify contact form.
+- Added final membership pricing: $99 startup, $249/$349/$449 monthly.
+- Added customer-facing homeowner education section.
+- Added BearTrack customer explanation section.
+- Replaced internal/demo wording with customer language.
+- Added visual polish without rebuilding the site from scratch.
+
+Upload all extracted files to GitHub and commit changes.
