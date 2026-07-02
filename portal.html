@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bear Track Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="portal-body">
+  <header class="site-header">
+    <a class="brand" href="index.html">Bear Home Management</a>
+    <nav class="nav open-desktop"><a href="index.html">Website</a><a href="#ops" class="btn small">Ops</a><a href="#tech">Tech</a><a href="#admin">Admin</a></nav>
+  </header>
+
+  <main class="portal-shell">
+    <section class="section portal-hero">
+      <p class="eyebrow">Bear Track Portal</p>
+      <h1>Operations, scheduling, work orders, technicians, and admin.</h1>
+      <p>Customer intake stays on the public website. Operational control stays here.</p>
+    </section>
+
+    <section id="ops" class="section">
+      <div class="section-heading"><p class="eyebrow">Operations Center</p><h2>Smart schedule board with real-time edits.</h2></div>
+      <div class="ops-top">
+        <div class="metric"><strong id="metricScheduled">0</strong><span>Scheduled</span></div>
+        <div class="metric"><strong id="metricProgress">0</strong><span>In Progress</span></div>
+        <div class="metric"><strong id="metricFollow">0</strong><span>Follow-up</span></div>
+        <div class="metric"><strong id="metricComplete">0</strong><span>Completed</span></div>
+      </div>
+      <div class="ops-layout">
+        <aside class="contact-form">
+          <h3>Create / Edit Work Order</h3>
+          <form id="opsForm">
+            <input type="hidden" name="id" />
+            <label>Customer<input name="customer" required /></label>
+            <label>Property<input name="property" required /></label>
+            <label>Job Type<select name="jobType"><option>Inspection</option><option>Repair Visit</option><option>Membership Request</option><option>Work Order</option><option>Follow-up</option></select></label>
+            <label>Date<input name="date" type="date" required /></label>
+            <label>Time<input name="time" type="time" required /></label>
+            <label>Assigned To<select name="tech"><option>Robert</option><option>Bear Tech 1</option><option>Partner Contractor</option></select></label>
+            <label>Status<select name="status"><option>Scheduled</option><option>En Route</option><option>On Site</option><option>Waiting on Customer</option><option>Waiting on Parts</option><option>Follow-up Required</option><option>Complete</option></select></label>
+            <label>Next Action<input name="next" /></label>
+            <label>Notes<textarea name="notes"></textarea></label>
+            <div class="hero-actions"><button class="btn primary" type="submit">Save</button><button class="btn secondary" type="button" id="clearOpsForm">Clear</button></div>
+          </form>
+        </aside>
+        <section class="schedule-board">
+          <div class="board-column" data-status="Scheduled"><h3>Scheduled</h3><div class="dropzone" id="scheduledList"></div></div>
+          <div class="board-column" data-status="En Route"><h3>En Route</h3><div class="dropzone" id="enRouteList"></div></div>
+          <div class="board-column" data-status="On Site"><h3>On Site</h3><div class="dropzone" id="onSiteList"></div></div>
+          <div class="board-column" data-status="Follow-up Required"><h3>Follow-up</h3><div class="dropzone" id="followList"></div></div>
+        </section>
+      </div>
+      <section class="history-panel"><h3>Completed / History</h3><div id="historyList" class="history-list"></div></section>
+    </section>
+
+    <section id="tech" class="section cream">
+      <div class="section-heading"><p class="eyebrow">Technician View</p><h2>Today’s jobs and inspection photo sections.</h2></div>
+      <div class="tech-grid"><section class="contact-form"><h3>Today’s Jobs</h3><div id="techJobs"></div></section><section class="contact-form"><h3>45-Min Inspection Sections</h3><div id="inspectionSections"></div></section></div>
+    </section>
+
+    <section id="admin" class="section">
+      <div class="section-heading"><p class="eyebrow">Admin</p><h2>Manage the Bear Track system.</h2></div>
+      <div class="admin-cards"><article><h3>Customers</h3><strong>Profiles</strong><p>Imported from website intake.</p></article><article><h3>Properties</h3><strong>Home Records</strong><p>Address, access, history, notes.</p></article><article><h3>Memberships</h3><strong>Plans</strong><p>Essential, Plus, Signature.</p></article><article><h3>Templates</h3><strong>Inspections</strong><p>Editable sections and photo requirements.</p></article></div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
