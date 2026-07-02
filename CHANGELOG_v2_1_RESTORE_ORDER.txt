@@ -1,0 +1,15 @@
+Bear Home Management v2.1
+
+Fixed:
+- Rolled back the v2.0 section movement.
+- Restored original page order/header position from the working v1.4 form version.
+- Kept working Netlify form.
+- Updated customer-facing text from “Interactive Inspection Process” to “Home Health Assessment.”
+- Added Home Care Hours™ note:
+  Cub: 4 hours/month
+  Black Bear: 6 hours/month
+  Grizzly: 8 hours/month
+- Added Startup Assessment note:
+  $99 for new members, $149 standard one-time assessment.
+
+Upload all extracted files to GitHub and commit changes.

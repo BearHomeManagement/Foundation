@@ -174,126 +174,18 @@ footer{background:#061727;color:#dceaf0;padding:28px 0}.footer-grid{display:flex
 
 
 
-/* Bear Home Management v2.0 polish */
-:root{
-  --bear-deep:#062b35;
-  --bear-green:#244536;
-  --bear-gold:#efb649;
-  --bear-cream:#f7f2e8;
-  --bear-ink:#162326;
+/* v2.1 safe plan notes - does not change page order */
+.plan-hours-note,
+.startup-assessment-note {
+  max-width: 1000px;
+  margin: 22px auto 0;
+  padding: 18px 22px;
+  border-radius: 16px;
+  background: rgba(239, 182, 73, 0.14);
+  border: 1px solid rgba(239, 182, 73, 0.45);
+  line-height: 1.6;
 }
-body{scroll-behavior:smooth;}
-.v2-section{
-  padding:80px 20px;
-  background:var(--bear-cream);
-  color:var(--bear-ink);
-}
-.v2-section:nth-of-type(even){background:#fff;}
-.v2-inner{max-width:1180px;margin:0 auto;}
-.v2-eyebrow{
-  text-transform:uppercase;
-  letter-spacing:.14em;
-  font-weight:900;
-  color:var(--bear-green);
-  margin:0 0 12px;
-}
-.v2-section h2{
-  font-size:clamp(2rem,4vw,3.8rem);
-  line-height:1.05;
-  margin:0 0 18px;
-  color:var(--bear-deep);
-}
-.v2-lead{
-  max-width:850px;
-  font-size:1.15rem;
-  line-height:1.7;
-  margin-bottom:34px;
-}
-.v2-pricing-grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:18px;
-}
-.v2-price-card{
-  background:#fff;
-  border:1px solid rgba(0,0,0,.08);
-  border-radius:24px;
-  padding:28px;
-  box-shadow:0 16px 45px rgba(0,0,0,.08);
-  position:relative;
-}
-.v2-price-card.featured{
-  border:2px solid var(--bear-gold);
-  transform:translateY(-8px);
-}
-.v2-price-card.startup{
-  background:linear-gradient(145deg,var(--bear-deep),var(--bear-green));
-  color:#fff;
-}
-.v2-price-card.startup h3,
-.v2-price-card.startup .v2-price{color:#fff;}
-.v2-price-card h3{
-  margin:8px 0 10px;
-  font-size:1.35rem;
-  color:var(--bear-deep);
-}
-.v2-price{
-  font-size:2.5rem;
-  font-weight:900;
-  color:var(--bear-green);
-  margin-bottom:12px;
-}
-.v2-price span{font-size:1rem;font-weight:700;opacity:.7;}
-.v2-badge{
-  display:inline-block;
-  background:var(--bear-gold);
-  color:#091d22;
-  font-weight:900;
-  padding:7px 10px;
-  border-radius:999px;
-  font-size:.75rem;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-}
-.v2-two-col{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:38px;
-  align-items:center;
-}
-.v2-checklist{
-  display:grid;
-  gap:12px;
-}
-.v2-checklist div{
-  background:#fff;
-  border-radius:16px;
-  padding:18px 20px;
-  box-shadow:0 10px 28px rgba(0,0,0,.07);
-  font-weight:800;
-}
-.v2-checklist div:before{
-  content:"✓";
-  color:var(--bear-green);
-  margin-right:10px;
-  font-weight:900;
-}
-.v2-feature-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:18px;
-}
-.v2-feature-grid article{
-  background:#fff;
-  border-radius:22px;
-  padding:24px;
-  box-shadow:0 12px 34px rgba(0,0,0,.075);
-}
-.v2-feature-grid h3{
-  margin:0 0 10px;
-  color:var(--bear-deep);
-}
-@media(max-width:950px){
-  .v2-pricing-grid,.v2-feature-grid,.v2-two-col{grid-template-columns:1fr;}
-  .v2-price-card.featured{transform:none;}
+.plan-hours-note strong,
+.startup-assessment-note strong {
+  color: #062b35;
 }
