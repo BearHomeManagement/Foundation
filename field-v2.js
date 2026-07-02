@@ -19,7 +19,9 @@ async function logout(){await db.auth.signOut();location.reload()}
 async function loadAssessments(){
  const {data,error}=await db.from('assessments').select('*, properties(*, customers(*))').order('created_at',{ascending:false});
  if(error){alert(error.message);return}
- $('assessmentList').innerHTML=(data||[]).map(a=>`<div class="assessment-row"><h3>${a.properties?.address||'No address'}</h3><p>${a.properties?.customers?.full_name||'No customer'} • ${a.assessment_date||''}</p><p class="muted">Score: ${a.home_health_score??'—'} | Risk: ${a.risk_index??'—'} | Status: ${a.status||'draft'}</p><div class="btnrow"><button onclick="openAssessment('${a.id}')">Open / Review</button><button onclick="deleteAssessment('${a.id}')" class="danger">Delete</button></div></div>`).join('')||'<p>No assessments saved yet.</p>';
+ $('assessmentList').innerHTML=(data||[]).map(a=>`<div class="assessment-row"><h3>${a.properties?.address||'No address'}</h3><p>${a.properties?.customers?.full_name||'No customer'} • ${a.assessment_date||''}</p><p class="muted">Score: ${a.home_health_score??'—'} | Risk: ${a.risk_index??'—'} | Status: ${a.status||'draft'}</p><div class="btnrow"><button class="open-assessment" data-id="${a.id}">Open / Review</button><button class="delete-assessment danger" data-id="${a.id}">Delete</button></div></div>`).join('')||'<p>No assessments saved yet.</p>';
+ document.querySelectorAll('.open-assessment').forEach(btn=>btn.onclick=()=>openAssessment(btn.dataset.id));
+ document.querySelectorAll('.delete-assessment').forEach(btn=>btn.onclick=()=>deleteAssessment(btn.dataset.id));
 }
 async function startInspection(){
  if(!$('customerName').value.trim()||!$('propertyAddress').value.trim()){alert('Customer name and property address required.');return}
@@ -33,7 +35,7 @@ async function openAssessment(id){
  const {data:ass,error}=await db.from('assessments').select('*, properties(*, customers(*))').eq('id',id).single();if(error){alert(error.message);return}
  inspection=ass;propertyId=ass.property_id;customerId=ass.properties?.customer_id;current=0;categoryIds={};savedItems={};
  const {data:cats,error:ce}=await db.from('assessment_categories').select('*').eq('assessment_id',id).order('sort_order');if(ce){alert(ce.message);return}
- cats.forEach(c=>categoryIds[c.name]=c.id);
+ if(!cats||!cats.length){alert('This assessment has no categories yet. Delete this test assessment and start a new one.');return} cats.forEach(c=>categoryIds[c.name]=c.id);
  const {data:items,error:ie}=await db.from('assessment_items').select('*').in('category_id',cats.map(c=>c.id)).order('sort_order');if(ie){alert(ie.message);return}
  items.forEach(i=>savedItems[i.sort_order]=i);
  $('editCustomerName').value=ass.properties?.customers?.full_name||'';$('editCustomerEmail').value=ass.properties?.customers?.email||'';$('editCustomerPhone').value=ass.properties?.customers?.phone||'';$('editPropertyAddress').value=ass.properties?.address||'';$('editPropertyCity').value=ass.properties?.city||'';$('editPropertyState').value=ass.properties?.state||'';$('editPropertyZip').value=ass.properties?.zip||'';$('editTechnician').value=ass.technician||'';
@@ -62,3 +64,6 @@ function finishInspection(){const t=calcTotals();$('finalScore').textContent=t.s
 function generateReport(){const t=calcTotals();let txt=`Bear Home Management - Home Health Assessment\n\nHome Health Score: ${t.score}\nRisk Index: ${t.riskIndex}\nEstimated Home Care Hours: ${t.hours.toFixed(1)}\nWork Orders Recommended: ${t.wo}\n\nFindings:\n`;t.items.filter(i=>i.status!=='Good').forEach(i=>{txt+=`\n[${i.status}] ${i.title}\nObservation: ${i.observation||'No observation entered.'}\nWhy it matters: ${i.homeowner_education}\nRecommendation: ${i.recommendation}\nCost range: ${i.cost_range||'TBD'}\n`});$('reportText').value=txt;db.from('assessments').update({summary:txt,status:'complete'}).eq('id',inspection.id);toast('Report updated')}
 async function createWorkOrders(){const t=calcTotals();for(const i of t.items.filter(x=>x.work_order_needed)){const {data:existing}=await db.from('work_orders').select('id').eq('assessment_item_id',i.id);if(!existing?.length)await db.from('work_orders').insert({property_id:propertyId,assessment_item_id:i.id,title:i.title,description:i.observation,priority:i.risk_points>=7?'high':'normal',status:'open',estimated_hours:i.estimated_hours,estimated_cost:i.cost_range})}toast('Work orders created')}
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setView(b.dataset.view));document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>chooseStatus(b.dataset.status));$('loginBtn').onclick=login;$('logoutBtn').onclick=logout;$('startBtn').onclick=startInspection;$('saveItemBtn').onclick=saveItem;$('nextBtn').onclick=next;$('prevBtn').onclick=prev;$('generateReportBtn').onclick=generateReport;$('createWorkOrdersBtn').onclick=createWorkOrders;$('saveMetaBtn').onclick=saveMeta;$('deleteAssessmentBtn').onclick=()=>deleteAssessment(inspection.id);$('refreshBtn').onclick=loadAssessments;checkSession();
+
+window.openAssessment=openAssessment;
+window.deleteAssessment=deleteAssessment;
