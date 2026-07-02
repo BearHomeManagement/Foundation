@@ -1,0 +1,8 @@
+Bear Home Management v1.2
+
+Changed:
+- Removed customer-facing “Interactive Inspection Process” wording.
+- Replaced it with “Home Health Assessment.”
+- Replaced review-only subtitle with customer-ready wording.
+
+Upload all extracted files to GitHub and commit changes.
