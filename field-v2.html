@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BearOps Field v2</title>
+  <link rel="stylesheet" href="field-v2.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div><h1>BearOps Field</h1><p>Assessments • Review • Edit • Delete</p></div>
+  <div><a href="app.html">Dashboard</a><button id="logoutBtn">Log Out</button></div>
+</header>
+<main>
+<section id="loginView" class="card login">
+  <h2>Login</h2>
+  <label>Email<input id="loginEmail" type="email"></label>
+  <label>Password<input id="loginPassword" type="password"></label>
+  <button id="loginBtn">Log In</button>
+  <p id="loginMsg"></p>
+</section>
+
+<section id="appView" class="hidden">
+  <nav class="tabs">
+    <button class="tab active" data-view="listView">Saved Assessments</button>
+    <button class="tab" data-view="newView">New Assessment</button>
+    <button class="tab" data-view="inspectView">Inspection Editor</button>
+  </nav>
+
+  <section id="listView" class="view active">
+    <div class="card">
+      <div class="row-head"><h2>Saved Assessments</h2><button id="refreshBtn">Refresh</button></div>
+      <div id="assessmentList"></div>
+    </div>
+  </section>
+
+  <section id="newView" class="view">
+    <section class="card">
+      <h2>Start New Inspection</h2>
+      <div class="grid">
+        <label>Customer Name<input id="customerName"></label>
+        <label>Email<input id="customerEmail"></label>
+        <label>Phone<input id="customerPhone"></label>
+        <label>Property Address<input id="propertyAddress"></label>
+        <label>City<input id="propertyCity"></label>
+        <label>State<input id="propertyState" value="FL"></label>
+        <label>Zip<input id="propertyZip"></label>
+        <label>Technician<input id="technician"></label>
+      </div>
+      <button id="startBtn">Create / Start Inspection</button>
+    </section>
+  </section>
+
+  <section id="inspectView" class="view">
+    <section id="emptyEditor" class="card"><h2>No assessment open</h2><p>Select an assessment from Saved Assessments or create a new one.</p></section>
+    <section id="editor" class="hidden">
+      <div class="card">
+        <div class="row-head">
+          <div><h2 id="openTitle">Open Assessment</h2><p id="openSub"></p></div>
+          <div class="btnrow"><button id="saveMetaBtn">Save Info</button><button id="deleteAssessmentBtn" class="danger">Delete Assessment</button></div>
+        </div>
+        <div class="grid">
+          <label>Customer Name<input id="editCustomerName"></label>
+          <label>Email<input id="editCustomerEmail"></label>
+          <label>Phone<input id="editCustomerPhone"></label>
+          <label>Property Address<input id="editPropertyAddress"></label>
+          <label>City<input id="editPropertyCity"></label>
+          <label>State<input id="editPropertyState"></label>
+          <label>Zip<input id="editPropertyZip"></label>
+          <label>Technician<input id="editTechnician"></label>
+        </div>
+      </div>
+
+      <div class="progress-card"><div><h2 id="sectionTitle"></h2><p id="itemCounter"></p></div><div class="scorebox"><span>Home Health Score™</span><strong id="score">100</strong></div></div>
+      <div class="progressbar"><div id="bar"></div></div>
+      <article class="card item-card">
+        <p class="eyebrow" id="categoryLabel"></p>
+        <h2 id="itemTitle"></h2>
+        <p id="educationText"></p>
+        <div class="choice-grid">
+          <button class="choice" data-status="Good">Good</button>
+          <button class="choice" data-status="Monitor">Monitor</button>
+          <button class="choice" data-status="Service Soon">Service Soon</button>
+          <button class="choice danger" data-status="Needs Repair">Needs Repair</button>
+        </div>
+        <div class="grid">
+          <label>Risk Points<input id="riskPoints" type="number" value="0"></label>
+          <label>Estimated Hours<input id="estimatedHours" type="number" step=".25" value="0"></label>
+          <label>Cost Range<input id="costRange" placeholder="$100 - $300"></label>
+          <label>Work Order Needed<select id="workOrderNeeded"><option>No</option><option>Yes</option></select></label>
+        </div>
+        <label>Observation<textarea id="observation" placeholder="What did you find?"></textarea></label>
+        <label>Recommendation<textarea id="recommendation"></textarea></label>
+        <div class="navbuttons"><button id="prevBtn">Back</button><button id="saveItemBtn">Save Item</button><button id="nextBtn">Next</button></div>
+      </article>
+      <section class="card finish">
+        <h2>Assessment Summary</h2>
+        <div class="finish-grid">
+          <div><span>Score</span><strong id="finalScore">100</strong></div>
+          <div><span>Risk</span><strong id="finalRisk">Low</strong></div>
+          <div><span>Hours</span><strong id="finalHours">0</strong></div>
+          <div><span>Work Orders</span><strong id="finalWO">0</strong></div>
+        </div>
+        <button id="generateReportBtn">Generate / Update Report</button>
+        <button id="createWorkOrdersBtn">Create Work Orders</button>
+        <textarea id="reportText"></textarea>
+      </section>
+    </section>
+  </section>
+</section>
+</main>
+<div id="toast"></div>
+<script src="field-v2.js"></script>
+</body>
+</html>
