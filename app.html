@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BearOps Cloud</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BearOps Unified</title>
   <link rel="stylesheet" href="app.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
@@ -11,16 +11,15 @@
 <body>
 <header class="topbar">
   <div>
-    <h1>BearOps Cloud</h1>
-    <p>Customers • Properties • Assessments • Work Orders</p>
+    <h1>BearOps</h1>
+    <p>Bear Home Management Operations Platform</p>
   </div>
   <button id="logoutBtn" class="hidden">Log Out</button>
 </header>
 
 <main>
-  <section id="loginView" class="login-card">
+  <section id="loginView" class="card login">
     <h2>Login</h2>
-    <p>Use your Supabase Auth user account.</p>
     <label>Email<input id="loginEmail" type="email"></label>
     <label>Password<input id="loginPassword" type="password"></label>
     <button id="loginBtn">Log In</button>
@@ -29,49 +28,47 @@
 
   <section id="appView" class="hidden">
     <nav class="tabs">
-      <button data-tab="dashboard" class="active">Dashboard</button>
-      <button data-tab="customers">Customers</button>
-      <button data-tab="properties">Properties</button>
-      <button data-tab="assessments">Assessments</button>
-      <button data-tab="workorders">Work Orders</button>
+      <button class="tab active" data-view="dashboard">Dashboard</button>
+      <button class="tab" data-view="customers">Customers</button>
+      <button class="tab" data-view="properties">Properties</button>
+      <button class="tab" data-view="assessments">Assessments</button>
+      <button class="tab" data-view="workorders">Work Orders</button>
+      <button class="tab" data-view="report">Report</button>
     </nav>
 
-    <section id="dashboard" class="tab active">
+    <section id="dashboard" class="view active">
       <div class="cards">
-        <div class="card"><span>Customers</span><strong id="customerCount">0</strong></div>
-        <div class="card"><span>Properties</span><strong id="propertyCount">0</strong></div>
-        <div class="card"><span>Assessments</span><strong id="assessmentCount">0</strong></div>
-        <div class="card"><span>Open Work Orders</span><strong id="workOrderCount">0</strong></div>
+        <div class="metric"><span>Customers</span><strong id="customerCount">0</strong></div>
+        <div class="metric"><span>Properties</span><strong id="propertyCount">0</strong></div>
+        <div class="metric"><span>Assessments</span><strong id="assessmentCount">0</strong></div>
+        <div class="metric"><span>Open Work Orders</span><strong id="woCount">0</strong></div>
       </div>
-
-      <div class="quick-actions">
-        <a class="action-card primary" href="field-v2.html">
-          <strong>Start / Review Field Inspection</strong>
-          <span>Open the live Home Health Assessment workflow.</span>
-        </a>
-        <a class="action-card" href="field-v2.html">
-          <strong>Saved Assessments</strong>
-          <span>Review, edit, or delete existing assessments.</span>
-        </a>
+      <div class="quick">
+        <button id="quickNewAssessment">Start New Assessment</button>
+        <button id="quickRefresh">Refresh Data</button>
+      </div>
+      <div class="card">
+        <h2>Recent Assessments</h2>
+        <div id="recentAssessments"></div>
       </div>
     </section>
 
-    <section id="customers" class="tab">
-      <div class="panel">
+    <section id="customers" class="view">
+      <div class="card">
         <h2>Add Customer</h2>
         <div class="grid">
           <label>Full Name<input id="customerName"></label>
-          <label>Email<input id="customerEmail" type="email"></label>
+          <label>Email<input id="customerEmail"></label>
           <label>Phone<input id="customerPhone"></label>
         </div>
         <label>Notes<textarea id="customerNotes"></textarea></label>
         <button id="addCustomerBtn">Save Customer</button>
       </div>
-      <div class="panel"><h2>Customers</h2><div id="customerList"></div></div>
+      <div class="card"><h2>Customers</h2><div id="customerList"></div></div>
     </section>
 
-    <section id="properties" class="tab">
-      <div class="panel">
+    <section id="properties" class="view">
+      <div class="card">
         <h2>Add Property</h2>
         <div class="grid">
           <label>Customer<select id="propertyCustomer"></select></label>
@@ -81,52 +78,126 @@
           <label>Zip<input id="propertyZip"></label>
           <label>Year Built<input id="propertyYear" type="number"></label>
           <label>Square Feet<input id="propertySqft" type="number"></label>
-          <label>Type<input id="propertyType" placeholder="Single family, condo, townhome..."></label>
+          <label>Type<input id="propertyType"></label>
         </div>
         <label>Notes<textarea id="propertyNotes"></textarea></label>
         <button id="addPropertyBtn">Save Property</button>
       </div>
-      <div class="panel"><h2>Properties</h2><div id="propertyList"></div></div>
+      <div class="card"><h2>Properties</h2><div id="propertyList"></div></div>
     </section>
 
-    <section id="assessments" class="tab">
-      <div class="panel">
-        <div class="section-actions"><h2>New Home Health Assessment</h2><a class="small-link" href="field-v2.html">Open Field Inspection Tool</a></div>
-        <div class="grid">
-          <label>Property<select id="assessmentProperty"></select></label>
-          <label>Technician<input id="assessmentTech"></label>
-          <label>Date<input id="assessmentDate" type="date"></label>
-          <label>Home Health Score<input id="assessmentScore" type="number" value="100"></label>
-          <label>Risk Index<select id="assessmentRisk"><option>Low</option><option>Moderate</option><option>High</option></select></label>
-          <label>Estimated Hours<input id="assessmentHours" type="number" step=".25" value="0"></label>
+    <section id="assessments" class="view">
+      <div class="split">
+        <div class="card">
+          <h2>Start Assessment</h2>
+          <p>Create a customer/property fast, or select an existing property below.</p>
+          <div class="grid two">
+            <label>Existing Property<select id="assessmentProperty"></select></label>
+            <label>Technician<input id="assessmentTech"></label>
+          </div>
+          <button id="startExistingAssessmentBtn">Start With Existing Property</button>
+          <hr>
+          <h3>Quick New Customer / Property</h3>
+          <div class="grid two">
+            <label>Customer Name<input id="quickCustomerName"></label>
+            <label>Email<input id="quickCustomerEmail"></label>
+            <label>Phone<input id="quickCustomerPhone"></label>
+            <label>Property Address<input id="quickPropertyAddress"></label>
+            <label>City<input id="quickPropertyCity"></label>
+            <label>State<input id="quickPropertyState" value="FL"></label>
+            <label>Zip<input id="quickPropertyZip"></label>
+            <label>Technician<input id="quickTech"></label>
+          </div>
+          <button id="startQuickAssessmentBtn">Create & Start Assessment</button>
         </div>
-        <label>Summary<textarea id="assessmentSummary"></textarea></label>
-        <button id="addAssessmentBtn">Save Assessment</button>
+        <div class="card">
+          <h2>Saved Assessments</h2>
+          <div id="assessmentList"></div>
+        </div>
       </div>
-      <div class="panel"><h2>Assessments</h2><div id="assessmentList"></div></div>
+
+      <section id="editorWrap" class="hidden">
+        <div class="card">
+          <div class="rowhead">
+            <div><h2 id="editorTitle">Inspection Editor</h2><p id="editorSub"></p></div>
+            <div class="actions">
+              <button id="saveMetaBtn">Save Info</button>
+              <button id="deleteAssessmentBtn" class="danger">Delete Assessment</button>
+            </div>
+          </div>
+          <div class="grid">
+            <label>Customer Name<input id="editCustomerName"></label>
+            <label>Email<input id="editCustomerEmail"></label>
+            <label>Phone<input id="editCustomerPhone"></label>
+            <label>Property Address<input id="editPropertyAddress"></label>
+            <label>City<input id="editPropertyCity"></label>
+            <label>State<input id="editPropertyState"></label>
+            <label>Zip<input id="editPropertyZip"></label>
+            <label>Technician<input id="editTechnician"></label>
+          </div>
+        </div>
+
+        <div class="progress">
+          <div>
+            <h2 id="sectionTitle">Section</h2>
+            <p id="itemCounter">Item</p>
+          </div>
+          <div class="scorebox"><span>Home Health Score™</span><strong id="liveScore">100</strong></div>
+        </div>
+        <div class="bar"><div id="barFill"></div></div>
+
+        <article class="card itemcard">
+          <p class="eyebrow" id="categoryLabel"></p>
+          <h2 id="itemTitle"></h2>
+          <p id="educationText"></p>
+          <div class="choices">
+            <button class="choice" data-status="Good">Good</button>
+            <button class="choice" data-status="Monitor">Monitor</button>
+            <button class="choice" data-status="Service Soon">Service Soon</button>
+            <button class="choice danger-choice" data-status="Needs Repair">Needs Repair</button>
+          </div>
+          <div class="grid">
+            <label>Risk Points<input id="riskPoints" type="number"></label>
+            <label>Estimated Hours<input id="estimatedHours" type="number" step=".25"></label>
+            <label>Cost Range<input id="costRange"></label>
+            <label>Work Order Needed<select id="workOrderNeeded"><option>No</option><option>Yes</option></select></label>
+          </div>
+          <label>Observation<textarea id="observation"></textarea></label>
+          <label>Recommendation<textarea id="recommendation"></textarea></label>
+          <div class="navrow">
+            <button id="prevItemBtn">Back</button>
+            <button id="saveItemBtn">Save Item</button>
+            <button id="nextItemBtn">Next</button>
+          </div>
+        </article>
+
+        <div class="card">
+          <h2>Assessment Summary</h2>
+          <div class="cards small">
+            <div class="metric"><span>Score</span><strong id="finalScore">100</strong></div>
+            <div class="metric"><span>Risk</span><strong id="finalRisk">Low</strong></div>
+            <div class="metric"><span>Hours</span><strong id="finalHours">0</strong></div>
+            <div class="metric"><span>WO Needed</span><strong id="finalWO">0</strong></div>
+          </div>
+          <button id="generateReportBtn">Generate / Update Report</button>
+          <button id="createWorkOrdersBtn">Create Work Orders</button>
+        </div>
+      </section>
     </section>
 
-    <section id="workorders" class="tab">
-      <div class="panel">
-        <h2>New Work Order</h2>
-        <div class="grid">
-          <label>Property<select id="workOrderProperty"></select></label>
-          <label>Title<input id="workOrderTitle"></label>
-          <label>Priority<select id="workOrderPriority"><option>normal</option><option>low</option><option>high</option><option>urgent</option></select></label>
-          <label>Status<select id="workOrderStatus"><option>open</option><option>scheduled</option><option>complete</option></select></label>
-          <label>Estimated Hours<input id="workOrderHours" type="number" step=".25"></label>
-          <label>Estimated Cost<input id="workOrderCost"></label>
-          <label>Assigned To<input id="workOrderAssigned"></label>
-          <label>Due Date<input id="workOrderDue" type="date"></label>
-        </div>
-        <label>Description<textarea id="workOrderDescription"></textarea></label>
-        <button id="addWorkOrderBtn">Save Work Order</button>
+    <section id="workorders" class="view">
+      <div class="card"><h2>Work Orders</h2><div id="workOrderList"></div></div>
+    </section>
+
+    <section id="report" class="view">
+      <div class="card">
+        <h2>Report</h2>
+        <textarea id="reportText"></textarea>
+        <button onclick="window.print()">Print / Save PDF</button>
       </div>
-      <div class="panel"><h2>Work Orders</h2><div id="workOrderList"></div></div>
     </section>
   </section>
 </main>
-
 <div id="toast"></div>
 <script src="app.js"></script>
 </body>

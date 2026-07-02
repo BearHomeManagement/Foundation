@@ -1,141 +1,54 @@
-const supabaseUrl = window.BEAROPS_SUPABASE_URL;
-const supabaseKey = window.BEAROPS_SUPABASE_ANON_KEY;
-const db = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-let customers = [];
-let properties = [];
-let assessments = [];
-let workOrders = [];
-
-const $ = id => document.getElementById(id);
-
-function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
-function row(title, body){ return `<div class="row"><h3>${title}</h3><div>${body}</div></div>`; }
-
-async function checkSession(){
-  const { data } = await db.auth.getSession();
-  if(data.session){ showApp(); } else { showLogin(); }
-}
-
-function showLogin(){
-  $('loginView').classList.remove('hidden');
-  $('appView').classList.add('hidden');
-  $('logoutBtn').classList.add('hidden');
-}
-async function showApp(){
-  $('loginView').classList.add('hidden');
-  $('appView').classList.remove('hidden');
-  $('logoutBtn').classList.remove('hidden');
-  await loadAll();
-}
-
-async function login(){
-  const email=$('loginEmail').value;
-  const password=$('loginPassword').value;
-  const { error } = await db.auth.signInWithPassword({ email, password });
-  if(error){ $('loginMsg').textContent=error.message; return; }
-  await showApp();
-}
-
-async function logout(){
-  await db.auth.signOut();
-  showLogin();
-}
-
+const db=window.supabase.createClient(window.BEAROPS_SUPABASE_URL,window.BEAROPS_SUPABASE_ANON_KEY),$=id=>document.getElementById(id);
+const checklist=[
+{cat:'Property & Safety',items:[['Customer / Property Info','Accurate records keep the home profile useful year after year.','Confirm contact, address, year built, size, and special systems.'],['Main Water Shutoff','Every homeowner should know how to shut water off quickly during a leak.','Locate, test accessibility, label, and photograph the shutoff.'],['Smoke / CO Detectors','Detectors have a service life and should be replaced when expired.','Check age, placement, and function.']]},
+{cat:'Exterior',items:[['Gutters & Downspouts','Poor drainage can damage fascia, siding, and foundation areas.','Check debris, discharge locations, and splash blocks.'],['Sealants / Caulking','Failed sealants allow water behind exterior surfaces.','Photograph failed joints and recommend replacement.'],['Paint / Exterior Finish','Paint protects trim and siding from moisture and UV damage.','Identify exposed or deteriorated areas.']]},
+{cat:'Roof',items:[['Roof Covering - Ground View','Aging roof materials increase water intrusion risk.','Document visible wear, missing shingles, debris, and penetrations.'],['Pipe Boots / Roof Penetrations','Cracked boots are a common roof leak source.','Flag for roofing partner if deterioration is visible.']]},
+{cat:'Plumbing',items:[['Water Heater','Older water heaters should be budgeted before failure.','Record age, condition, shutoff, pan, and drain path.'],['Toilets / Visible Leaks','Small toilet leaks can waste water and damage flooring.','Check loose toilets, running tanks, and supply lines.'],['Visible Sink Drains / P-Traps','Small drain leaks can damage cabinets and flooring.','Check accessible drains and note corrosion or seepage.']]},
+{cat:'Electrical',items:[['Panel Exterior Review','Panel labeling and visible condition help future service work.','Photograph panel and note visible concerns only.'],['GFCI Protection','GFCI protection reduces shock risk in wet locations.','Test accessible GFCI devices and refer as needed.']]},
+{cat:'HVAC',items:[['Filter / Return Air','Clean filters protect comfort, efficiency, and equipment life.','Verify filter size and replacement schedule.'],['Condensate Drain','Clogged condensate drains can cause interior water damage.','Check visible drain condition and cleanout access.']]}
+];
+const flat=checklist.flatMap((s,si)=>s.items.map((it,ii)=>({cat:s.cat,title:it[0],education:it[1],defaultRec:it[2],sort:flatIndex(si,ii)})));
+function flatIndex(si,ii){let n=0;for(let i=0;i<si;i++)n+=checklist[i].items.length;return n+ii}
+let customers=[],properties=[],assessments=[],workOrders=[],inspection=null,propertyId=null,customerId=null,categoryIds={},savedItems={},current=0;
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function setView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(v).classList.add('active');document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===v))}
+async function checkSession(){const {data}=await db.auth.getSession();data.session?showApp():showLogin()}
+function showLogin(){$('loginView').classList.remove('hidden');$('appView').classList.add('hidden');$('logoutBtn').classList.add('hidden')}
+async function showApp(){$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('logoutBtn').classList.remove('hidden');await loadAll()}
+async function login(){const {error}=await db.auth.signInWithPassword({email:$('loginEmail').value,password:$('loginPassword').value});if(error){$('loginMsg').textContent=error.message;return}await showApp()}
+async function logout(){await db.auth.signOut();location.reload()}
 async function loadAll(){
-  const [c,p,a,w] = await Promise.all([
-    db.from('customers').select('*').order('created_at',{ascending:false}),
-    db.from('properties').select('*').order('created_at',{ascending:false}),
-    db.from('assessments').select('*').order('created_at',{ascending:false}),
-    db.from('work_orders').select('*').order('created_at',{ascending:false})
-  ]);
-  if(c.error||p.error||a.error||w.error){
-    alert((c.error||p.error||a.error||w.error).message);
-    return;
-  }
-  customers=c.data||[]; properties=p.data||[]; assessments=a.data||[]; workOrders=w.data||[];
-  renderAll();
+ const [c,p,a,w]=await Promise.all([db.from('customers').select('*').order('created_at',{ascending:false}),db.from('properties').select('*, customers(*)').order('created_at',{ascending:false}),db.from('assessments').select('*, properties(*, customers(*))').order('created_at',{ascending:false}),db.from('work_orders').select('*, properties(*)').order('created_at',{ascending:false})]);
+ if(c.error||p.error||a.error||w.error){alert((c.error||p.error||a.error||w.error).message);return}
+ customers=c.data||[];properties=p.data||[];assessments=a.data||[];workOrders=w.data||[];renderAll()
 }
-
-function renderAll(){
-  renderCounts(); renderCustomers(); renderProperties(); renderAssessments(); renderWorkOrders(); fillSelects();
-}
-function renderCounts(){
-  $('customerCount').textContent=customers.length;
-  $('propertyCount').textContent=properties.length;
-  $('assessmentCount').textContent=assessments.length;
-  $('workOrderCount').textContent=workOrders.filter(w=>w.status!=='complete').length;
-}
-function fillSelects(){
-  const customerOptions=customers.map(c=>`<option value="${c.id}">${c.full_name}</option>`).join('');
-  $('propertyCustomer').innerHTML=customerOptions;
-  const propertyOptions=properties.map(p=>`<option value="${p.id}">${p.address}</option>`).join('');
-  $('assessmentProperty').innerHTML=propertyOptions;
-  $('workOrderProperty').innerHTML=propertyOptions;
-}
-function renderCustomers(){
-  $('customerList').innerHTML = customers.map(c=>row(c.full_name, `${c.email||''}<br>${c.phone||''}<br><span class="muted">${c.notes||''}</span>`)).join('') || '<p>No customers yet.</p>';
-}
-function renderProperties(){
-  $('propertyList').innerHTML = properties.map(p=>{
-    const c = customers.find(x=>x.id===p.customer_id);
-    return row(p.address, `${p.city||''}, ${p.state||''} ${p.zip||''}<br>Owner: ${c?.full_name||'—'}<br><span class="muted">${p.notes||''}</span>`);
-  }).join('') || '<p>No properties yet.</p>';
-}
-function renderAssessments(){
-  $('assessmentList').innerHTML = assessments.map(a=>{
-    const p = properties.find(x=>x.id===a.property_id);
-    return row(`${a.assessment_type||'Home Health Assessment'} - ${a.assessment_date||''}`, `Property: ${p?.address||'—'}<br>Score: ${a.home_health_score||'—'} | Risk: ${a.risk_index||'—'} | Hours: ${a.estimated_hours||0}<br><span class="muted">${a.summary||''}</span>`);
-  }).join('') || '<p>No assessments yet.</p>';
-}
-function renderWorkOrders(){
-  $('workOrderList').innerHTML = workOrders.map(w=>{
-    const p = properties.find(x=>x.id===w.property_id);
-    return row(w.title, `Property: ${p?.address||'—'}<br>Status: ${w.status} | Priority: ${w.priority}<br>Hours: ${w.estimated_hours||0} | Cost: ${w.estimated_cost||'TBD'}<br><span class="muted">${w.description||''}</span>`);
-  }).join('') || '<p>No work orders yet.</p>';
-}
-
-async function addCustomer(){
-  const payload={ full_name:$('customerName').value, email:$('customerEmail').value, phone:$('customerPhone').value, notes:$('customerNotes').value };
-  const { error } = await db.from('customers').insert(payload);
-  if(error){ alert(error.message); return; }
-  ['customerName','customerEmail','customerPhone','customerNotes'].forEach(id=>$(id).value='');
-  toast('Customer saved'); await loadAll();
-}
-async function addProperty(){
-  const payload={ customer_id:$('propertyCustomer').value||null, address:$('propertyAddress').value, city:$('propertyCity').value, state:$('propertyState').value, zip:$('propertyZip').value, year_built:Number($('propertyYear').value)||null, square_feet:Number($('propertySqft').value)||null, property_type:$('propertyType').value, notes:$('propertyNotes').value };
-  const { error } = await db.from('properties').insert(payload);
-  if(error){ alert(error.message); return; }
-  ['propertyAddress','propertyCity','propertyZip','propertyYear','propertySqft','propertyType','propertyNotes'].forEach(id=>$(id).value='');
-  toast('Property saved'); await loadAll();
-}
-async function addAssessment(){
-  const payload={ property_id:$('assessmentProperty').value||null, technician:$('assessmentTech').value, assessment_date:$('assessmentDate').value||new Date().toISOString().slice(0,10), home_health_score:Number($('assessmentScore').value)||100, risk_index:$('assessmentRisk').value, estimated_hours:Number($('assessmentHours').value)||0, summary:$('assessmentSummary').value, status:'complete' };
-  const { error } = await db.from('assessments').insert(payload);
-  if(error){ alert(error.message); return; }
-  ['assessmentTech','assessmentSummary'].forEach(id=>$(id).value='');
-  toast('Assessment saved'); await loadAll();
-}
-async function addWorkOrder(){
-  const payload={ property_id:$('workOrderProperty').value||null, title:$('workOrderTitle').value, description:$('workOrderDescription').value, status:$('workOrderStatus').value, priority:$('workOrderPriority').value, estimated_hours:Number($('workOrderHours').value)||null, estimated_cost:$('workOrderCost').value, assigned_to:$('workOrderAssigned').value, due_date:$('workOrderDue').value||null };
-  const { error } = await db.from('work_orders').insert(payload);
-  if(error){ alert(error.message); return; }
-  ['workOrderTitle','workOrderDescription','workOrderHours','workOrderCost','workOrderAssigned','workOrderDue'].forEach(id=>$(id).value='');
-  toast('Work order saved'); await loadAll();
-}
-
-document.querySelectorAll('.tabs button').forEach(btn=>btn.onclick=()=>{
-  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  $(btn.dataset.tab).classList.add('active');
-});
-$('loginBtn').onclick=login;
-$('logoutBtn').onclick=logout;
-$('addCustomerBtn').onclick=addCustomer;
-$('addPropertyBtn').onclick=addProperty;
-$('addAssessmentBtn').onclick=addAssessment;
-$('addWorkOrderBtn').onclick=addWorkOrder;
-$('assessmentDate').value=new Date().toISOString().slice(0,10);
-
-checkSession();
+function renderAll(){renderCounts();renderSelects();renderCustomers();renderProperties();renderAssessments();renderWorkOrders()}
+function renderCounts(){$('customerCount').textContent=customers.length;$('propertyCount').textContent=properties.length;$('assessmentCount').textContent=assessments.length;$('woCount').textContent=workOrders.filter(w=>w.status!=='complete').length}
+function renderSelects(){const co=customers.map(c=>`<option value="${c.id}">${c.full_name}</option>`).join('');$('propertyCustomer').innerHTML=co;const po=properties.map(p=>`<option value="${p.id}">${p.address}</option>`).join('');$('assessmentProperty').innerHTML=po}
+function row(title,body,actions=''){return`<div class="row"><h3>${title}</h3><div>${body}</div><div class="actions">${actions}</div></div>`}
+function renderCustomers(){$('customerList').innerHTML=customers.map(c=>row(c.full_name,`${c.email||''}<br>${c.phone||''}<br><span class="muted">${c.notes||''}</span>`)).join('')||'<p>No customers yet.</p>'}
+function renderProperties(){$('propertyList').innerHTML=properties.map(p=>row(p.address,`${p.city||''}, ${p.state||''} ${p.zip||''}<br>Owner: ${p.customers?.full_name||'—'}<br><span class="muted">${p.notes||''}</span>`)).join('')||'<p>No properties yet.</p>'}
+function renderAssessments(){const html=assessments.map(a=>`<div class="assessment-row"><h3>${a.properties?.address||'No address'}</h3><p>${a.properties?.customers?.full_name||'No customer'} • ${a.assessment_date||''}</p><p class="muted">Score: ${a.home_health_score??'—'} | Risk: ${a.risk_index??'—'} | Status: ${a.status||'draft'}</p><div class="actions"><button class="open-assessment" data-id="${a.id}">Open / Review</button><button class="delete-assessment danger" data-id="${a.id}">Delete</button></div></div>`).join('')||'<p>No assessments yet.</p>';$('assessmentList').innerHTML=html;$('recentAssessments').innerHTML=html;document.querySelectorAll('.open-assessment').forEach(b=>b.onclick=()=>openAssessment(b.dataset.id));document.querySelectorAll('.delete-assessment').forEach(b=>b.onclick=()=>deleteAssessment(b.dataset.id))}
+function renderWorkOrders(){$('workOrderList').innerHTML=workOrders.map(w=>row(w.title,`Property: ${w.properties?.address||'—'}<br>Status: ${w.status} | Priority: ${w.priority}<br>Hours: ${w.estimated_hours||0} | Cost: ${w.estimated_cost||'TBD'}<br><span class="muted">${w.description||''}</span>`)).join('')||'<p>No work orders yet.</p>'}
+async function addCustomer(){const {error}=await db.from('customers').insert({full_name:$('customerName').value,email:$('customerEmail').value,phone:$('customerPhone').value,notes:$('customerNotes').value});if(error){alert(error.message);return}toast('Customer saved');await loadAll()}
+async function addProperty(){const payload={customer_id:$('propertyCustomer').value||null,address:$('propertyAddress').value,city:$('propertyCity').value,state:$('propertyState').value,zip:$('propertyZip').value,year_built:Number($('propertyYear').value)||null,square_feet:Number($('propertySqft').value)||null,property_type:$('propertyType').value,notes:$('propertyNotes').value};const {error}=await db.from('properties').insert(payload);if(error){alert(error.message);return}toast('Property saved');await loadAll()}
+async function startExistingAssessment(){const pid=$('assessmentProperty').value;if(!pid){alert('Create a property first.');return}await createAssessment(pid,$('assessmentTech').value)}
+async function startQuickAssessment(){if(!$('quickCustomerName').value||!$('quickPropertyAddress').value){alert('Customer and address required.');return}const {data:c,error:ce}=await db.from('customers').insert({full_name:$('quickCustomerName').value,email:$('quickCustomerEmail').value,phone:$('quickCustomerPhone').value}).select().single();if(ce){alert(ce.message);return}const {data:p,error:pe}=await db.from('properties').insert({customer_id:c.id,address:$('quickPropertyAddress').value,city:$('quickPropertyCity').value,state:$('quickPropertyState').value,zip:$('quickPropertyZip').value}).select().single();if(pe){alert(pe.message);return}await createAssessment(p.id,$('quickTech').value)}
+async function createAssessment(pid,tech){const {data:a,error}=await db.from('assessments').insert({property_id:pid,technician:tech,assessment_date:new Date().toISOString().slice(0,10),assessment_type:'Home Health Assessment',status:'draft',home_health_score:100,risk_index:'Low',estimated_hours:0}).select().single();if(error){alert(error.message);return}await ensureCategories(a.id);await loadAll();await openAssessment(a.id);toast('Assessment started')}
+async function ensureCategories(assessmentId){const {data:existing}=await db.from('assessment_categories').select('*').eq('assessment_id',assessmentId);if(existing&&existing.length){return existing}for(let i=0;i<checklist.length;i++){await db.from('assessment_categories').insert({assessment_id:assessmentId,name:checklist[i].cat,sort_order:i})}const {data}=await db.from('assessment_categories').select('*').eq('assessment_id',assessmentId).order('sort_order');return data||[]}
+async function openAssessment(id){const {data:a,error}=await db.from('assessments').select('*, properties(*, customers(*))').eq('id',id).single();if(error){alert(error.message);return}inspection=a;propertyId=a.property_id;customerId=a.properties?.customer_id;categoryIds={};savedItems={};current=0;const cats=await ensureCategories(id);cats.forEach(c=>categoryIds[c.name]=c.id);const {data:items,error:ie}=await db.from('assessment_items').select('*').in('category_id',cats.map(c=>c.id)).order('sort_order');if(ie){alert(ie.message);return}items.forEach(i=>savedItems[i.sort_order]=i);$('editCustomerName').value=a.properties?.customers?.full_name||'';$('editCustomerEmail').value=a.properties?.customers?.email||'';$('editCustomerPhone').value=a.properties?.customers?.phone||'';$('editPropertyAddress').value=a.properties?.address||'';$('editPropertyCity').value=a.properties?.city||'';$('editPropertyState').value=a.properties?.state||'';$('editPropertyZip').value=a.properties?.zip||'';$('editTechnician').value=a.technician||'';$('editorTitle').textContent=a.properties?.address||'Open Assessment';$('editorSub').textContent=(a.properties?.customers?.full_name||'')+' • '+(a.assessment_date||'');$('editorWrap').classList.remove('hidden');setView('assessments');renderItem();finishSummary();$('reportText').value=a.summary||''}
+async function saveMeta(){await db.from('customers').update({full_name:$('editCustomerName').value,email:$('editCustomerEmail').value,phone:$('editCustomerPhone').value}).eq('id',customerId);await db.from('properties').update({address:$('editPropertyAddress').value,city:$('editPropertyCity').value,state:$('editPropertyState').value,zip:$('editPropertyZip').value}).eq('id',propertyId);await db.from('assessments').update({technician:$('editTechnician').value}).eq('id',inspection.id);toast('Info saved');await loadAll()}
+async function deleteAssessment(id){if(!confirm('Delete this assessment and related inspection items/work orders?'))return;const cats=await ensureCategories(id);const catIds=cats.map(c=>c.id);if(catIds.length){const {data:items}=await db.from('assessment_items').select('id').in('category_id',catIds);const ids=(items||[]).map(i=>i.id);if(ids.length)await db.from('work_orders').delete().in('assessment_item_id',ids);await db.from('assessment_items').delete().in('category_id',catIds)}await db.from('assessment_categories').delete().eq('assessment_id',id);await db.from('assessments').delete().eq('id',id);$('editorWrap').classList.add('hidden');toast('Assessment deleted');await loadAll()}
+function statusDefaults(s){return s==='Good'?{risk:0,hours:0}:s==='Monitor'?{risk:2,hours:.25}:s==='Service Soon'?{risk:4,hours:.75}:{risk:7,hours:1.5}}
+function renderItem(){const item=flat[current],ex=savedItems[current]||{};$('sectionTitle').textContent=item.cat;$('categoryLabel').textContent=item.cat;$('itemTitle').textContent=item.title;$('educationText').textContent=item.education;$('itemCounter').textContent=`Item ${current+1} of ${flat.length}`;$('barFill').style.width=(current/flat.length*100)+'%';document.querySelectorAll('.choice').forEach(b=>b.classList.toggle('active',b.dataset.status===(ex.status||'')));$('riskPoints').value=ex.risk_points??0;$('estimatedHours').value=ex.estimated_hours??0;$('costRange').value=ex.cost_range||'';$('workOrderNeeded').value=ex.work_order_needed?'Yes':'No';$('observation').value=ex.observation||'';$('recommendation').value=ex.recommendation||item.defaultRec;previewScore()}
+function chooseStatus(s){const d=statusDefaults(s);$('riskPoints').value=d.risk;$('estimatedHours').value=d.hours;$('workOrderNeeded').value=s==='Needs Repair'?'Yes':'No';document.querySelectorAll('.choice').forEach(b=>b.classList.toggle('active',b.dataset.status===s));previewScore()}
+async function saveItem(){const item=flat[current],active=document.querySelector('.choice.active'),status=active?active.dataset.status:'Good',payload={category_id:categoryIds[item.cat],title:item.title,status,risk_points:Number($('riskPoints').value)||0,estimated_hours:Number($('estimatedHours').value)||0,observation:$('observation').value,homeowner_education:item.education,recommendation:$('recommendation').value,cost_range:$('costRange').value,work_order_needed:$('workOrderNeeded').value==='Yes',sort_order:current};let data,error;if(savedItems[current]?.id)({data,error}=await db.from('assessment_items').update(payload).eq('id',savedItems[current].id).select().single());else({data,error}=await db.from('assessment_items').insert(payload).select().single());if(error){alert(error.message);return false}savedItems[current]=data;await updateTotals();toast('Item saved');return true}
+async function nextItem(){if(await saveItem()){if(current<flat.length-1){current++;renderItem()}else{$('barFill').style.width='100%';finishSummary()}}}
+function prevItem(){if(current>0){current--;renderItem()}}
+function calc(){const items=Object.values(savedItems),risk=items.reduce((s,i)=>s+(Number(i.risk_points)||0),0),hours=items.reduce((s,i)=>s+(Number(i.estimated_hours)||0),0),score=Math.max(0,100-risk),riskIndex=risk<=8?'Low':risk<=20?'Moderate':'High';return{items,risk,hours,score,riskIndex,wo:items.filter(i=>i.work_order_needed).length}}
+function previewScore(){$('liveScore').textContent=calc().score}
+async function updateTotals(){const t=calc();$('liveScore').textContent=t.score;await db.from('assessments').update({home_health_score:t.score,risk_index:t.riskIndex,estimated_hours:t.hours}).eq('id',inspection.id);finishSummary();await loadAll()}
+function finishSummary(){const t=calc();$('finalScore').textContent=t.score;$('finalRisk').textContent=t.riskIndex;$('finalHours').textContent=t.hours.toFixed(1);$('finalWO').textContent=t.wo}
+function generateReport(){const t=calc();let txt=`Bear Home Management - Home Health Assessment\n\nCustomer: ${$('editCustomerName').value}\nProperty: ${$('editPropertyAddress').value}\nTechnician: ${$('editTechnician').value}\n\nHome Health Score: ${t.score}\nRisk Index: ${t.riskIndex}\nEstimated Home Care Hours: ${t.hours.toFixed(1)}\nWork Orders Recommended: ${t.wo}\n\nFindings:\n`;t.items.filter(i=>i.status!=='Good').forEach(i=>{txt+=`\n[${i.status}] ${i.title}\nObservation: ${i.observation||'No observation entered.'}\nWhy it matters: ${i.homeowner_education}\nRecommendation: ${i.recommendation}\nCost range: ${i.cost_range||'TBD'}\n`});$('reportText').value=txt;db.from('assessments').update({summary:txt,status:'complete'}).eq('id',inspection.id);setView('report');toast('Report updated')}
+async function createWorkOrders(){const t=calc();for(const i of t.items.filter(x=>x.work_order_needed)){const {data:existing}=await db.from('work_orders').select('id').eq('assessment_item_id',i.id);if(!existing?.length)await db.from('work_orders').insert({property_id:propertyId,assessment_item_id:i.id,title:i.title,description:i.observation,priority:i.risk_points>=7?'high':'normal',status:'open',estimated_hours:i.estimated_hours,estimated_cost:i.cost_range})}toast('Work orders created');await loadAll();setView('workorders')}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setView(b.dataset.view));document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>chooseStatus(b.dataset.status));$('loginBtn').onclick=login;$('logoutBtn').onclick=logout;$('addCustomerBtn').onclick=addCustomer;$('addPropertyBtn').onclick=addProperty;$('quickNewAssessment').onclick=()=>setView('assessments');$('quickRefresh').onclick=loadAll;$('startExistingAssessmentBtn').onclick=startExistingAssessment;$('startQuickAssessmentBtn').onclick=startQuickAssessment;$('saveMetaBtn').onclick=saveMeta;$('deleteAssessmentBtn').onclick=()=>deleteAssessment(inspection.id);$('prevItemBtn').onclick=prevItem;$('saveItemBtn').onclick=saveItem;$('nextItemBtn').onclick=nextItem;$('generateReportBtn').onclick=generateReport;$('createWorkOrdersBtn').onclick=createWorkOrders;checkSession();
