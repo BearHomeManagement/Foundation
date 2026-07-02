@@ -18,7 +18,7 @@
           <small>Protect. Maintain. Preserve.</small>
         </div>
       </a>
-      <button class="menu-toggle" aria-label="Open navigation">☰</button>
+      <button type="submit" class="menu-toggle" aria-label="Open navigation">☰</button>
       <nav class="site-nav">
         <a href="#how">How It Works</a>
         <a href="#memberships">Memberships</a>
@@ -480,11 +480,13 @@
             <span>No surprise labor bills for covered maintenance. If something falls outside the plan, we explain why and price it before proceeding.</span>
           </div>
         </div>
-        <form>
-          <input type="text" placeholder="Name" />
-          <input type="email" placeholder="Email" />
-          <input type="tel" placeholder="Phone" />
-          <select>
+        <form name="inspection-request" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+<input type="hidden" name="form-name" value="inspection-request">
+<p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
+          <input name="name" type="text" placeholder="Name" />
+          <input name="email" type="email" placeholder="Email" />
+          <input name="phone" type="tel" placeholder="Phone" />
+          <select name="service">
             <option>Schedule a full-home inspection</option>
             <option>Request a one-time service</option>
             <option>Ask about memberships</option>
