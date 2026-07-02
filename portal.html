@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BearTrack™ Portal | Bear Home Management</title>
+  <title>BearTrack™ Customer Intake | Bear Home Management</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -19,10 +19,7 @@
       </a>
       <nav class="site-nav open">
         <a href="index.html">Website</a>
-        <a href="#customer">Customer</a>
-        <a href="#ops">Operations</a>
-        <a href="#tech">Technician</a>
-        <a href="#admin">Admin</a>
+        <a href="#intake">Customer Intake</a>
       </nav>
     </div>
   </header>
@@ -35,67 +32,69 @@
         </div>
         <div class="hero-copy">
           <p class="eyebrow">BearTrack™ Portal</p>
-          <h1>Customer requests, scheduling, inspections, and work orders in one place.</h1>
-          <p class="hero-lead">This is the app side of Bear Home Management. The public website stays clean; operations stay here.</p>
+          <h1>Start your home profile.</h1>
+          <p class="hero-lead">Tell us about you, your home, and what you need help with. Bear Home Management will use this information to create your request and follow up with the next step.</p>
         </div>
       </div>
     </section>
 
-    <section id="customer" class="section cream">
+    <section id="intake" class="section cream">
       <div class="container two-col">
         <div>
           <p class="eyebrow">Customer intake</p>
-          <h2>Customer and home information.</h2>
-          <p>Customers can request service, membership, work orders, and appointments while adding personal and property details.</p>
+          <h2>Customer, home, and request information.</h2>
+          <p>This page is only for collecting customer information. Operations, scheduling, technician tools, and admin tools stay internal.</p>
+          <ul class="check-list">
+            <li>Personal contact information</li>
+            <li>Home/property details</li>
+            <li>Service, membership, work order, or appointment request</li>
+            <li>Photos or notes about the issue</li>
+          </ul>
         </div>
-        <form name="beartrack-customer" method="POST" data-netlify="true" class="contact-form">
+
+        <form name="beartrack-customer" method="POST" data-netlify="true" enctype="multipart/form-data" class="contact-form">
           <input type="hidden" name="form-name" value="beartrack-customer" />
+
+          <h3>Personal Information</h3>
           <input name="name" placeholder="Full name" required />
           <input name="email" type="email" placeholder="Email" required />
           <input name="phone" type="tel" placeholder="Phone" />
+          <select name="preferred-contact">
+            <option value="">Preferred contact method</option>
+            <option>Call</option>
+            <option>Text</option>
+            <option>Email</option>
+          </select>
+
+          <h3>Home Information</h3>
           <input name="property-address" placeholder="Property address" />
-          <select name="request-type"><option>Request Service</option><option>Request Membership</option><option>Create Work Order</option><option>Schedule Appointment</option></select>
+          <input name="property-type" placeholder="Property type: single-family, condo, townhouse, etc." />
+          <input name="year-built" placeholder="Year built, if known" />
+          <input name="home-size" placeholder="Approx. square footage, if known" />
+          <input name="access-notes" placeholder="Gate code, access notes, pets, or parking details" />
+
+          <h3>Request</h3>
+          <select name="request-type" required>
+            <option value="">What do you need?</option>
+            <option>Request Service</option>
+            <option>Request Membership</option>
+            <option>Create Work Order</option>
+            <option>Schedule Appointment</option>
+            <option>Bear Home Assessment™</option>
+          </select>
+          <input name="preferred-time" placeholder="Preferred appointment days/times" />
           <textarea name="details" placeholder="Tell us about the home or work needed"></textarea>
+          <label>Upload photos, if available<input name="photos" type="file" accept="image/*" multiple /></label>
+
           <button class="button" type="submit">Submit to BearTrack</button>
         </form>
-      </div>
-    </section>
-
-    <section id="ops" class="section">
-      <div class="container">
-        <p class="eyebrow">Operations Center</p>
-        <h2>Smart schedule board.</h2>
-        <div class="cards three">
-          <article class="card"><h3>Incoming Requests</h3><p>New customer requests become work orders for review.</p></article>
-          <article class="card"><h3>Smart Scheduling</h3><p>The system suggests times based on job type, duration, priority, availability, and location.</p></article>
-          <article class="card"><h3>Real-Time Control</h3><p>Ops can edit, reassign, reschedule, and change status anytime.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section id="tech" class="section cream">
-      <div class="container">
-        <p class="eyebrow">Technician View</p>
-        <h2>Today’s jobs and inspection workflow.</h2>
-        <div class="cards three">
-          <article class="card"><h3>Assigned Jobs</h3><p>See today’s schedule and open each work order.</p></article>
-          <article class="card"><h3>Inspection Photos</h3><p>Take or upload photos in each inspection section.</p></article>
-          <article class="card"><h3>Completion</h3><p>Completed work orders leave the active board and move to history.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section id="admin" class="section">
-      <div class="container">
-        <p class="eyebrow">Admin</p>
-        <h2>Manage customers, properties, memberships, templates, and roles.</h2>
       </div>
     </section>
   </main>
 
   <footer>
     <div class="container footer-grid">
-      <div><strong>Bear Home Management</strong><span>BearTrack™ Portal</span></div>
+      <div><strong>Bear Home Management</strong><span>BearTrack™ Customer Intake</span></div>
       <div><span><a href="index.html">Back to Website</a></span></div>
     </div>
   </footer>
