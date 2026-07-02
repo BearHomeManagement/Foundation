@@ -1,0 +1,12 @@
+Bear Home Management v1.4 Form Fix
+
+Changed:
+- Form now posts directly to Netlify.
+- Submit button uses type="submit".
+- Added required hidden form-name field.
+- Added honeypot spam field.
+- Added thank-you.html success page.
+- Added name fields for form data.
+
+Upload all extracted files to GitHub and commit changes.
+After Netlify publishes, submit a test form again.

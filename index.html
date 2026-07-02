@@ -18,7 +18,7 @@
           <small>Protect. Maintain. Preserve.</small>
         </div>
       </a>
-      <button type="submit" class="menu-toggle" aria-label="Open navigation">☰</button>
+      <button class="menu-toggle" aria-label="Open navigation">☰</button>
       <nav class="site-nav">
         <a href="#how">How It Works</a>
         <a href="#memberships">Memberships</a>
@@ -449,7 +449,7 @@
                 </div>
 
                 <label class="notes-label" for="inspectionNote">Technician Note</label>
-                <textarea id="inspectionNote" placeholder="Add field notes, measurements, homeowner comments, or follow-up instructions..."></textarea>
+                <textarea name="message" id="inspectionNote" placeholder="Add field notes, measurements, homeowner comments, or follow-up instructions..."></textarea>
 
                 <div class="detail-buttons">
                   <button type="button" id="addNoteBtn">Add Note</button>
@@ -480,12 +480,14 @@
             <span>No surprise labor bills for covered maintenance. If something falls outside the plan, we explain why and price it before proceeding.</span>
           </div>
         </div>
-        <form name="inspection-request" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-<input type="hidden" name="form-name" value="inspection-request">
-<p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
-          <input name="name" type="text" placeholder="Name" />
-          <input name="email" type="email" placeholder="Email" />
-          <input name="phone" type="tel" placeholder="Phone" />
+        <form name="contact" method="POST" action="/thank-you.html" data-netlify="true" netlify-honeypot="bot-field">
+  <input type="hidden" name="form-name" value="contact">
+  <p class="hidden" style="display:none;">
+    <label>Don’t fill this out if you’re human: <input name="bot-field"></label>
+  </p>
+          <input type="text" placeholder="Name" / name="name">
+          <input type="email" placeholder="Email" / name="email">
+          <input type="tel" placeholder="Phone" / name="phone">
           <select name="service">
             <option>Schedule a full-home inspection</option>
             <option>Request a one-time service</option>
@@ -494,7 +496,7 @@
             <option>Multi-home / portfolio care</option>
           </select>
           <textarea placeholder="Tell us about the home or work needed"></textarea>
-          <button type="button" class="button">Submit Request</button>
+          <button type="submit" class="button">Submit Request</button>
         </form>
       </div>
     </section>
