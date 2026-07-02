@@ -1,173 +1,181 @@
-:root{
-  --navy:#071f34;
-  --navy2:#0f2d52;
-  --gold:#f2b84b;
-  --gold2:#d19a4d;
-  --cream:#f6efe4;
-  --paper:#fffaf2;
-  --white:#ffffff;
-  --green:#244a32;
-  --ink:#102033;
-  --muted:#5d6872;
-  --line:#dfd3c2;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
-a{text-decoration:none;color:inherit}
-.container{max-width:1240px;margin:0 auto;padding:0 28px}
-.site-header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#061a2c,var(--navy));color:white;box-shadow:0 12px 28px rgba(7,31,52,.25)}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:12px 28px}
-.brand{display:flex;align-items:center;gap:14px;min-width:275px}
-.brand img{width:76px;height:64px;object-fit:contain}
-.brand strong{display:block;font-size:38px;line-height:.85;letter-spacing:.05em}
-.brand span{display:block;color:var(--gold2);font-size:18px;font-weight:900;letter-spacing:.11em}
-.brand small{display:block;color:#f3e5cf;font-size:11px;letter-spacing:.15em;text-transform:uppercase;margin-top:3px}
-.site-nav{display:flex;align-items:center;gap:16px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.035em}
-.site-nav a{color:#f3f7fa}
-.menu-toggle{display:none;background:transparent;color:white;border:1px solid rgba(255,255,255,.35);border-radius:8px;font-size:22px;padding:6px 10px}
-.nav-button,.button{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#061727;border:0;border-radius:8px;padding:13px 18px;font-weight:900;text-transform:uppercase;letter-spacing:.035em;box-shadow:0 10px 22px rgba(183,122,51,.25);cursor:pointer}
-.button.secondary{background:white;color:var(--navy);border:2px solid var(--navy);box-shadow:none}
-.nav-button{padding:12px 15px;color:#061727!important}
-.hero{position:relative;overflow:hidden;background:linear-gradient(90deg,rgba(246,239,228,.98) 0%,rgba(246,239,228,.94) 42%,rgba(7,31,52,.08) 100%), radial-gradient(circle at 80% 30%,rgba(36,74,50,.34),transparent 32%), linear-gradient(135deg,#fffaf2 0%,#f0e5d5 48%,#d6e1d8 100%);padding:54px 0 0}
-.hero:after{content:"";position:absolute;right:0;top:0;width:48%;height:100%;background:linear-gradient(120deg,rgba(246,239,228,.18),rgba(7,31,52,.15)),linear-gradient(135deg,#e7d6bc,#b8cbb8 55%,#8aa5a6);clip-path:polygon(12% 0,100% 0,100% 100%,0 100%);z-index:0}
-.hero-bg-shapes:before{content:"";position:absolute;right:8%;top:13%;width:270px;height:270px;border-radius:50%;background:rgba(242,184,75,.22);filter:blur(2px);z-index:0}
-.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:330px minmax(0,1fr);gap:46px;align-items:center;padding-bottom:48px}
-.hero-bear{width:318px;max-width:100%;filter:drop-shadow(0 16px 20px rgba(7,31,52,.16))}
-.eyebrow{color:var(--gold2);text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:900;margin:0 0 10px}.eyebrow.light{color:var(--gold)}
-h1{font-size:58px;line-height:1.02;text-transform:uppercase;letter-spacing:-.045em;color:var(--navy);margin:0 0 18px;max-width:790px}
-h2{font-size:40px;line-height:1.12;letter-spacing:-.025em;color:var(--navy);margin:0 0 16px}
-h3{margin:0 0 10px;color:var(--navy)}
-.hero-lead,.lead{font-size:19px;color:#1f3041;max-width:740px}
-.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
-.apartment-message{position:relative;display:block;font-size:20px;max-width:760px;line-height:1.55;background:rgba(7,31,52,.92);color:var(--gold);padding:24px 28px;border-radius:20px;border:1px solid rgba(242,184,75,.42);box-shadow:0 18px 38px rgba(7,31,52,.25);overflow:hidden;margin:18px 0}
-.apartment-message:before{content:"";position:absolute;left:0;top:0;width:100%;height:5px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
-.apartment-message strong,.apartment-message span{color:var(--gold);font-weight:900;text-shadow:0 1px 2px rgba(0,0,0,.35)}
-.hero-benefits{position:relative;z-index:2;background:rgba(7,31,52,.96);color:white;border-radius:20px 20px 0 0;margin-top:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;box-shadow:0 -10px 35px rgba(7,31,52,.22)}
-.hero-benefits article{padding:24px;border-right:1px solid rgba(255,255,255,.15);text-align:center}.hero-benefits article:last-child{border-right:0}
-.hero-benefits strong{display:block;text-transform:uppercase;color:white;font-size:14px;line-height:1.15}.hero-benefits span{display:block;color:#e7eef3;font-size:13px;margin-top:7px}
-.feature-strip{background:rgba(255,250,242,.92);border-bottom:1px solid var(--line)}.strip-grid{display:grid;grid-template-columns:repeat(5,1fr)}.strip-grid div{padding:24px 18px;border-right:1px solid var(--line)}.strip-grid div:last-child{border-right:0}.strip-grid strong{display:block;color:var(--navy);font-size:14px;text-transform:uppercase;line-height:1.15}.strip-grid span{display:block;color:var(--muted);font-size:13px;margin-top:6px}
-.section{padding:78px 0;background:var(--white)}.section.cream,.cream{background:var(--cream)}.intro{background:var(--paper)}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:center}
-.panel,.card,.price-card,.phone-card,.portfolio-card,.review-card,.process-card{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 12px 28px rgba(7,31,52,.08)}
-.panel.dark{background:linear-gradient(135deg,var(--navy),var(--navy2));color:white}.panel.dark h3{color:white}.panel.dark p,.panel.dark li{color:#e7eef3}
-.process-card{display:grid;gap:14px;background:linear-gradient(135deg,#fffaf2,#f0e8dc)}.process-card div{display:grid;grid-template-columns:48px 1fr;gap:6px 14px;align-items:center;padding:14px;border-radius:16px;background:white;border:1px solid var(--line)}.process-card span{grid-row:1/3;background:var(--navy);color:var(--gold);height:48px;width:48px;border-radius:50%;display:grid;place-items:center;font-weight:900}.process-card strong{color:var(--navy);font-size:18px}.process-card small{color:var(--muted)}
-.cards{display:grid;gap:20px;margin-top:28px}.cards.three{grid-template-columns:repeat(3,1fr)}.cards.four{grid-template-columns:repeat(4,1fr)}.card p,.price-card p,.price-card li,.portfolio-card span,.check-list li{color:var(--muted)}
-.dashboard{margin-top:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.dashboard div{background:linear-gradient(180deg,#fff,var(--paper));border:1px solid var(--line);border-radius:20px;padding:20px}.dashboard span{display:block;color:var(--muted);text-transform:uppercase;font-size:11px;font-weight:900;letter-spacing:.12em}.dashboard strong{display:block;color:var(--gold2);font-size:42px;line-height:1.1}.dashboard small{color:var(--muted)}
-.check-list{list-style:none;padding:0;margin:20px 0}.check-list li{padding-left:28px;position:relative;margin:10px 0}.check-list li:before{content:'✓';position:absolute;left:0;color:var(--gold2);font-weight:900}.phone-card{max-width:430px;margin-left:auto;background:linear-gradient(180deg,#fff,#f9f2e8)}.phone-title{background:var(--navy);color:white;border-radius:16px;padding:14px 16px;font-weight:900;margin-bottom:18px}.phone-card label{display:block;color:var(--muted);text-transform:uppercase;font-size:11px;font-weight:900;letter-spacing:.1em;margin:14px 0 6px}.fake-input{border:1px solid var(--line);background:white;border-radius:12px;padding:12px}.meter{height:12px;border-radius:99px;background:#e3d7c7;overflow:hidden}.meter span{display:block;height:100%;width:72%;background:linear-gradient(90deg,var(--gold),var(--green))}.phone-card button{width:100%;border:0;border-radius:10px;background:var(--gold);color:#061727;padding:13px;font-weight:900;text-transform:uppercase}
-.pricing{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:28px}.price-card{position:relative}.price-card.featured{transform:translateY(-10px);border:2px solid var(--gold);box-shadow:0 18px 45px rgba(183,122,51,.18)}.price-card.recovery{border:2px solid var(--green)}.badge{position:absolute;top:-14px;right:18px;background:var(--gold);color:#061727;border-radius:99px;padding:6px 12px;font-size:11px;font-weight:900;text-transform:uppercase}.price{font-size:32px!important;color:var(--gold2)!important;font-weight:900;margin:0!important}.hours{color:var(--green)!important;font-weight:900}.price-card ul{padding-left:18px}
-.navy-section{background:linear-gradient(135deg,var(--navy),var(--green));color:white}.navy-section h2{color:white}.navy-section p{color:#e7eef3}.review-card{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:white}.review-card h3{color:white}.review-card p{color:#e7eef3}.dark-cards .card{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}.dark-cards .card h3{color:white}.dark-cards .card p{color:#e7eef3}
-.service-options{align-items:stretch}.service-card{display:flex;flex-direction:column}.service-price{font-size:28px!important;line-height:1;color:var(--gold2)!important;font-weight:900;margin:6px 0 12px!important}.service-card small{display:block;margin-top:auto;color:var(--green);font-weight:900;border-top:1px solid var(--line);padding-top:14px}.portfolio-card{background:linear-gradient(135deg,#fffaf2,#ecf1e8)}.portfolio-card div{border:1px solid var(--line);border-radius:14px;background:white;padding:14px;margin:10px 0}.portfolio-card strong{display:block;color:var(--navy)}
-.contact{background:linear-gradient(135deg,var(--navy),var(--green));color:white}.contact h2{color:white}.contact p{color:#e7eef3}.contact form{display:grid;gap:12px}.contact input,.contact textarea,.contact select{font:inherit;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:white;color:var(--ink)}.contact textarea{min-height:130px}.contact-promise{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:20px;margin-top:24px}.contact-promise strong{display:block;color:var(--gold);font-size:20px}.contact-promise span{color:#e7eef3}
-footer{background:#061727;color:#dceaf0;padding:28px 0}.footer-grid{display:flex;justify-content:space-between;gap:20px}.footer-grid strong,.footer-grid span{display:block}
-@media(max-width:1160px){.site-nav{gap:10px;font-size:11px}.pricing{grid-template-columns:repeat(2,1fr)}.cards.four{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:900px){.nav{align-items:flex-start}.menu-toggle{display:block;margin-left:auto}.site-nav{display:none;width:100%;flex-direction:column;align-items:flex-start;padding:14px 0}.site-nav.open{display:flex}.brand{min-width:0}.hero:after{opacity:.28;width:100%;clip-path:none}.hero-grid,.two-col{grid-template-columns:1fr}.hero-logo-wrap{text-align:center}.hero-bear{width:240px}h1{font-size:40px}h2{font-size:31px}.hero-benefits,.strip-grid,.cards.three,.cards.four,.dashboard,.pricing{grid-template-columns:1fr}.hero-benefits article,.strip-grid div{border-right:0;border-bottom:1px solid rgba(0,0,0,.09)}.price-card.featured{transform:none}.phone-card{margin-left:0}.footer-grid{display:block}.process-card div{grid-template-columns:42px 1fr}.process-card span{width:42px;height:42px}}
-@media(max-width:560px){.container{padding:0 18px}.nav{padding:10px 18px}.brand img{width:60px;height:52px}.brand strong{font-size:30px}.brand span{font-size:15px}.hero{padding-top:34px}.apartment-message{font-size:18px;padding:20px}.hero-actions .button{width:100%;text-align:center}}
-
-.compliance-note{display:flex;gap:12px;align-items:flex-start;background:rgba(242,184,75,.16);border:1px solid rgba(209,154,77,.45);border-radius:18px;padding:18px 20px;margin:24px 0;color:var(--ink)}
-.compliance-note strong{color:var(--navy);text-transform:uppercase;letter-spacing:.08em}
-.compliance-note span{color:#344352}
-.compliance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px}
-.compliance-card{border:1px solid var(--line);border-radius:24px;padding:24px;background:var(--paper);box-shadow:0 12px 28px rgba(7,31,52,.08)}
-.compliance-card h3{font-size:22px}.compliance-card ul{padding-left:20px;margin-bottom:0}.compliance-card li{color:var(--muted);margin:8px 0}.compliance-card.ok{border-top:5px solid var(--green)}.compliance-card.caution{border-top:5px solid var(--gold)}.compliance-card.partner{border-top:5px solid var(--navy2)}
-.matrix-wrap{overflow-x:auto;margin-top:28px;border-radius:20px;border:1px solid var(--line);box-shadow:0 12px 28px rgba(7,31,52,.08)}
-.compliance-table{width:100%;border-collapse:collapse;background:white;min-width:760px}.compliance-table th{background:var(--navy);color:white;text-align:left;text-transform:uppercase;letter-spacing:.08em;font-size:12px;padding:16px}.compliance-table td{padding:16px;border-top:1px solid var(--line);vertical-align:top;color:var(--muted)}.compliance-table td:first-child{color:var(--ink);font-weight:800}
-.pill{display:inline-block;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;white-space:nowrap}.pill.ok{background:rgba(36,74,50,.14);color:var(--green)}.pill.caution{background:rgba(242,184,75,.22);color:#94621f}.pill.partner{background:rgba(15,45,82,.12);color:var(--navy2)}
-@media(max-width:900px){.compliance-grid{grid-template-columns:1fr}.compliance-note{display:block}.compliance-note strong{display:block;margin-bottom:6px}}
-
-.brand-ecosystem{background:linear-gradient(180deg,#fffaf2,#f6efe4)}
-.ecosystem-map{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:28px;padding:28px;border:1px solid rgba(242,184,75,.35);box-shadow:0 18px 45px rgba(7,31,52,.18);color:white}
-.ecosystem-root{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#061727;text-align:center;border-radius:18px;padding:18px;font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:.05em;box-shadow:0 12px 28px rgba(0,0,0,.18)}
-.ecosystem-branches{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
-.ecosystem-branches span{display:block;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:16px;font-weight:900;color:var(--gold)}
-.ecosystem-branches small{display:block;color:#e7eef3;font-weight:700;margin-top:4px;font-size:12px;letter-spacing:.02em}
-@media(max-width:900px){.ecosystem-branches{grid-template-columns:1fr}}
-
-/* Three-tier membership refinement */
-.pricing.three-tier {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-.same-services-card {
-  margin-top: 1.5rem;
-  background: #ffffff;
-  border: 1px solid rgba(15, 45, 82, 0.14);
-  border-left: 6px solid #f2b84b;
-  border-radius: 18px;
-  padding: 1.35rem 1.5rem;
-  box-shadow: 0 14px 34px rgba(15, 45, 82, 0.08);
-}
-.same-services-card h3 {
-  margin-top: 0;
-  color: #0f2d52;
-}
-.same-services-card p:last-child {
-  margin-bottom: 0;
-}
-@media (max-width: 900px) {
-  .pricing.three-tier {
-    grid-template-columns: 1fr;
-  }
+const toggle = document.querySelector('.menu-toggle');
+const nav = document.querySelector('.site-nav');
+if (toggle && nav) {
+  toggle.addEventListener('click', () => nav.classList.toggle('open'));
 }
 
-/* Multi-home / family plan section */
-.portfolio-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
-  margin-top: 28px;
-}
-.portfolio-plan-card {
-  background: #ffffff;
-  border: 1px solid rgba(15, 45, 82, 0.14);
-  border-radius: 24px;
-  padding: 26px;
-  box-shadow: 0 12px 28px rgba(7,31,52,.08);
-}
-.portfolio-plan-card h3 { color: var(--navy); margin-top: 0; }
-.family-example { min-height: 100%; }
-.portfolio-table-wrap {
-  margin-top: 24px;
-  overflow-x: auto;
-  background: #ffffff;
-  border: 1px solid rgba(15, 45, 82, 0.14);
-  border-radius: 20px;
-  box-shadow: 0 12px 28px rgba(7,31,52,.08);
-}
-.portfolio-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 680px;
-}
-.portfolio-table th,
-.portfolio-table td {
-  padding: 16px 18px;
-  text-align: left;
-  border-bottom: 1px solid var(--line);
-}
-.portfolio-table th {
-  background: var(--navy);
-  color: var(--gold);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-.portfolio-table tr:last-child td { border-bottom: 0; }
-.portfolio-table td:first-child { font-weight: 900; color: var(--navy); }
-@media(max-width:900px){.portfolio-grid{grid-template-columns:1fr}.portfolio-table{min-width:560px}}
+// Interactive BearTrack inspection mockup
+const inspectionData = [
+  {name:'Property Information', done:14, total:14, items:[
+    {n:'1.1', title:'Address / Owner Info', status:'Good', photos:0, observation:'Property information confirmed and attached to BearTrack profile.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Keep records updated annually.'},
+    {n:'1.2', title:'Year Built / Square Footage', status:'Good', photos:0, observation:'Home age and size recorded for complexity scoring.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Use for annual plan review.'},
+    {n:'1.3', title:'Special Systems', status:'Monitor', photos:1, observation:'Irrigation and smart devices present; add to maintenance profile.', cost:'TBD', impact:'-1 point', trade:'Bear Home Management', next:'Document controllers and shutoffs.'}
+  ]},
+  {name:'Exterior', done:28, total:32, items:[
+    {n:'2.1', title:'Gutters', status:'Monitor', photos:3, observation:'Minor debris and staining observed at rear gutter runs.', cost:'$125 – $225', impact:'-2 points', trade:'Bear Home Management', next:'Clean gutters during next service visit.', meaning:'Restricted flow can overflow against fascia and exterior walls.', when:'Within 60 days.'},
+    {n:'2.2', title:'Downspouts', status:'Good', photos:2, observation:'Downspouts are connected and discharging away from foundation.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Monitor seasonally.'},
+    {n:'2.3', title:'Gutter Guards', status:'Monitor', photos:1, observation:'Some panels lifted at the front elevation.', cost:'$100 – $180', impact:'-1 point', trade:'Bear Home Management', next:'Secure loose sections.'},
+    {n:'2.4', title:'Splash Blocks', status:'Service Soon', photos:1, observation:'Several splash blocks are missing or misaligned.', cost:'$80 – $160', impact:'-3 points', trade:'Bear Home Management', next:'Install or realign splash blocks to direct water away.'},
+    {n:'2.5', title:'Siding / Stucco Condition', status:'Good', photos:4, observation:'Exterior finish generally sound with no active displacement observed.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Inspect annually.'},
+    {n:'2.6', title:'Paint / Finish', status:'Service Soon', photos:2, observation:'Localized fading and minor finish breakdown at sun-exposed trim.', cost:'$250 – $600', impact:'-3 points', trade:'Bear Home Management / Painter Partner', next:'Touch up exposed trim before finish fails.'},
+    {n:'2.7', title:'Brick / Stone', status:'Good', photos:2, observation:'Masonry appears stable with no significant cracking.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Monitor annually.'},
+    {n:'2.8', title:'Sealants / Caulking', status:'Needs Repair', photos:5, observation:'Deteriorated and cracked caulking around several windows and siding transitions.', cost:'$250 – $450', impact:'-6 points', trade:'Bear Home Management', next:'Schedule exterior caulking replacement to prevent water damage.', meaning:'Seal is no longer effective and water may penetrate behind surfaces.', when:'Within 3–6 months.'},
+    {n:'2.9', title:'Windows', status:'Good', photos:3, observation:'Windows operate and show no obvious active distress.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Monitor sealants and operation.'},
+    {n:'2.10', title:'Window Seals & Caulking', status:'Monitor', photos:1, observation:'Early sealant shrinkage at two openings.', cost:'$125 – $250', impact:'-2 points', trade:'Bear Home Management', next:'Add to next caulking visit.'},
+    {n:'2.11', title:'Exterior Doors', status:'Good', photos:2, observation:'Exterior doors latch and weatherstripping is serviceable.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Lubricate and inspect annually.'},
+    {n:'2.12', title:'Foundation Walls', status:'Good', photos:3, observation:'No visible displacement or active cracking observed at accessible foundation areas.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Monitor annually.'},
+    {n:'2.13', title:'Foundation Cracks', status:'Monitor', photos:2, observation:'Minor hairline cracks noted at garage stem wall.', cost:'$150 – $350', impact:'-2 points', trade:'Bear Home Management / Partner if movement noted', next:'Seal and monitor for movement.'}
+  ]},
+  {name:'Roof', done:9, total:12, items:[
+    {n:'3.1', title:'Roof Covering', status:'Monitor', photos:4, observation:'Roof is serviceable but shows age-related granule loss.', cost:'TBD', impact:'-4 points', trade:'Roofing Partner', next:'Plan roof budget review.', meaning:'Aging roof materials increase leak risk over time.', when:'Review annually.'},
+    {n:'3.2', title:'Pipe Boots', status:'Needs Repair', photos:2, observation:'Boots show cracking at two plumbing penetrations.', cost:'$250 – $500', impact:'-5 points', trade:'Roofing Partner', next:'Schedule licensed roofing partner repair.'},
+    {n:'3.3', title:'Attic Ventilation', status:'Good', photos:1, observation:'Ventilation appears adequate from accessible areas.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Monitor annually.'}
+  ]},
+  {name:'Plumbing', done:15, total:24, items:[
+    {n:'4.1', title:'Water Heater', status:'Service Soon', photos:2, observation:'Water heater is 11 years old with no active leak observed.', cost:'$1,600 – $2,400 replacement forecast', impact:'-4 points', trade:'Plumbing Partner', next:'Create replacement budget plan.'},
+    {n:'4.2', title:'Toilet Components', status:'Needs Repair', photos:1, observation:'Hall bath toilet runs intermittently; flapper appears worn.', cost:'$45 – $95', impact:'-2 points', trade:'Bear Home Management / Verify locally', next:'Replace flapper and test.'},
+    {n:'4.3', title:'P-Traps / Sink Drains', status:'Monitor', photos:1, observation:'Minor corrosion at guest bath P-trap.', cost:'$75 – $150', impact:'-2 points', trade:'Bear Home Management / Verify locally', next:'Replace during next plumbing visit.'}
+  ]},
+  {name:'Electrical', done:12, total:20, items:[
+    {n:'5.1', title:'Panel Condition', status:'Good', photos:2, observation:'Panel appears clean and labeled; no overheating observed from exterior view.', cost:'—', impact:'0 points', trade:'Electrical Partner for panel work', next:'Keep labels updated.'},
+    {n:'5.2', title:'GFCI Protection', status:'Service Soon', photos:1, observation:'One exterior receptacle did not trip during test.', cost:'$125 – $225', impact:'-5 points', trade:'Verify locally / Electrical Partner', next:'Repair or replace GFCI protection.'},
+    {n:'5.3', title:'Smoke Detectors', status:'Needs Repair', photos:1, observation:'Two smoke detectors are past recommended replacement age.', cost:'$80 – $180', impact:'-4 points', trade:'Bear Home Management', next:'Replace detectors.'}
+  ]},
+  {name:'HVAC', done:10, total:18, items:[
+    {n:'6.1', title:'Filter / Airflow', status:'Good', photos:1, observation:'Filter replaced recently and airflow appears acceptable.', cost:'Included', impact:'0 points', trade:'Bear Home Management', next:'Replace on schedule.'},
+    {n:'6.2', title:'Condensate Drain', status:'Monitor', photos:1, observation:'Drain line has light buildup at cleanout.', cost:'$95 – $175', impact:'-2 points', trade:'Bear Home Management', next:'Clean drain and treat line.'},
+    {n:'6.3', title:'Contactor / Capacitor', status:'Service Soon', photos:2, observation:'Components are aging; replacement may require licensed HVAC partner depending on scope.', cost:'$180 – $350', impact:'-3 points', trade:'Verify / HVAC Partner', next:'Flag for HVAC partner or compliance review.'}
+  ]},
+  {name:'Interior', done:16, total:24, items:[
+    {n:'7.1', title:'Walls / Ceilings', status:'Good', photos:2, observation:'No active staining or cracking observed in primary living areas.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Monitor.'},
+    {n:'7.2', title:'Doors / Hardware', status:'Service Soon', photos:1, observation:'Primary bedroom door rubs at latch side.', cost:'$75 – $125', impact:'-1 point', trade:'Bear Home Management', next:'Adjust door.'},
+    {n:'7.3', title:'Cabinet Hardware', status:'Monitor', photos:0, observation:'Several kitchen hinges loose.', cost:'$50 – $125', impact:'-1 point', trade:'Bear Home Management', next:'Tighten and adjust hinges.'}
+  ]},
+  {name:'Safety', done:8, total:16, items:[
+    {n:'8.1', title:'Handrails', status:'Good', photos:1, observation:'Handrails are secure at observed locations.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Monitor.'},
+    {n:'8.2', title:'Trip Hazards', status:'Monitor', photos:2, observation:'Slight sidewalk lift at front walk.', cost:'$150 – $500', impact:'-2 points', trade:'Bear Home Management / Concrete Partner', next:'Mark and plan repair.'},
+    {n:'8.3', title:'Emergency Shutoffs', status:'Service Soon', photos:1, observation:'Main water shutoff not clearly labeled.', cost:'$25 – $75', impact:'-2 points', trade:'Bear Home Management', next:'Label shutoff and document location.'}
+  ]},
+  {name:'Garage / Laundry', done:6, total:10, items:[
+    {n:'9.1', title:'Dryer Vent', status:'Needs Repair', photos:1, observation:'Dryer vent shows lint buildup at exterior termination.', cost:'$125 – $225', impact:'-4 points', trade:'Bear Home Management', next:'Clean dryer vent.'},
+    {n:'9.2', title:'Garage Door', status:'Monitor', photos:1, observation:'Rollers are noisy and need lubrication.', cost:'$75 – $150', impact:'-1 point', trade:'Bear Home Management', next:'Lubricate and inspect rollers.'}
+  ]},
+  {name:'Attic / Crawlspace', done:6, total:12, items:[
+    {n:'10.1', title:'Attic Access', status:'Good', photos:1, observation:'Access panel functional.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Monitor.'},
+    {n:'10.2', title:'Insulation', status:'Monitor', photos:2, observation:'Minor disturbed insulation around air handler platform.', cost:'$150 – $300', impact:'-2 points', trade:'Bear Home Management', next:'Reposition insulation.'}
+  ]},
+  {name:'Grounds / Landscaping', done:8, total:14, items:[
+    {n:'11.1', title:'Drainage / Grading', status:'Monitor', photos:2, observation:'Low area noted at left side yard after rain.', cost:'TBD', impact:'-3 points', trade:'Bear Home Management / Drainage Partner', next:'Monitor after heavy rain.'},
+    {n:'11.2', title:'Trees Near Roof', status:'Service Soon', photos:2, observation:'Branches within 3 feet of roof at rear elevation.', cost:'$200 – $600', impact:'-3 points', trade:'Tree Partner', next:'Trim branches away from roof.'}
+  ]},
+  {name:'Pool / Spa', done:0, total:10, items:[
+    {n:'12.1', title:'Pool Equipment', status:'Monitor', photos:0, observation:'Pool section not applicable unless present; verify during property setup.', cost:'TBD', impact:'0 points', trade:'Pool Partner', next:'Enable if home has pool or spa.'}
+  ]},
+  {name:'Systems & Appliances', done:6, total:12, items:[
+    {n:'13.1', title:'Appliance Age', status:'Monitor', photos:0, observation:'Appliance ages should be entered for replacement forecasting.', cost:'TBD', impact:'-1 point', trade:'Bear Home Management', next:'Collect model and serial numbers.'},
+    {n:'13.2', title:'Garbage Disposal', status:'Good', photos:1, observation:'Disposal operates normally at time of inspection.', cost:'—', impact:'0 points', trade:'Verify locally', next:'Monitor.'}
+  ]},
+  {name:'Documentation & Photos', done:18, total:18, items:[
+    {n:'14.1', title:'Warranty Documents', status:'Monitor', photos:0, observation:'Collect available warranties, manuals, and receipts from homeowner.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Upload to BearTrack.'},
+    {n:'14.2', title:'Photo Record', status:'Good', photos:18, observation:'Baseline photo record created for the home.', cost:'—', impact:'0 points', trade:'Bear Home Management', next:'Update with each service visit.'}
+  ]}
+];
 
-/* Interactive inspection process */
-.inspection-section{background:linear-gradient(180deg,#fff,#f6efe4)}
-.inspection-shell{display:grid;grid-template-columns:315px minmax(0,1fr);gap:0;margin-top:32px;border:1px solid rgba(15,45,82,.14);border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(7,31,52,.14);background:#fff}
-.inspection-sidebar{background:linear-gradient(180deg,#061a2c,#0f2d52);color:white;padding:22px;min-height:780px}
-.inspection-brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}.inspection-brand img{width:54px;height:48px;object-fit:contain}.inspection-brand strong{display:block;color:white;font-size:21px}.inspection-brand span{display:block;color:var(--gold);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.09em}
-.tech-card-mini{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:16px;margin-bottom:18px}.tech-card-mini strong,.tech-card-mini span,.tech-card-mini small{display:block}.tech-card-mini span{color:#dceaf0}.tech-card-mini small{color:#aec0ce;margin-top:6px}
-.progress-wrap{margin:18px 0 20px}.progress-label{display:flex;justify-content:space-between;font-size:12px;font-weight:900;text-transform:uppercase;color:#dceaf0}.progress-label strong{color:var(--gold)}.progress-bar{height:10px;background:rgba(255,255,255,.16);border-radius:99px;overflow:hidden;margin-top:8px}.progress-bar span{display:block;height:100%;width:68%;background:linear-gradient(90deg,var(--gold),#66b37c);border-radius:99px}
-.inspection-cats{display:grid;gap:8px}.cat-button{width:100%;display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;border:0;background:transparent;color:#e7eef3;border-radius:14px;padding:10px;cursor:pointer;text-align:left}.cat-button:hover,.cat-button.active{background:rgba(255,255,255,.12)}.cat-num{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.12);color:var(--gold);font-weight:900}.cat-button.active .cat-num{background:var(--gold);color:#061727}.cat-name{font-weight:900}.cat-count{font-size:12px;color:#dceaf0}
-.score-mini-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}.score-mini-grid div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:12px}.score-mini-grid span{display:block;color:#dceaf0;text-transform:uppercase;font-size:11px;font-weight:900}.score-mini-grid strong{font-size:28px;color:var(--gold);line-height:1}.score-mini-grid small{color:#dceaf0}
-.inspection-main{min-width:0;background:#f8fafc}.inspection-topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;background:white;border-bottom:1px solid #dde5ec}.inspection-topbar h3{font-size:24px;margin:0;color:var(--navy)}.inspection-topbar p{margin:4px 0 0;color:var(--muted)}.inspection-actions{display:flex;gap:10px}.inspection-actions button,.detail-buttons button,.photo-row button{border:1px solid #d6dee6;background:white;color:var(--navy);border-radius:10px;padding:11px 14px;font-weight:900;cursor:pointer}.inspection-actions button.primary,.detail-buttons button.primary{background:#1f65d6;color:white;border-color:#1f65d6}
-.inspection-toolbar{padding:18px 26px;background:#fff;border-bottom:1px solid #dde5ec}.inspection-toolbar input{width:100%;border:1px solid #d6dee6;border-radius:12px;padding:13px 14px;font:inherit}.status-filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.status-filters button{border:1px solid #d6dee6;background:white;border-radius:999px;padding:8px 11px;font-weight:900;font-size:12px;cursor:pointer}.status-filters button.active{background:#eaf1ff;border-color:#7ca5e7;color:#174ea6}
-.inspection-layout{display:grid;grid-template-columns:minmax(360px,1fr) 520px;gap:18px;padding:18px}.item-list-panel,.item-detail-panel{background:white;border:1px solid #dde5ec;border-radius:18px;overflow:hidden}.inspection-items{display:grid}.item-row{display:grid;grid-template-columns:52px 1fr auto auto;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid #eef2f5;cursor:pointer}.item-row:last-child{border-bottom:0}.item-row:hover,.item-row.active{background:#f0f6ff}.item-num{font-weight:900;color:#627386}.item-title{font-weight:900;color:#102033}.item-meta{font-size:12px;color:#73808c}.status-pill{display:inline-block;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;white-space:nowrap}.status-Good,.good{background:#e7f6e9;color:#1f7a35}.status-Monitor,.monitor{background:#fff5cf;color:#9a6b00}.status-Service-Soon,.soon{background:#ffead6;color:#b95613}.status-Needs-Repair,.needs{background:#ffe1df;color:#b7281f}.status-Critical,.critical{background:#f8d2d2;color:#8f1111}.photo-count{font-size:12px;color:#73808c}
-.item-detail-panel{padding:18px;overflow:visible}.detail-header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;border-bottom:1px solid #eef2f5;padding-bottom:16px}.detail-header h3{margin:0;color:var(--navy)}.detail-header span:first-child{display:block;color:#627386;font-weight:900}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.item-detail-panel h4{margin:0 0 8px;color:var(--navy);text-transform:uppercase;letter-spacing:.08em;font-size:12px}.item-detail-panel p{margin:0;color:#344352}.photo-row{display:flex;gap:8px;align-items:stretch}.photo-row span{width:70px;height:64px;border-radius:10px;background:linear-gradient(135deg,#e0d2bf,#aebcc4);display:block}.photo-row button{font-size:12px;padding:8px;width:94px}
-.five-questions{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:18px}.five-questions article{border:1px solid #dde5ec;border-radius:14px;padding:12px;background:#fbfdff}.five-questions strong{display:block;color:var(--navy);font-size:12px;line-height:1.25}.five-questions span{display:block;color:#53606b;font-size:12px;margin-top:8px;line-height:1.35}.recommendation-grid{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:12px;margin-top:18px}.recommendation-grid>div{border:1px solid #dde5ec;border-radius:14px;padding:14px;background:#fbfdff}.cost-text{font-size:23px!important;color:var(--navy)!important;font-weight:900}.impact-text{font-size:22px!important;color:#b7281f!important;font-weight:900}.recommendation-grid small{color:#53606b}.notes-label{display:block;margin:18px 0 8px;color:var(--navy);font-size:12px;text-transform:uppercase;letter-spacing:.09em;font-weight:900}.item-detail-panel textarea{width:100%;min-height:78px;border:1px solid #d6dee6;border-radius:12px;padding:12px;font:inherit;resize:vertical}.detail-buttons{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
-.inspection-output-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px}.toast{position:fixed;right:20px;bottom:20px;background:var(--navy);color:white;border-left:5px solid var(--gold);padding:14px 18px;border-radius:14px;box-shadow:0 12px 30px rgba(7,31,52,.3);z-index:50;font-weight:900;opacity:0;transform:translateY(12px);transition:.25s}.toast.show{opacity:1;transform:translateY(0)}
-@media(max-width:1200px){.inspection-shell{grid-template-columns:1fr}.inspection-sidebar{min-height:auto}.inspection-cats{grid-template-columns:repeat(2,1fr)}.score-mini-grid{grid-template-columns:repeat(3,1fr)}.inspection-layout{grid-template-columns:1fr}.five-questions{grid-template-columns:repeat(2,1fr)}.recommendation-grid{grid-template-columns:1fr}}
-@media(max-width:700px){.inspection-cats,.score-mini-grid,.inspection-output-grid{grid-template-columns:1fr}.inspection-topbar{display:block}.inspection-actions{margin-top:12px;flex-wrap:wrap}.item-row{grid-template-columns:42px 1fr}.item-row .status-pill,.item-row .photo-count{grid-column:2}.detail-grid,.five-questions,.detail-buttons{grid-template-columns:1fr}.inspection-layout{padding:10px}.inspection-toolbar{padding:14px}.inspection-sidebar{padding:16px}}
+let activeCategory = 1;
+let activeFilter = 'All';
+let activeItemIndex = 7;
+
+const catsEl = document.getElementById('inspectionCategories');
+const itemsEl = document.getElementById('inspectionItems');
+const titleEl = document.getElementById('activeSectionTitle');
+const subEl = document.getElementById('activeSectionSub');
+const searchEl = document.getElementById('inspectionSearch');
+const filtersEl = document.getElementById('statusFilters');
+
+function statusClass(status){ return 'status-' + status.replace(/\s+/g,'-'); }
+function getActiveItems(){
+  const q = (searchEl?.value || '').toLowerCase();
+  return inspectionData[activeCategory].items.filter(item => {
+    const matchesFilter = activeFilter === 'All' || item.status === activeFilter;
+    const matchesSearch = !q || item.title.toLowerCase().includes(q) || item.observation.toLowerCase().includes(q);
+    return matchesFilter && matchesSearch;
+  });
+}
+function renderCategories(){
+  if(!catsEl) return;
+  catsEl.innerHTML = inspectionData.map((cat, i) => `
+    <button type="button" class="cat-button ${i===activeCategory?'active':''}" data-cat="${i}">
+      <span class="cat-num">${i+1}</span>
+      <span class="cat-name">${cat.name}</span>
+      <span class="cat-count">${cat.done}/${cat.total}</span>
+    </button>`).join('');
+  catsEl.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+    activeCategory = Number(btn.dataset.cat);
+    activeItemIndex = 0;
+    activeFilter = 'All';
+    if(searchEl) searchEl.value = '';
+    document.querySelectorAll('#statusFilters button').forEach(b => b.classList.toggle('active', b.dataset.filter === 'All'));
+    renderAll();
+  }));
+}
+function renderItems(){
+  if(!itemsEl) return;
+  const cat = inspectionData[activeCategory];
+  titleEl.textContent = `Section ${activeCategory+1}: ${cat.name}`;
+  subEl.textContent = `${cat.done} of ${cat.total} items completed`;
+  const filtered = getActiveItems();
+  itemsEl.innerHTML = filtered.map((item, idx) => `
+    <div class="item-row ${idx===activeItemIndex?'active':''}" data-idx="${idx}">
+      <span class="item-num">${item.n}</span>
+      <div><span class="item-title">${item.title}</span><div class="item-meta">${item.trade || 'Bear Home Management'}</div></div>
+      <span class="status-pill ${statusClass(item.status)}">${item.status}</span>
+      <span class="photo-count">📷 ${item.photos}</span>
+    </div>`).join('') || '<div class="item-row"><div>No items match this filter.</div></div>';
+  itemsEl.querySelectorAll('.item-row[data-idx]').forEach(row => row.addEventListener('click', () => {
+    activeItemIndex = Number(row.dataset.idx);
+    renderItems();
+    renderDetail();
+  }));
+}
+function renderDetail(){
+  const items = getActiveItems();
+  const item = items[activeItemIndex] || items[0] || inspectionData[activeCategory].items[0];
+  if(!item) return;
+  const set = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  set('detailNumber', item.n); set('detailTitle', item.title); set('detailObservation', item.observation);
+  set('qObserved', item.observation); set('qMeaning', item.meaning || 'This condition should be monitored or addressed before it creates larger repairs.');
+  set('qNext', item.next || 'Add to the maintenance roadmap.'); set('qWhen', item.when || (item.status === 'Critical' ? 'Immediately.' : item.status === 'Needs Repair' ? 'Within 30 days.' : item.status === 'Service Soon' ? 'Within 60–180 days.' : 'Review annually.'));
+  set('qTrade', item.trade || 'Bear Home Management'); set('detailRecommendation', item.next || 'Monitor during the next scheduled visit.');
+  set('detailCost', item.cost || 'TBD'); set('detailImpact', item.impact || '0 points');
+  const status = document.getElementById('detailStatus');
+  if(status){ status.textContent = item.status; status.className = 'status-pill ' + statusClass(item.status); }
+  const note = document.getElementById('inspectionNote'); if(note) note.value = '';
+}
+function updateScores(){
+  const totalDone = inspectionData.reduce((s,c)=>s+c.done,0), total = inspectionData.reduce((s,c)=>s+c.total,0);
+  const pct = Math.round(totalDone/total*100);
+  const txt=document.getElementById('inspectionProgressText'), bar=document.getElementById('inspectionProgressBar');
+  if(txt) txt.textContent = pct + '%'; if(bar) bar.style.width = pct + '%';
+}
+function renderAll(){ renderCategories(); renderItems(); renderDetail(); updateScores(); }
+function toast(msg){
+  let el=document.querySelector('.toast');
+  if(!el){ el=document.createElement('div'); el.className='toast'; document.body.appendChild(el); }
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2300);
+}
+
+if(catsEl){
+  renderAll();
+  searchEl?.addEventListener('input', () => {activeItemIndex=0; renderItems(); renderDetail();});
+  filtersEl?.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+    activeFilter = btn.dataset.filter;
+    filtersEl.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+    activeItemIndex=0; renderItems(); renderDetail();
+  }));
+  document.getElementById('saveDraftBtn')?.addEventListener('click',()=>toast('Inspection draft saved.'));
+  document.getElementById('completeSectionBtn')?.addEventListener('click',()=>toast('Section marked complete for review.'));
+  document.getElementById('addNoteBtn')?.addEventListener('click',()=>toast('Technician note added to BearTrack™.'));
+  document.getElementById('createWorkOrderBtn')?.addEventListener('click',()=>toast('Work order created from inspection finding.'));
+  document.getElementById('markCompleteBtn')?.addEventListener('click',()=>toast('Inspection item marked complete.'));
+}

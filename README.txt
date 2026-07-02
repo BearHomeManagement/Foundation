@@ -1,16 +1,485 @@
-Bear Home Management Website - Version 1.0
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bear Home Management | Every Home Deserves Its Own Maintenance Department</title>
+  <meta name="description" content="Bear Home Management gives every homeowner their own maintenance department through BearTrack, Home Care Hours, full-home inspections, work orders, repair planning, and project oversight." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="Bear Home Management home">
+        <img src="assets/bear-head-header.png" alt="Bear Home Management bear head logo" />
+        <div class="brand-text">
+          <strong>BEAR</strong>
+          <span>MAINTENANCE</span>
+          <small>Protect. Maintain. Preserve.</small>
+        </div>
+      </a>
+      <button class="menu-toggle" aria-label="Open navigation">☰</button>
+      <nav class="site-nav">
+        <a href="#how">How It Works</a>
+        <a href="#memberships">Memberships</a>
+        <a href="#services">Services</a>
+        <a href="#compliance">Compliance</a>
+        <a href="#brand-ecosystem">Ecosystem</a>
+        <a href="#beartrack">BearTrack™</a>
+        <a href="#inspection-process">Inspection Process</a>
+        <a href="#buying-selling">Buying & Selling</a>
+        <a href="#contact" class="nav-button">Schedule Inspection</a>
+      </nav>
+    </div>
+  </header>
 
-How to open:
-1. Extract this ZIP file.
-2. Open the extracted folder.
-3. Double-click index.html.
-4. The website opens locally in your browser.
+  <main id="top">
+    
+<section class="customer-process" id="home-health-assessment">
+  <div class="section-inner">
+    <p class="eyebrow">Home Health Assessment</p>
+    <h2>A clear look at your home without overcomplicating it.</h2>
+    <p>
+      Our assessment focuses on the major systems that protect the home: exterior, roof observations,
+      plumbing, electrical, HVAC, water heater, safety items, moisture concerns, and the accessible main
+      water shutoff.
+    </p>
+    <div class="process-grid">
+      <article>
+        <h3>Inspect</h3>
+        <p>We review the major components and document important findings with photos.</p>
+      </article>
+      <article>
+        <h3>Explain</h3>
+        <p>We teach the homeowner what was found, why it matters, and what happens if it is ignored.</p>
+      </article>
+      <article>
+        <h3>Prioritize</h3>
+        <p>Findings are organized by urgency so owners know what needs attention first.</p>
+      </article>
+      <article>
+        <h3>Plan</h3>
+        <p>We turn inspection findings into a practical maintenance plan inside BearTrack™.</p>
+      </article>
+    </div>
+  </div>
+</section>
 
-Files:
-- index.html: website content
-- styles.css: colors, layout, and responsive design
-- script.js: small mobile-menu behavior
-- assets/: bear head images
 
-Notes:
-This is a static concept website. The contact form and portal previews are visual only. A production version would need hosting, form handling, user accounts, database, payments, scheduling, and admin tools.
+    <section id="how" class="section intro">
+      <div class="container two-col">
+        <div>
+          <p class="eyebrow">The Bear Method™</p>
+          <h2>Inspect. Analyze. Prioritize. Maintain. Improve. Protect.</h2>
+          <p>Bear Home Management is not a handyman list. We begin by understanding the home, then create a practical maintenance plan based on its age, condition, systems, risks, and homeowner goals.</p>
+          <p>Small items are handled by our team. Bigger-ticket work is coordinated with trusted partners and overseen so the homeowner has an advocate from proposal to final walkthrough.</p>
+        </div>
+        <div class="process-card">
+          <div><span>01</span><strong>Home Inspection</strong><small>Condition ratings, photos, notes, and immediate concerns.</small></div>
+          <div><span>02</span><strong>BearTrack Created</strong><small>Home Health Score, Complexity Score, Risk Index, and records.</small></div>
+          <div><span>03</span><strong>Maintenance Plan</strong><small>Monthly hours, repair roadmap, and seasonal priorities.</small></div>
+          <div><span>04</span><strong>Ongoing Care</strong><small>Work orders, banked hours, small repairs, upgrades, and oversight.</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="beartrack" class="section cream">
+      <div class="container">
+        <p class="eyebrow">BearTrack™</p>
+        <h2>Your home’s digital maintenance record.</h2>
+        <p class="lead">BearTrack organizes the home like a facility manager would: condition, history, photos, documents, warranties, upcoming repairs, and long-term planning in one place.</p>
+        <div class="cards three">
+          <article class="card"><h3>Home Health Score</h3><p>A clear condition score based on inspections, completed repairs, deferred maintenance, safety items, and risk reduction.</p></article>
+          <article class="card"><h3>Complexity Score</h3><p>A plan recommendation based on size, age, bathrooms, systems, exterior, lot features, and actual condition.</p></article>
+          <article class="card"><h3>Risk Index</h3><p>Highlights roof, water intrusion, HVAC, plumbing, electrical, exterior, and safety risks before they become emergencies.</p></article>
+        </div>
+        <div class="dashboard">
+          <div><span>Home Health</span><strong>84%</strong><small>Good and improving</small></div>
+          <div><span>Complexity Score</span><strong>38</strong><small>Recommended: Home Plus</small></div>
+          <div><span>Hours Available</span><strong>10.5</strong><small>Banked and ready</small></div>
+          <div><span>Risk Index</span><strong>Low</strong><small>Monitored annually</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workorders" class="section">
+      <div class="container two-col">
+        <div>
+          <p class="eyebrow">Homeowner work orders</p>
+          <h2>Submit a request without starting from scratch.</h2>
+          <p>Homeowners can add a work order, attach photos, choose urgency, and track the status. The request connects to the home profile so the technician knows the property history before arriving.</p>
+          <ul class="check-list">
+            <li>Running toilets, leaking sinks, outlet issues, door adjustments</li>
+            <li>Light fixtures, ceiling fans, faucets, and smart-home upgrades</li>
+            <li>TV mounting, shelving, appliance delivery coordination, and honey-do lists</li>
+            <li>Anything outside the plan is explained and approved before work begins</li>
+          </ul>
+        </div>
+        <div class="phone-card">
+          <div class="phone-title">BearTrack™ Work Order</div>
+          <label>What needs attention?</label><div class="fake-input">Mount living room TV</div>
+          <label>Location</label><div class="fake-input">Living Room</div>
+          <label>Available Home Care Hours</label><div class="meter"><span></span></div>
+          <p><strong>7.5 hours banked</strong></p>
+          <button type="button">Submit Work Order</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="memberships" class="section cream">
+      <div class="container">
+        <p class="eyebrow">Transparent memberships</p>
+        <h2>Three simple plans. Same services. Different monthly hours.</h2>
+        <p class="lead">Every Bear Home Management member gets the same core experience: BearTrack™, work orders, inspections, common maintenance parts, partner coordination, and project oversight. The only difference between tiers is the number of Home Care Hours™ reserved for your home each month.</p>
+        <div class="pricing three-tier">
+          <article class="price-card">
+            <h3>Bear Essential</h3><p class="price">$249/mo</p><p class="hours">2 Home Care Hours™ monthly</p><p>For newer, recently renovated, or well-maintained homes that need light ongoing support.</p><ul><li>Same BearTrack™ services</li><li>Bankable Home Care Hours™</li><li>Annual Home Assessment</li><li>Unlimited work order requests</li><li>Common maintenance parts included</li></ul>
+          </article>
+          <article class="price-card featured"><div class="badge">Most Popular</div>
+            <h3>Bear Plus</h3><p class="price">$399/mo</p><p class="hours">4 Home Care Hours™ monthly</p><p>For established family homes, busy homeowners, and homes with regular maintenance needs.</p><ul><li>Same BearTrack™ services</li><li>Bankable Home Care Hours™</li><li>Home Health Score™</li><li>My Honey-Do List™</li><li>Partner contractor coordination</li></ul>
+          </article>
+          <article class="price-card">
+            <h3>Bear Signature</h3><p class="price">$549/mo</p><p class="hours">6 Home Care Hours™ monthly</p><p>For older, larger, or more active homes that need more monthly capacity and planning.</p><ul><li>Same BearTrack™ services</li><li>Bankable Home Care Hours™</li><li>Risk Index™</li><li>Major project oversight</li><li>Annual BearTrack™ review</li></ul>
+          </article>
+        </div>
+        <div class="same-services-card">
+          <h3>Every membership includes the same Bear Home Management services.</h3>
+          <p>No confusing service packages. No hidden “better” version of care. Every tier includes BearTrack™, your digital Home Profile, unlimited work order requests, Home Health Score™, Home Complexity Score™, Risk Index™, banked Home Care Hours™, common maintenance parts within plan guidelines, buying and selling support, partner contractor coordination, major project oversight, and lifetime home history.</p>
+          <p><strong>The only difference is how many Home Care Hours™ your home receives each month: 2, 4, or 6.</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="dynamic" class="section navy-section">
+      <div class="container two-col">
+        <div>
+          <p class="eyebrow light">Annual BearTrack™ Review</p>
+          <h2>Your plan can move down when your home improves — or up when it needs more support.</h2>
+          <p>Memberships are reviewed year over year based on the home’s condition, upcoming work, average monthly usage, and banked hour balance. If the home needs less support, we recommend a lower tier. If risks increase, we explain why a higher tier may be appropriate.</p>
+        </div>
+        <div class="review-card">
+          <h3>Example Annual Review</h3>
+          <p><strong>Home Health:</strong> 61% → 88%</p>
+          <p><strong>Deferred Maintenance:</strong> High → Low</p>
+          <p><strong>Average Monthly Usage:</strong> 2.1 hours</p>
+          <p><strong>Recommendation:</strong> Move from Bear Plus to Bear Essential and save monthly while maintaining protection.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="section cream">
+      <div class="container">
+        <p class="eyebrow">Use your Home Care Hours your way</p>
+        <h2>Maintenance, repairs, small upgrades, and convenience help.</h2>
+        <div class="cards four">
+          <article class="card"><h3>Maintenance & Repairs</h3><p>Flappers, fill valves, P-traps, filters, capacitors, contactors, GFCIs, caulking, weatherstripping, dryer vents, door adjustments, and minor drywall.</p></article>
+          <article class="card"><h3>Lighting & Face-Lift Upgrades</h3><p>Light fixtures, ceiling fans, faucets, cabinet hardware, door hardware, smart locks, smart doorbells, smart thermostats, and smoke detectors.</p></article>
+          <article class="card"><h3>Mounting & Shelving</h3><p>TV mounting, floating shelves, garage shelving, curtain rods, mirrors, pictures, bathroom accessories, and closet organization.</p></article>
+          <article class="card"><h3>Convenience Help</h3><p>Appliance delivery coordination, appropriate appliance installation, furniture assembly, holiday lighting, wellness checks, and honey-do lists.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="single-services" class="section">
+      <div class="container">
+        <p class="eyebrow">One-time service options</p>
+        <h2>Not ready for a membership? Start with a single service.</h2>
+        <p class="lead">Single services are good for one clear repair, installation, move-in punch-list, or upgrade. Pricing is confirmed before work begins.</p>
+        <div class="cards four service-options">
+          <article class="card service-card"><h3>Home Repair Visit</h3><p class="service-price">From $125</p><p>Small repairs like running toilets, loose doors, minor plumbing, outlet issues, caulking, drywall patches, and general punch-list items.</p><small>Parts quoted before work begins.</small></article>
+          <article class="card service-card"><h3>Fixture & Face-Lift Visit</h3><p class="service-price">From $150</p><p>Lighting upgrades, ceiling fans, faucets, cabinet hardware, door hardware, smart locks, smart doorbells, and small refresh projects.</p><small>Customer-supplied fixtures or quoted materials.</small></article>
+          <article class="card service-card"><h3>TV Mounting & Shelving</h3><p class="service-price">From $175</p><p>TV mounting, floating shelves, garage shelving, curtain rods, mirrors, pictures, bathroom accessories, and closet organization.</p><small>Mounts, anchors, and materials quoted as needed.</small></article>
+          <article class="card service-card"><h3>Move-In / Honey-Do List</h3><p class="service-price">From $275</p><p>A block of time for multiple small tasks after moving in, preparing to sell, setting up a rental, or catching up.</p><small>Great first step before choosing a membership.</small></article>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section id="compliance" class="section">
+      <div class="container">
+        <p class="eyebrow">Florida service compliance</p>
+        <h2>Clear lines between Bear Home Management work and licensed partner work.</h2>
+        <p class="lead">Bear Home Management is designed to handle routine maintenance, small repairs, work orders, inspections, documentation, and homeowner support. When a task requires a licensed trade contractor, permit, or specialty certification, the work is routed through the Bear Partner Network and documented inside BearTrack™.</p>
+        <div class="compliance-note">
+          <strong>Important:</strong>
+          <span>This is a planning guide for Clay, Duval, and St. Johns County operations. Final service rules should be verified with county permitting offices and a Florida construction/licensing professional before launch.</span>
+        </div>
+        <div class="compliance-grid">
+          <article class="compliance-card ok">
+            <h3>Bear Home Management</h3>
+            <p>Typically suitable for our in-house Home Maintenance Specialists when no permit or licensed trade work is required.</p>
+            <ul>
+              <li>Full-home inspections and BearTrack documentation</li>
+              <li>Work orders, honey-do lists, TV mounting, shelving, and furniture assembly</li>
+              <li>Caulking, weatherstripping, minor drywall, trim, doors, screens, and hardware</li>
+              <li>Filters, smoke detector batteries, basic maintenance, wellness checks, and punch-list work</li>
+            </ul>
+          </article>
+          <article class="compliance-card caution">
+            <h3>Verify Locally</h3>
+            <p>These may be allowed in limited situations, but should be checked against county rules, permitting requirements, and insurance limitations.</p>
+            <ul>
+              <li>Replacing existing light fixtures, ceiling fans, switches, receptacles, or GFCIs</li>
+              <li>Replacing faucets, P-traps, toilet fill valves, flappers, and supply lines</li>
+              <li>Garbage disposals, appliance connections, thermostat swaps, and similar fixture replacements</li>
+              <li>Any task where wiring, plumbing, or equipment conditions are unclear</li>
+            </ul>
+          </article>
+          <article class="compliance-card partner">
+            <h3>Licensed Partner</h3>
+            <p>Major repairs and regulated trade work should be performed by properly licensed and insured partners, with Bear Home Management providing oversight.</p>
+            <ul>
+              <li>Roof replacement, structural work, window replacement, and major waterproofing repairs</li>
+              <li>HVAC system replacement, refrigerant work, compressors, and permitted HVAC repairs</li>
+              <li>Electrical panels, new circuits, rewiring, generators, and service upgrades</li>
+              <li>Water heaters, re-pipes, sewer lines, major plumbing changes, and slab/underground work</li>
+            </ul>
+          </article>
+        </div>
+        <div class="matrix-wrap" aria-label="Service compliance matrix">
+          <table class="compliance-table">
+            <thead><tr><th>Service Type</th><th>Default Route</th><th>Operational Rule</th></tr></thead>
+            <tbody>
+              <tr><td>TV mounting, shelves, pictures, cabinet hardware</td><td><span class="pill ok">Bear Home Management</span></td><td>Use Home Care Hours. Document photos and notes in BearTrack.</td></tr>
+              <tr><td>Flappers, fill valves, P-traps, faucet aerators</td><td><span class="pill caution">Verify Locally</span></td><td>Confirm scope is repair/replacement only. Escalate if moving plumbing or hidden damage is found.</td></tr>
+              <tr><td>Light fixtures, ceiling fans, switches, GFCIs</td><td><span class="pill caution">Verify Locally</span></td><td>Existing-location replacement only if allowed. No new wiring or panel work.</td></tr>
+              <tr><td>HVAC filters, drain clearing, basic coil cleaning</td><td><span class="pill ok">Bear Home Management</span></td><td>Maintenance only. No refrigerant-system work.</td></tr>
+              <tr><td>Capacitors, contactors, HVAC electrical components</td><td><span class="pill caution">Verify / Partner</span></td><td>Flag for licensing review; route to HVAC partner where required.</td></tr>
+              <tr><td>Roof, water heater, panel, re-pipe, structural, major HVAC</td><td><span class="pill partner">Licensed Partner</span></td><td>Bear Home Management coordinates, monitors quality, stores documents, and performs final walkthrough support.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="parts" class="section cream">
+      <div class="container two-col">
+        <div>
+          <p class="eyebrow">Common parts included</p>
+          <h2>No surprise bills for the small things that commonly fail.</h2>
+          <p>Memberships include many common repair parts that fit the plan: flappers, fill valves, P-traps, basic supply lines, faucet aerators, HVAC filters, capacitors, contactors, float switches, standard switches, receptacles, GFCIs, smoke detector batteries, weatherstripping, caulking, and minor drywall materials.</p>
+        </div>
+        <div class="panel dark">
+          <h3>Major repairs are handled differently.</h3>
+          <p>Roof replacement, HVAC replacement, water heaters, re-pipes, electrical panels, structural repairs, and major specialty work are not hidden inside the membership. Bear Home Management reviews proposals, coordinates trusted partners, monitors quality, documents progress, and protects the homeowner’s interests.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="buying-selling" class="section">
+      <div class="container">
+        <p class="eyebrow">Buying & Selling</p>
+        <h2>Support before, during, and after home ownership.</h2>
+        <div class="cards three">
+          <article class="card"><h3>Before You Buy</h3><p>Review inspection findings, estimate upcoming ownership costs, identify risk, and build a 5- to 10-year maintenance forecast before making a decision.</p></article>
+          <article class="card"><h3>Preparing to Sell</h3><p>Pre-listing assessment, prioritized repair recommendations, small repairs, project coordination, and documentation that builds buyer confidence.</p></article>
+          <article class="card"><h3>After Closing</h3><p>Create the BearTrack profile, schedule initial maintenance, store documents, and recommend the right plan for the home’s real needs.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="portfolio" class="section cream">
+      <div class="container">
+        <p class="eyebrow">Multi-home & family plans</p>
+        <h2>One trusted team for up to three homes — each home gets the tier it actually needs.</h2>
+        <p class="lead">Multi-home owners should not be forced into one oversized plan. Each property receives its own BearTrack™ profile and its own 2, 4, or 6-hour membership recommendation. Additional homes on the same family account receive a <strong>$50 monthly discount per home</strong>.</p>
+
+        <div class="portfolio-grid">
+          <article class="portfolio-plan-card">
+            <h3>How family pricing works</h3>
+            <p>Your primary home is billed at the standard membership rate. Home #2 and Home #3 each receive $50 off their selected tier every month.</p>
+            <ul class="check-list">
+              <li>Choose Bear Essential, Bear Plus, or Bear Signature per property</li>
+              <li>Separate Home Health Scores, work orders, photos, and documents</li>
+              <li>One login, one billing relationship, one Home Manager</li>
+              <li>Designed for primary homes, vacation homes, rentals, and parent care</li>
+            </ul>
+          </article>
+
+          <article class="portfolio-card family-example">
+            <h3>Example Family Account</h3>
+            <div><strong>Primary Home</strong><span>Bear Plus · 4 hours · $399/mo</span></div>
+            <div><strong>Parent’s Home</strong><span>Bear Essential · 2 hours · $199/mo after $50 discount</span></div>
+            <div><strong>Rental / Vacation Home</strong><span>Bear Signature · 6 hours · $499/mo after $50 discount</span></div>
+            <p><strong>Result:</strong> each home gets the right amount of care without paying full-price for every additional property.</p>
+          </article>
+        </div>
+
+        <div class="portfolio-table-wrap">
+          <table class="portfolio-table">
+            <thead><tr><th>Plan chosen per home</th><th>Primary home</th><th>Additional home rate</th><th>Hours per month</th></tr></thead>
+            <tbody>
+              <tr><td>Bear Essential</td><td>$249/mo</td><td>$199/mo</td><td>2 Home Care Hours™</td></tr>
+              <tr><td>Bear Plus</td><td>$399/mo</td><td>$349/mo</td><td>4 Home Care Hours™</td></tr>
+              <tr><td>Bear Signature</td><td>$549/mo</td><td>$499/mo</td><td>6 Home Care Hours™</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="portal" class="section navy-section">
+      <div class="container">
+        <p class="eyebrow light">Platform preview</p>
+        <h2>Built for homeowners, technicians, operations, and partners.</h2>
+        <div class="cards four dark-cards">
+          <article class="card"><h3>Customer Portal</h3><p>Work orders, Home Care Hours, projects, documents, warranties, photos, maintenance calendar, and approvals.</p></article>
+          <article class="card"><h3>Technician App</h3><p>Daily route, inspections, photos, notes, parts used, recommendations, customer signature, and completed work history.</p></article>
+          <article class="card"><h3>Operations Dashboard</h3><p>Scheduling, dispatch, job status, inventory, billing, partner coordination, reporting, and quality assurance.</p></article>
+          <article class="card"><h3>Partner Portal</h3><p>Trusted contractors upload proposals, progress photos, warranties, closeout documents, and completion notes for oversight.</p></article>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section id="inspection-process" class="section inspection-section">
+      <div class="container">
+        <p class="eyebrow">Interactive inspection process</p>
+        <h2>Initial Bear Assessment — the engine behind BearTrack™.</h2>
+        <p class="lead">This mockup shows how a Home Maintenance Specialist would complete a full-home inspection. Click a section, filter by status, select an item, add notes, and create a work order. The technician answers questions; BearTrack™ turns those answers into scores, risks, maintenance plans, and recommended Home Care Hours™.</p>
+
+        <div class="inspection-shell">
+          <aside class="inspection-sidebar">
+            <div class="inspection-brand">
+              <img src="assets/bear-head-header.png" alt="Bear Home Management logo">
+              <div><strong>BearTrack™</strong><span>Inspection Mode</span></div>
+            </div>
+            <div class="tech-card-mini">
+              <strong>Initial Bear Assessment</strong>
+              <span>Level 1 · 250+ point inspection</span>
+              <small>Clay County pilot · Home base: SR 218 / Blanding</small>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-label"><span>Inspection Progress</span><strong id="inspectionProgressText">68%</strong></div>
+              <div class="progress-bar"><span id="inspectionProgressBar"></span></div>
+            </div>
+            <nav class="inspection-cats" id="inspectionCategories" aria-label="Inspection categories"></nav>
+            <div class="score-mini-grid">
+              <div><span>Health</span><strong id="healthScore">82</strong><small>/100</small></div>
+              <div><span>Complexity</span><strong id="complexityScore">38</strong><small>/100</small></div>
+              <div><span>Risk</span><strong id="riskScore">Moderate</strong></div>
+            </div>
+          </aside>
+
+          <div class="inspection-main">
+            <div class="inspection-topbar">
+              <div>
+                <h3 id="activeSectionTitle">Section 2: Exterior</h3>
+                <p id="activeSectionSub">28 of 32 items completed</p>
+              </div>
+              <div class="inspection-actions">
+                <button type="button" id="saveDraftBtn">Save Draft</button>
+                <button type="button" class="primary" id="completeSectionBtn">Complete Section</button>
+              </div>
+            </div>
+
+            <div class="inspection-toolbar">
+              <input id="inspectionSearch" type="search" placeholder="Search items in this section...">
+              <div class="status-filters" id="statusFilters">
+                <button type="button" class="active" data-filter="All">All</button>
+                <button type="button" data-filter="Good">Good</button>
+                <button type="button" data-filter="Monitor">Monitor</button>
+                <button type="button" data-filter="Service Soon">Service Soon</button>
+                <button type="button" data-filter="Needs Repair">Needs Repair</button>
+                <button type="button" data-filter="Critical">Critical</button>
+              </div>
+            </div>
+
+            <div class="inspection-layout">
+              <div class="item-list-panel">
+                <div id="inspectionItems" class="inspection-items"></div>
+              </div>
+
+              <aside class="item-detail-panel" id="itemDetailPanel">
+                <div class="detail-header">
+                  <div><span id="detailNumber">2.8</span><h3 id="detailTitle">Sealants / Caulking</h3></div>
+                  <span id="detailStatus" class="status-pill needs">Needs Repair</span>
+                </div>
+
+                <div class="detail-grid">
+                  <div>
+                    <h4>Observation</h4>
+                    <p id="detailObservation">Deteriorated and cracked caulking around several windows and siding transitions.</p>
+                  </div>
+                  <div>
+                    <h4>Photos</h4>
+                    <div class="photo-row"><span></span><span></span><button type="button">+ Add Photo</button></div>
+                  </div>
+                </div>
+
+                <div class="five-questions">
+                  <article><strong>1. What did we observe?</strong><span id="qObserved">Cracked and deteriorated caulking in multiple locations.</span></article>
+                  <article><strong>2. What does it mean?</strong><span id="qMeaning">Seal is no longer effective and water may penetrate behind surfaces.</span></article>
+                  <article><strong>3. What should happen next?</strong><span id="qNext">Schedule exterior caulking replacement to prevent water damage.</span></article>
+                  <article><strong>4. When?</strong><span id="qWhen">Within 3–6 months.</span></article>
+                  <article><strong>5. Can Bear perform it?</strong><span id="qTrade">Yes — Bear Home Management.</span></article>
+                </div>
+
+                <div class="recommendation-grid">
+                  <div><h4>Recommendation</h4><p id="detailRecommendation">Remove failed caulking and apply high-quality exterior sealant at affected areas.</p></div>
+                  <div><h4>Estimated Cost</h4><p id="detailCost" class="cost-text">$250 – $450</p><small>Can use Home Care Hours™</small></div>
+                  <div><h4>Point Impact</h4><p id="detailImpact" class="impact-text">-6 points</p><small>Home Health Score</small></div>
+                </div>
+
+                <label class="notes-label" for="inspectionNote">Technician Note</label>
+                <textarea id="inspectionNote" placeholder="Add field notes, measurements, homeowner comments, or follow-up instructions..."></textarea>
+
+                <div class="detail-buttons">
+                  <button type="button" id="addNoteBtn">Add Note</button>
+                  <button type="button" id="createWorkOrderBtn">Create Work Order</button>
+                  <button type="button" class="primary" id="markCompleteBtn">Mark Complete</button>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+
+        <div class="inspection-output-grid">
+          <article class="card"><h3>What the inspection produces</h3><p>Home Health Score™, Complexity Score, Risk Index™, Home Care Hours recommendation, deferred maintenance roadmap, and upcoming capital expense forecast.</p></article>
+          <article class="card"><h3>How it supports operations</h3><p>Every finding can become a work order, partner referral, annual review item, or scheduled maintenance task inside BearTrack™.</p></article>
+          <article class="card"><h3>Why it is different</h3><p>The goal is not just to find what is wrong today. It is to create a living plan to keep the home healthy year after year.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact">
+      <div class="container two-col">
+        <div>
+          <p class="eyebrow light">Start with the inspection</p>
+          <h2>Build your home’s plan.</h2>
+          <p>Schedule a full-home inspection, request a one-time service, or ask about memberships. We will explain the recommended path before any work begins.</p>
+          <div class="contact-promise">
+            <strong>No hidden fees.</strong>
+            <span>No surprise labor bills for covered maintenance. If something falls outside the plan, we explain why and price it before proceeding.</span>
+          </div>
+        </div>
+        <form>
+          <input type="text" placeholder="Name" />
+          <input type="email" placeholder="Email" />
+          <input type="tel" placeholder="Phone" />
+          <select>
+            <option>Schedule a full-home inspection</option>
+            <option>Request a one-time service</option>
+            <option>Ask about memberships</option>
+            <option>Buying or selling support</option>
+            <option>Multi-home / portfolio care</option>
+          </select>
+          <textarea placeholder="Tell us about the home or work needed"></textarea>
+          <button type="button" class="button">Submit Request</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div><strong>Bear Home Management</strong><span>Every home deserves its own maintenance department.</span></div>
+      <div><span>Concept website · Version 1.0</span></div>
+    </div>
+  <p>Robert@bearhomemanagement.com</p></footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
