@@ -1,0 +1,12 @@
+RESTORE FIX
+
+This package restores the real website files.
+
+Verified:
+index.html starts with <!DOCTYPE html>
+It is not an image file.
+
+Upload everything in this folder to GitHub > Foundation > Add file > Upload files.
+When GitHub says files will be replaced, commit changes.
+
+After Netlify publishes, hard refresh the site with Ctrl + F5.
