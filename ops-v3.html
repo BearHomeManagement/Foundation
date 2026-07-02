@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BearOps | Operational Console</title>
+  <link rel="stylesheet" href="ops-v3.css">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <h1>BearOps</h1>
+    <p>Operational inspection and work order console</p>
+  </div>
+  <div class="top-actions">
+    <button id="newInspectionBtn">New Inspection</button>
+    <button id="saveBtn">Save</button>
+    <button id="printBtn">Print Report</button>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="side">
+    <h2>Customer / Property</h2>
+    <label>Customer Name<input id="customerName"></label>
+    <label>Email<input id="customerEmail"></label>
+    <label>Phone<input id="customerPhone"></label>
+    <label>Property Address<input id="propertyAddress"></label>
+    <label>Membership
+      <select id="membership">
+        <option>Startup Assessment</option>
+        <option>Cub - 4 hrs/mo</option>
+        <option>Black Bear - 6 hrs/mo</option>
+        <option>Grizzly - 8 hrs/mo</option>
+      </select>
+    </label>
+    <label>Technician<input id="technician"></label>
+    <label>Date<input id="inspectionDate" type="date"></label>
+
+    <div class="score"><span>Home Health Score™</span><strong id="score">100</strong></div>
+    <div class="score"><span>Risk Index™</span><strong id="risk">Low</strong></div>
+    <div class="score"><span>Estimated Hours</span><strong id="hours">0.0</strong></div>
+    <div class="score"><span>Open Work Orders</span><strong id="woCount">0</strong></div>
+
+    <h2>Saved Inspections</h2>
+    <div id="savedList" class="saved-list"></div>
+  </aside>
+
+  <section class="main">
+    <nav class="tabs">
+      <button class="tab active" data-view="inspection">Inspection</button>
+      <button class="tab" data-view="workorders">Work Orders</button>
+      <button class="tab" data-view="report">Report</button>
+      <button class="tab" data-view="data">Data</button>
+    </nav>
+
+    <section id="inspection" class="view active">
+      <div class="categories" id="categories"></div>
+      <div class="items" id="items"></div>
+    </section>
+
+    <section id="workorders" class="view">
+      <h2>Work Orders</h2>
+      <div id="workOrderList"></div>
+    </section>
+
+    <section id="report" class="view">
+      <h2>Customer Report Summary</h2>
+      <button id="generateReportBtn">Generate Report</button>
+      <textarea id="reportText"></textarea>
+    </section>
+
+    <section id="data" class="view">
+      <h2>Data Tools</h2>
+      <button id="exportDataBtn">Export JSON</button>
+      <button id="importDataBtn">Import JSON</button>
+      <button id="clearDataBtn" class="danger">Clear Local Data</button>
+      <textarea id="dataBox" placeholder="Exported/imported JSON appears here."></textarea>
+    </section>
+  </section>
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="ops-v3.js"></script>
+</body>
+</html>
