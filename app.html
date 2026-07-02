@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>BearOps Unified</title>
-  <link rel="stylesheet" href="app.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BearOps v2</title>
+  <link rel="stylesheet" href="app.css"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
 </head>
@@ -12,18 +12,21 @@
 <header class="topbar">
   <div>
     <h1>BearOps</h1>
-    <p>Bear Home Management Operations Platform</p>
+    <p>Operations platform for Bear Home Management</p>
   </div>
-  <button id="logoutBtn" class="hidden">Log Out</button>
+  <div class="top-actions">
+    <button id="refreshBtn" class="hidden">Refresh</button>
+    <button id="logoutBtn" class="hidden">Log Out</button>
+  </div>
 </header>
 
 <main>
   <section id="loginView" class="card login">
     <h2>Login</h2>
-    <label>Email<input id="loginEmail" type="email"></label>
-    <label>Password<input id="loginPassword" type="password"></label>
+    <label>Email<input id="loginEmail" type="email" autocomplete="email"></label>
+    <label>Password<input id="loginPassword" type="password" autocomplete="current-password"></label>
     <button id="loginBtn">Log In</button>
-    <p id="loginMsg"></p>
+    <p id="loginMsg" class="error"></p>
   </section>
 
   <section id="appView" class="hidden">
@@ -31,45 +34,61 @@
       <button class="tab active" data-view="dashboard">Dashboard</button>
       <button class="tab" data-view="customers">Customers</button>
       <button class="tab" data-view="properties">Properties</button>
-      <button class="tab" data-view="assessments">Assessments</button>
+      <button class="tab" data-view="assessments">Inspections</button>
       <button class="tab" data-view="workorders">Work Orders</button>
+      <button class="tab" data-view="memberships">Memberships</button>
       <button class="tab" data-view="report">Report</button>
     </nav>
 
     <section id="dashboard" class="view active">
-      <div class="cards">
-        <div class="metric"><span>Customers</span><strong id="customerCount">0</strong></div>
-        <div class="metric"><span>Properties</span><strong id="propertyCount">0</strong></div>
-        <div class="metric"><span>Assessments</span><strong id="assessmentCount">0</strong></div>
-        <div class="metric"><span>Open Work Orders</span><strong id="woCount">0</strong></div>
+      <div class="metrics">
+        <div class="metric"><span>Customers</span><strong id="metricCustomers">0</strong></div>
+        <div class="metric"><span>Properties</span><strong id="metricProperties">0</strong></div>
+        <div class="metric"><span>Inspections</span><strong id="metricAssessments">0</strong></div>
+        <div class="metric"><span>Open Work Orders</span><strong id="metricOpenWO">0</strong></div>
       </div>
-      <div class="quick">
-        <button id="quickNewAssessment">Start New Assessment</button>
-        <button id="quickRefresh">Refresh Data</button>
+      <div class="quick-actions">
+        <button id="dashNewInspection">Start Home Health Assessment</button>
+        <button id="dashNewCustomer">Add Customer</button>
+        <button id="dashWorkOrders">View Work Orders</button>
       </div>
-      <div class="card">
-        <h2>Recent Assessments</h2>
-        <div id="recentAssessments"></div>
+      <div class="grid two">
+        <div class="card">
+          <h2>Recent Inspections</h2>
+          <div id="dashboardAssessments"></div>
+        </div>
+        <div class="card">
+          <h2>Urgent / Open Work Orders</h2>
+          <div id="dashboardWorkOrders"></div>
+        </div>
       </div>
     </section>
 
     <section id="customers" class="view">
       <div class="card">
-        <h2>Add Customer</h2>
+        <h2>Customer</h2>
+        <input type="hidden" id="customerId">
         <div class="grid">
           <label>Full Name<input id="customerName"></label>
-          <label>Email<input id="customerEmail"></label>
+          <label>Email<input id="customerEmail" type="email"></label>
           <label>Phone<input id="customerPhone"></label>
         </div>
         <label>Notes<textarea id="customerNotes"></textarea></label>
-        <button id="addCustomerBtn">Save Customer</button>
+        <div class="actions">
+          <button id="saveCustomerBtn">Save Customer</button>
+          <button id="clearCustomerBtn">Clear</button>
+        </div>
       </div>
-      <div class="card"><h2>Customers</h2><div id="customerList"></div></div>
+      <div class="card">
+        <h2>Customers</h2>
+        <div id="customerList"></div>
+      </div>
     </section>
 
     <section id="properties" class="view">
       <div class="card">
-        <h2>Add Property</h2>
+        <h2>Property</h2>
+        <input type="hidden" id="propertyId">
         <div class="grid">
           <label>Customer<select id="propertyCustomer"></select></label>
           <label>Address<input id="propertyAddress"></label>
@@ -78,63 +97,74 @@
           <label>Zip<input id="propertyZip"></label>
           <label>Year Built<input id="propertyYear" type="number"></label>
           <label>Square Feet<input id="propertySqft" type="number"></label>
-          <label>Type<input id="propertyType"></label>
+          <label>Type<input id="propertyType" placeholder="Single Family, Condo..."></label>
         </div>
         <label>Notes<textarea id="propertyNotes"></textarea></label>
-        <button id="addPropertyBtn">Save Property</button>
+        <div class="actions">
+          <button id="savePropertyBtn">Save Property</button>
+          <button id="clearPropertyBtn">Clear</button>
+        </div>
       </div>
-      <div class="card"><h2>Properties</h2><div id="propertyList"></div></div>
+      <div class="card">
+        <h2>Properties</h2>
+        <div id="propertyList"></div>
+      </div>
     </section>
 
     <section id="assessments" class="view">
-      <div class="split">
+      <div class="grid two">
         <div class="card">
-          <h2>Start Assessment</h2>
-          <p>Create a customer/property fast, or select an existing property below.</p>
-          <div class="grid two">
-            <label>Existing Property<select id="assessmentProperty"></select></label>
-            <label>Technician<input id="assessmentTech"></label>
-          </div>
-          <button id="startExistingAssessmentBtn">Start With Existing Property</button>
+          <h2>Start Inspection</h2>
+          <label>Existing Property<select id="assessmentProperty"></select></label>
+          <label>Technician<input id="assessmentTech"></label>
+          <button id="startAssessmentBtn">Start Home Health Assessment</button>
           <hr>
-          <h3>Quick New Customer / Property</h3>
+          <h3>Quick Create Customer + Property</h3>
           <div class="grid two">
-            <label>Customer Name<input id="quickCustomerName"></label>
-            <label>Email<input id="quickCustomerEmail"></label>
-            <label>Phone<input id="quickCustomerPhone"></label>
-            <label>Property Address<input id="quickPropertyAddress"></label>
-            <label>City<input id="quickPropertyCity"></label>
-            <label>State<input id="quickPropertyState" value="FL"></label>
-            <label>Zip<input id="quickPropertyZip"></label>
+            <label>Customer<input id="quickCustomer"></label>
+            <label>Email<input id="quickEmail"></label>
+            <label>Phone<input id="quickPhone"></label>
+            <label>Address<input id="quickAddress"></label>
+            <label>City<input id="quickCity"></label>
+            <label>State<input id="quickState" value="FL"></label>
+            <label>Zip<input id="quickZip"></label>
             <label>Technician<input id="quickTech"></label>
           </div>
-          <button id="startQuickAssessmentBtn">Create & Start Assessment</button>
+          <button id="quickStartAssessmentBtn">Create & Start</button>
         </div>
         <div class="card">
-          <h2>Saved Assessments</h2>
+          <h2>Saved Inspections</h2>
           <div id="assessmentList"></div>
         </div>
       </div>
 
-      <section id="editorWrap" class="hidden">
+      <section id="inspectionEditor" class="hidden">
         <div class="card">
           <div class="rowhead">
-            <div><h2 id="editorTitle">Inspection Editor</h2><p id="editorSub"></p></div>
+            <div>
+              <h2 id="inspectionTitle">Inspection Editor</h2>
+              <p id="inspectionSub" class="muted"></p>
+            </div>
             <div class="actions">
-              <button id="saveMetaBtn">Save Info</button>
-              <button id="deleteAssessmentBtn" class="danger">Delete Assessment</button>
+              <button id="saveInspectionMetaBtn">Save Info</button>
+              <button id="deleteAssessmentBtn" class="danger">Delete Inspection</button>
             </div>
           </div>
           <div class="grid">
-            <label>Customer Name<input id="editCustomerName"></label>
+            <label>Customer<input id="editCustomerName"></label>
             <label>Email<input id="editCustomerEmail"></label>
             <label>Phone<input id="editCustomerPhone"></label>
-            <label>Property Address<input id="editPropertyAddress"></label>
+            <label>Address<input id="editPropertyAddress"></label>
             <label>City<input id="editPropertyCity"></label>
             <label>State<input id="editPropertyState"></label>
             <label>Zip<input id="editPropertyZip"></label>
             <label>Technician<input id="editTechnician"></label>
           </div>
+        </div>
+
+        <div class="inspection-nav card">
+          <h3>Inspection Sections</h3>
+          <div id="sectionButtons" class="section-buttons"></div>
         </div>
 
         <div class="progress">
@@ -146,7 +176,7 @@
         </div>
         <div class="bar"><div id="barFill"></div></div>
 
-        <article class="card itemcard">
+        <article class="card item-card">
           <p class="eyebrow" id="categoryLabel"></p>
           <h2 id="itemTitle"></h2>
           <p id="educationText"></p>
@@ -158,13 +188,13 @@
           </div>
           <div class="grid">
             <label>Risk Points<input id="riskPoints" type="number"></label>
-            <label>Estimated Hours<input id="estimatedHours" type="number" step=".25"></label>
-            <label>Cost Range<input id="costRange"></label>
+            <label>Estimated Home Care Hours™<input id="estimatedHours" type="number" step=".25"></label>
+            <label>Cost Range<input id="costRange" placeholder="$100 - $300"></label>
             <label>Work Order Needed<select id="workOrderNeeded"><option>No</option><option>Yes</option></select></label>
           </div>
-          <label>Observation<textarea id="observation"></textarea></label>
-          <label>Recommendation<textarea id="recommendation"></textarea></label>
-          <div class="navrow">
+          <label>Observation<textarea id="observation" placeholder="What was found?"></textarea></label>
+          <label>Recommendation<textarea id="recommendation" placeholder="What should happen next?"></textarea></label>
+          <div class="actions navrow">
             <button id="prevItemBtn">Back</button>
             <button id="saveItemBtn">Save Item</button>
             <button id="nextItemBtn">Next</button>
@@ -172,26 +202,43 @@
         </article>
 
         <div class="card">
-          <h2>Assessment Summary</h2>
-          <div class="cards small">
+          <h2>Inspection Summary</h2>
+          <div class="metrics small">
             <div class="metric"><span>Score</span><strong id="finalScore">100</strong></div>
             <div class="metric"><span>Risk</span><strong id="finalRisk">Low</strong></div>
             <div class="metric"><span>Hours</span><strong id="finalHours">0</strong></div>
             <div class="metric"><span>WO Needed</span><strong id="finalWO">0</strong></div>
           </div>
-          <button id="generateReportBtn">Generate / Update Report</button>
-          <button id="createWorkOrdersBtn">Create Work Orders</button>
+          <div class="actions">
+            <button id="generateReportBtn">Generate Report</button>
+            <button id="createWorkOrdersBtn">Create Work Orders</button>
+          </div>
         </div>
       </section>
     </section>
 
     <section id="workorders" class="view">
-      <div class="card"><h2>Work Orders</h2><div id="workOrderList"></div></div>
+      <div class="card">
+        <h2>Work Orders</h2>
+        <div id="workOrderList"></div>
+      </div>
+    </section>
+
+    <section id="memberships" class="view">
+      <div class="card">
+        <h2>Memberships</h2>
+        <div class="plan-grid">
+          <div class="plan"><h3>Startup Assessment</h3><strong>$99</strong><p>Regular one-time assessment: $149</p></div>
+          <div class="plan"><h3>Cub</h3><strong>$249/mo</strong><p>4 Home Care Hours™ per month</p></div>
+          <div class="plan"><h3>Black Bear</h3><strong>$349/mo</strong><p>6 Home Care Hours™ per month</p></div>
+          <div class="plan"><h3>Grizzly</h3><strong>$449/mo</strong><p>8 Home Care Hours™ per month</p></div>
+        </div>
+      </div>
     </section>
 
     <section id="report" class="view">
       <div class="card">
-        <h2>Report</h2>
+        <h2>Customer Report</h2>
         <textarea id="reportText"></textarea>
         <button onclick="window.print()">Print / Save PDF</button>
       </div>
