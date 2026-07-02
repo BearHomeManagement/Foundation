@@ -1,0 +1,19 @@
+BearTrack Branding Patch v0.9
+
+Changed:
+- Rebranded visible app UI from BearOps to BearTrack™.
+- Header now reads BearTrack™.
+- Subtitle: The Home Intelligence Platform.
+- Added: Powered by Bear Home Management.
+- Login screen now says Welcome to BearTrack™.
+- Report output now says BearTrack™ Home Health Assessment / Prepared by Bear Home Management.
+
+Not changed:
+- Supabase config
+- Database
+- Authentication
+- Customers
+- Properties
+- Inspections
+- Work orders
+- Reports logic
