@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BearOps | Home Health Assessment</title>
+  <link rel="stylesheet" href="ops.css">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <h1>BearOps</h1>
+    <p>Home Health Assessment Console</p>
+  </div>
+  <button onclick="window.print()">Print / Save PDF</button>
+</header>
+
+<main class="app">
+  <aside class="sidebar">
+    <h2>Assessment</h2>
+    <label>Customer Name<input id="customerName" placeholder="Customer name"></label>
+    <label>Property Address<input id="propertyAddress" placeholder="Property address"></label>
+    <label>Technician<input id="technician" placeholder="Technician"></label>
+    <label>Assessment Date<input id="assessmentDate" type="date"></label>
+
+    <div class="score-card">
+      <span>Home Health Score™</span>
+      <strong id="healthScore">100</strong>
+    </div>
+    <div class="score-card">
+      <span>Risk Index™</span>
+      <strong id="riskIndex">Low</strong>
+    </div>
+    <div class="score-card">
+      <span>Items Complete</span>
+      <strong id="completeCount">0/0</strong>
+    </div>
+  </aside>
+
+  <section class="workspace">
+    <div class="workspace-head">
+      <div>
+        <h2>45-Minute Home Health Assessment</h2>
+        <p>Inspect the major systems, educate the homeowner, and convert findings into a plan.</p>
+      </div>
+      <button id="exportBtn">Generate Summary</button>
+    </div>
+
+    <div id="categories" class="categories"></div>
+    <div id="items" class="items"></div>
+
+    <section class="summary">
+      <h2>Report Summary</h2>
+      <textarea id="summaryOutput" placeholder="Generated report summary will appear here..."></textarea>
+    </section>
+  </section>
+</main>
+
+<script src="ops.js"></script>
+</body>
+</html>
