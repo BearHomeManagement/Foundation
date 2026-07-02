@@ -238,3 +238,26 @@ footer{background:#061727;color:#dceaf0;padding:28px 0}.footer-grid{display:flex
 /* BearTrack portal button only */
 .beartrack-portal-cta{margin-top:24px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 12px 28px rgba(7,31,52,.08)}
 .beartrack-portal-cta p{margin:12px 0 0;color:var(--muted)}
+
+
+/* BearTrack customer portal forms */
+.portal-form h3{margin:6px 0 2px;color:var(--navy);font-size:18px;text-transform:uppercase;letter-spacing:.06em}
+.portal-form input,.portal-form textarea,.portal-form select{font:inherit;width:100%;box-sizing:border-box;padding:14px;border-radius:12px;border:1px solid var(--line);background:white;color:var(--ink)}
+.portal-form textarea{min-height:130px;resize:vertical}
+.portal-form .file-label{display:block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:12px;color:white;font-weight:800}
+.portal-form .file-label input{margin-top:8px;background:white;color:var(--ink)}
+.cream .portal-form,.section:not(.contact) .portal-form{display:grid;gap:12px;background:white;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 12px 28px rgba(7,31,52,.08)}
+.contact .portal-form{display:grid;gap:12px}
+.contact .portal-form h3{color:white}
+.contact .portal-form select,.contact .portal-form input,.contact .portal-form textarea{border-color:rgba(255,255,255,.25)}
+
+
+/* BearTrack login-gated customer access */
+.portal-login-card{display:grid;gap:18px}
+.create-account-form{margin-top:0}
+.customer-dashboard[hidden]{display:none}
+.portal-welcome{padding-top:40px;padding-bottom:20px}
+.dashboard-welcome-card{display:flex;align-items:center;justify-content:space-between;gap:22px;background:white;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 12px 28px rgba(7,31,52,.08)}
+.dashboard-welcome-card h2{margin-top:0}
+.locked-link{opacity:.7}
+@media (max-width: 760px){.dashboard-welcome-card{display:block}.dashboard-welcome-card .button{margin-top:16px}}
