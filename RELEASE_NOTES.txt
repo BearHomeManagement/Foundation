@@ -1,0 +1,24 @@
+BearTrack Inspection Mode + Website Corrections
+
+Upload these files/folders:
+- index.html
+- styles.css
+- robots.txt
+- sitemap.xml
+- app.html
+- app.css
+- app.js
+- assets/ folder if included
+
+Do NOT replace:
+- config.js
+
+Includes:
+- BearTrack Inspection Mode layout
+- Photo add/take per inspection item
+- Bear Home Management provider wording in inspections
+- Website header/branding correction from Bear Maintenance to Bear Home Management
+- Phone button retained: (904) 424-9092
+- Call button wrapping improved
+- Powered by BearTrack™ note
+- SEO files
