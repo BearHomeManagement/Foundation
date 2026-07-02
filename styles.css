@@ -195,3 +195,42 @@ footer{background:#061727;color:#dceaf0;padding:28px 0}.footer-grid{display:flex
 .startup-inner .label{display:inline-block;background:#efb649;color:#062b35;font-weight:700;padding:6px 12px;border-radius:999px;margin-bottom:10px}
 .startup-inner h3{margin:8px 0;font-size:2rem}
 .startup-inner p{margin:0;opacity:.95}
+
+
+
+/* Website contact/SEO patch */
+.call-now,
+.site-phone a {
+  display:inline-block;
+  margin-left:14px;
+  padding:10px 14px;
+  border-radius:999px;
+  background:#efb649;
+  color:#061b22 !important;
+  font-weight:900;
+  text-decoration:none;
+}
+.contact-details {
+  max-width:1100px;
+  margin:24px auto;
+  padding:18px 22px;
+  border-radius:16px;
+  background:rgba(239,182,73,.14);
+  border:1px solid rgba(239,182,73,.45);
+}
+.contact-details a {
+  color:inherit;
+  font-weight:800;
+}
+.powered-by {
+  font-weight:800;
+  opacity:.85;
+}
+@media(max-width:800px){
+  .call-now,
+  .site-phone a {
+    display:block;
+    margin:12px 0 0;
+    text-align:center;
+  }
+}

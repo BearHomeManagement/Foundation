@@ -1,0 +1,25 @@
+Bear Home Management Website Contact/SEO Patch
+
+Changed:
+- Added phone number: (904) 424-9092
+- Added click-to-call links: tel:9044249092
+- Added contact details block with phone and email.
+- Replaced remaining visible Bear Maintenance text with Bear Home Management.
+- Added/updated SEO title and meta description.
+- Added Open Graph tags.
+- Added LocalBusiness schema.
+- Added robots.txt.
+- Added sitemap.xml.
+- Added Powered by BearTrack™ footer note.
+
+Upload ONLY public website files as needed:
+- index.html
+- styles.css
+- robots.txt
+- sitemap.xml
+
+Do not upload/replace:
+- app.html
+- app.css
+- app.js
+- config.js
