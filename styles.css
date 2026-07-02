@@ -189,3 +189,9 @@ footer{background:#061727;color:#dceaf0;padding:28px 0}.footer-grid{display:flex
 .startup-assessment-note strong {
   color: #062b35;
 }
+ 
+.startup-banner{margin:0 auto 28px;max-width:1000px}
+.startup-inner{background:#062b35;color:#fff;border-radius:18px;padding:22px 28px;text-align:center}
+.startup-inner .label{display:inline-block;background:#efb649;color:#062b35;font-weight:700;padding:6px 12px;border-radius:999px;margin-bottom:10px}
+.startup-inner h3{margin:8px 0;font-size:2rem}
+.startup-inner p{margin:0;opacity:.95}
