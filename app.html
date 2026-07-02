@@ -36,6 +36,7 @@
       <button class="tab" data-view="properties">Properties</button>
       <button class="tab" data-view="assessments">Inspections</button>
       <button class="tab" data-view="workorders">Work Orders</button>
+      <button class="tab" data-view="propertyfile">Property File</button>
       <button class="tab" data-view="memberships">Memberships</button>
       <button class="tab" data-view="report">Report</button>
     </nav>
@@ -221,6 +222,42 @@
       <div class="card">
         <h2>Work Orders</h2>
         <div id="workOrderList"></div>
+      </div>
+    </section>
+
+
+    <section id="propertyfile" class="view">
+      <div class="card">
+        <div class="rowhead">
+          <div>
+            <h2 id="propertyFileTitle">Property File</h2>
+            <p id="propertyFileSub" class="muted">Select a property from the Properties tab.</p>
+          </div>
+          <button id="propertyFileBackBtn">Back to Properties</button>
+        </div>
+      </div>
+
+      <div class="metrics small">
+        <div class="metric"><span>Latest Score</span><strong id="pfScore">—</strong></div>
+        <div class="metric"><span>Open WOs</span><strong id="pfOpenWO">0</strong></div>
+        <div class="metric"><span>Completed WOs</span><strong id="pfCompletedWO">0</strong></div>
+        <div class="metric"><span>Inspections</span><strong id="pfAssessments">0</strong></div>
+      </div>
+
+      <div class="grid two">
+        <div class="card">
+          <h2>Open Work Orders</h2>
+          <div id="pfOpenWorkOrders"></div>
+        </div>
+        <div class="card">
+          <h2>Completed Work Order History</h2>
+          <div id="pfCompletedWorkOrders"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Inspection History</h2>
+        <div id="pfAssessmentHistory"></div>
       </div>
     </section>
 

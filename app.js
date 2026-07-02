@@ -14,7 +14,35 @@ function flatIndex(si,ii){let n=0;for(let i=0;i<si;i++)n+=checklist[i].items.len
 let customers=[],properties=[],assessments=[],workOrders=[],inspection=null,propertyId=null,customerId=null,categoryIds={},savedItems={},current=0;
 
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
-function setView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(v).classList.add('active');document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===v))}
+function setView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(v).classList.add('active');
+function openPropertyFile(id){
+ const p=properties.find(x=>x.id===id);
+ if(!p){alert('Property not found');return}
+ const propAssessments=assessments.filter(a=>a.property_id===id);
+ const propWO=workOrders.filter(w=>w.property_id===id);
+ const openWO=propWO.filter(w=>w.status!=='complete');
+ const completedWO=propWO.filter(w=>w.status==='complete');
+ const latest=propAssessments[0];
+
+ $('propertyFileTitle').textContent=p.address||'Property File';
+ $('propertyFileSub').textContent=`${p.city||''}, ${p.state||''} ${p.zip||''} • Owner: ${p.customers?.full_name||'—'}`;
+ $('pfScore').textContent=latest?.home_health_score??'—';
+ $('pfOpenWO').textContent=openWO.length;
+ $('pfCompletedWO').textContent=completedWO.length;
+ $('pfAssessments').textContent=propAssessments.length;
+
+ $('pfOpenWorkOrders').innerHTML=openWO.map(w=>row(w.title,`Status: ${w.status}<br>Priority: ${w.priority}<br>Hours: ${w.estimated_hours||0} | Cost: ${w.estimated_cost||'TBD'}<br><span class="muted">${w.description||''}</span>`,`<button data-id="${w.id}" data-status="complete" class="pf-wo-complete">Mark Complete</button>`)).join('')||'<p>No open work orders.</p>';
+
+ $('pfCompletedWorkOrders').innerHTML=completedWO.map(w=>row(w.title,`Completed: ${w.completed_at?new Date(w.completed_at).toLocaleDateString():'—'}<br>Hours: ${w.estimated_hours||0} | Cost: ${w.estimated_cost||'TBD'}<br><span class="muted">${w.description||''}</span>`)).join('')||'<p>No completed work orders yet.</p>';
+
+ $('pfAssessmentHistory').innerHTML=propAssessments.map(a=>row(`${a.assessment_type||'Home Health Assessment'} - ${a.assessment_date||''}`,`Score: ${a.home_health_score??'—'} | Risk: ${a.risk_index??'—'} | Hours: ${a.estimated_hours||0}<br>Status: ${a.status||'draft'}`,`<button data-id="${a.id}" class="pf-open-assessment">Open Inspection</button>`)).join('')||'<p>No inspections yet.</p>';
+
+ document.querySelectorAll('.pf-wo-complete').forEach(b=>b.onclick=async()=>{await updateWOStatus(b.dataset.id,'complete');openPropertyFile(id)});
+ document.querySelectorAll('.pf-open-assessment').forEach(b=>b.onclick=()=>openAssessment(b.dataset.id));
+ setView('propertyfile');
+}
+
+document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===v))}
 async function checkSession(){const {data}=await db.auth.getSession();data.session?showApp():showLogin()}
 function showLogin(){$('loginView').classList.remove('hidden');$('appView').classList.add('hidden');$('logoutBtn').classList.add('hidden');$('refreshBtn').classList.add('hidden')}
 async function showApp(){$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('logoutBtn').classList.remove('hidden');$('refreshBtn').classList.remove('hidden');await loadAll()}
@@ -38,7 +66,7 @@ function renderSelects(){const co=customers.map(c=>`<option value="${c.id}">${c.
 function row(title,body,actions=''){return`<div class="row"><h3>${title}</h3><div>${body}</div><div class="actions">${actions}</div></div>`}
 
 function renderCustomers(){$('customerList').innerHTML=customers.map(c=>row(c.full_name,`${c.email||''}<br>${c.phone||''}<br><span class="muted">${c.notes||''}</span>`,`<button data-id="${c.id}" class="edit-customer">Edit</button>`)).join('')||'<p>No customers yet.</p>';document.querySelectorAll('.edit-customer').forEach(b=>b.onclick=()=>editCustomer(b.dataset.id))}
-function renderProperties(){$('propertyList').innerHTML=properties.map(p=>row(p.address,`${p.city||''}, ${p.state||''} ${p.zip||''}<br>Owner: ${p.customers?.full_name||'—'}<br><span class="muted">${p.notes||''}</span>`,`<button data-id="${p.id}" class="edit-property">Edit</button>`)).join('')||'<p>No properties yet.</p>';document.querySelectorAll('.edit-property').forEach(b=>b.onclick=()=>editProperty(b.dataset.id))}
+function renderProperties(){$('propertyList').innerHTML=properties.map(p=>row(p.address,`${p.city||''}, ${p.state||''} ${p.zip||''}<br>Owner: ${p.customers?.full_name||'—'}<br><span class="muted">${p.notes||''}</span>`,`<button data-id="${p.id}" class="open-property-file">Open Property File</button><button data-id="${p.id}" class="edit-property">Edit</button>`)).join('')||'<p>No properties yet.</p>';document.querySelectorAll('.edit-property').forEach(b=>b.onclick=()=>editProperty(b.dataset.id));document.querySelectorAll('.open-property-file').forEach(b=>b.onclick=()=>openPropertyFile(b.dataset.id))}
 function renderAssessments(){const html=assessments.map(a=>`<div class="assessment-row"><h3>${a.properties?.address||'No address'}</h3><p>${a.properties?.customers?.full_name||'No customer'} • ${a.assessment_date||''}</p><p class="muted">Score: ${a.home_health_score??'—'} | Risk: ${a.risk_index??'—'} | Status: ${a.status||'draft'}</p><div class="actions"><button class="open-assessment" data-id="${a.id}">Open / Review</button><button class="delete-assessment danger" data-id="${a.id}">Delete</button></div></div>`).join('')||'<p>No assessments yet.</p>';$('assessmentList').innerHTML=html;$('dashboardAssessments').innerHTML=html;document.querySelectorAll('.open-assessment').forEach(b=>b.onclick=()=>openAssessment(b.dataset.id));document.querySelectorAll('.delete-assessment').forEach(b=>b.onclick=()=>deleteAssessment(b.dataset.id))}
 function renderWorkOrders(){const html=workOrders.map(w=>row(w.title,`Property: ${w.properties?.address||'—'}<br>Status: ${w.status} | Priority: ${w.priority}<br>Hours: ${w.estimated_hours||0} | Cost: ${w.estimated_cost||'TBD'}<br><span class="muted">${w.description||''}</span>`,`<button data-id="${w.id}" data-status="scheduled" class="wo-status">Schedule</button><button data-id="${w.id}" data-status="complete" class="wo-status">Complete</button>`)).join('')||'<p>No work orders yet.</p>';$('workOrderList').innerHTML=html;$('dashboardWorkOrders').innerHTML=html;document.querySelectorAll('.wo-status').forEach(b=>b.onclick=()=>updateWOStatus(b.dataset.id,b.dataset.status))}
 
@@ -73,10 +101,38 @@ function generateReport(){const t=calc();let txt=`Bear Home Management - Home He
 async function createWorkOrders(){const t=calc();for(const i of t.items.filter(x=>x.work_order_needed)){const {data:existing}=await db.from('work_orders').select('id').eq('assessment_item_id',i.id);if(!existing?.length)await db.from('work_orders').insert({property_id:propertyId,assessment_item_id:i.id,title:i.title,description:i.observation,priority:i.risk_points>=7?'high':'normal',status:'open',estimated_hours:i.estimated_hours,estimated_cost:i.cost_range})}toast('Work orders created');await loadAll();setView('workorders')}
 async function updateWOStatus(id,status){await db.from('work_orders').update({status,completed_at:status==='complete'?new Date().toISOString():null}).eq('id',id);toast('Work order updated');await loadAll()}
 
+
+function openPropertyFile(id){
+ const p=properties.find(x=>x.id===id);
+ if(!p){alert('Property not found');return}
+ const propAssessments=assessments.filter(a=>a.property_id===id);
+ const propWO=workOrders.filter(w=>w.property_id===id);
+ const openWO=propWO.filter(w=>w.status!=='complete');
+ const completedWO=propWO.filter(w=>w.status==='complete');
+ const latest=propAssessments[0];
+
+ $('propertyFileTitle').textContent=p.address||'Property File';
+ $('propertyFileSub').textContent=`${p.city||''}, ${p.state||''} ${p.zip||''} • Owner: ${p.customers?.full_name||'—'}`;
+ $('pfScore').textContent=latest?.home_health_score??'—';
+ $('pfOpenWO').textContent=openWO.length;
+ $('pfCompletedWO').textContent=completedWO.length;
+ $('pfAssessments').textContent=propAssessments.length;
+
+ $('pfOpenWorkOrders').innerHTML=openWO.map(w=>row(w.title,`Status: ${w.status}<br>Priority: ${w.priority}<br>Hours: ${w.estimated_hours||0} | Cost: ${w.estimated_cost||'TBD'}<br><span class="muted">${w.description||''}</span>`,`<button data-id="${w.id}" data-status="complete" class="pf-wo-complete">Mark Complete</button>`)).join('')||'<p>No open work orders.</p>';
+
+ $('pfCompletedWorkOrders').innerHTML=completedWO.map(w=>row(w.title,`Completed: ${w.completed_at?new Date(w.completed_at).toLocaleDateString():'—'}<br>Hours: ${w.estimated_hours||0} | Cost: ${w.estimated_cost||'TBD'}<br><span class="muted">${w.description||''}</span>`)).join('')||'<p>No completed work orders yet.</p>';
+
+ $('pfAssessmentHistory').innerHTML=propAssessments.map(a=>row(`${a.assessment_type||'Home Health Assessment'} - ${a.assessment_date||''}`,`Score: ${a.home_health_score??'—'} | Risk: ${a.risk_index??'—'} | Hours: ${a.estimated_hours||0}<br>Status: ${a.status||'draft'}`,`<button data-id="${a.id}" class="pf-open-assessment">Open Inspection</button>`)).join('')||'<p>No inspections yet.</p>';
+
+ document.querySelectorAll('.pf-wo-complete').forEach(b=>b.onclick=async()=>{await updateWOStatus(b.dataset.id,'complete');openPropertyFile(id)});
+ document.querySelectorAll('.pf-open-assessment').forEach(b=>b.onclick=()=>openAssessment(b.dataset.id));
+ setView('propertyfile');
+}
+
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setView(b.dataset.view));
 document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>chooseStatus(b.dataset.status));
 $('loginBtn').onclick=login;$('logoutBtn').onclick=logout;$('refreshBtn').onclick=loadAll;
-$('dashNewInspection').onclick=()=>setView('assessments');$('dashNewCustomer').onclick=()=>setView('customers');$('dashWorkOrders').onclick=()=>setView('workorders');
+$('dashNewInspection').onclick=()=>setView('assessments');$('propertyFileBackBtn').onclick=()=>setView('properties');$('dashNewCustomer').onclick=()=>setView('customers');$('dashWorkOrders').onclick=()=>setView('workorders');
 $('saveCustomerBtn').onclick=saveCustomer;$('clearCustomerBtn').onclick=clearCustomer;
 $('savePropertyBtn').onclick=saveProperty;$('clearPropertyBtn').onclick=clearProperty;
 $('startAssessmentBtn').onclick=startExistingAssessment;$('quickStartAssessmentBtn').onclick=quickStartAssessment;
