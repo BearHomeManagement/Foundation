@@ -1,23 +1,28 @@
-# Bear Home Management Website
+# Bear Home Management V2 - Bear Track Portal
 
-Simple starter website for Bear Home Management.
+This patch turns Bear Track into the central website/app portal.
+
+## Included
+- Public website remains intact.
+- Bear Track Portal button in header and hero.
+- Role-based portal views: Customer, Operations, Technician, Admin.
+- Customer profile and property/home info intake.
+- Customer service, membership, work order, and appointment request form.
+- Smart scheduling slot suggestion.
+- Fully interactive Ops Schedule Board.
+- Drag/drop work orders between statuses.
+- Real-time edit/reassign/reschedule form.
+- Completed work orders fall off active board and move to History.
+- Follow-ups stay active until resolved.
+- Technician view with today’s jobs.
+- Inspection sections with take/upload photo inputs.
+- Admin snapshot.
+- LocalStorage prototype data persistence.
+
+## Deploy
+Upload these files to the GitHub repo root and deploy through Netlify.
 
 ## Files
-- index.html = website content
-- styles.css = design/styling
-
-## Deploy through Netlify
-1. Create a new GitHub repository named `bear-home-management-site`.
-2. Upload these files to that repository.
-3. In Netlify, choose "Add new site" > "Import an existing project".
-4. Connect GitHub.
-5. Pick the `bear-home-management-site` repository.
-6. Build command: leave blank.
-7. Publish directory: leave blank or use `/`.
-8. Deploy.
-
-## Domain
-After deploy:
-1. Netlify > Site configuration > Domain management.
-2. Add custom domain: `bearhomemanagement.com`.
-3. Follow Netlify DNS instructions or update GoDaddy DNS records.
+- index.html
+- styles.css
+- script.js
