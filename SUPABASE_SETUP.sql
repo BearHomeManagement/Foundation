@@ -3,7 +3,8 @@
 create table if not exists profiles (
   id text primary key,
   created_at timestamptz default now(),
-  name text, email text, phone text, "preferred-contact" text,
+  name text, email text, phone text, "preferred-contact" text, "primary-service" text,
+  account_status text, ops_notes text, updated_at timestamptz,
   "property-address" text, "property-type" text, "year-built" text, "home-size" text,
   "access-notes" text, "home-notes" text, status text
 );
@@ -19,7 +20,7 @@ create table if not exists memberships (
   id text primary key,
   created_at timestamptz default now(),
   name text, email text, phone text, "property-address" text,
-  "membership-interest" text, "membership-notes" text, status text
+  "membership-interest" text, "membership-notes" text, status text, ops_notes text, updated_at timestamptz
 );
 insert into storage.buckets (id, name, public) values ('beartrack-photos', 'beartrack-photos', false)
 on conflict (id) do nothing;
