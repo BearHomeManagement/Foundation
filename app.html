@@ -1,255 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>BearTrack™</title>
-  <link rel="stylesheet" href="app.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BearTrack™ App | Bear Home Management</title>
+  <meta name="description" content="BearTrack customer intake and operations dashboard for Bear Home Management." />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .hidden{display:none!important}.app-panel{background:#fff;border-radius:24px;padding:28px;box-shadow:var(--shadow)}.app-actions{display:flex;gap:12px;flex-wrap:wrap}.app-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.app-table{width:100%;border-collapse:collapse;background:#fff;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}.app-table th,.app-table td{padding:12px;border-bottom:1px solid #e7ebf0;text-align:left;vertical-align:top}.app-table th{background:var(--navy);color:#fff}.ops-actions{display:flex;gap:8px;flex-wrap:wrap}.ops-actions select,.ops-actions input{min-width:150px}.record-card{background:#fff;border-radius:18px;padding:20px;box-shadow:var(--shadow)}.small-muted{color:var(--muted);font-size:.9rem}.mini-nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.mini-nav a{padding:10px 14px;border-radius:999px;background:rgba(15,45,82,.08);font-weight:800;text-decoration:none;color:var(--navy)}@media(max-width:800px){.app-grid{grid-template-columns:1fr}.app-table{display:block;overflow-x:auto}}
+  </style>
 </head>
 <body>
-<header class="topbar">
-  <div>
-    <h1>BearTrack™</h1>
-    <p>The Home Intelligence Platform</p>
-    <small>Powered by Bear Home Management</small>
-  </div>
-  <div class="top-actions">
-    <button id="refreshBtn" class="hidden">Refresh</button>
-    <button id="logoutBtn" class="hidden">Log Out</button>
-  </div>
-</header>
-
-<main>
-<section id="loginView" class="card login">
-  <h2>Welcome to BearTrack™</h2>
-  <p class="login-tagline">The Home Intelligence Platform</p>
-  <label>Email<input id="loginEmail" type="email"></label>
-  <label>Password<input id="loginPassword" type="password"></label>
-  <button id="loginBtn">Log In</button>
-  <p id="loginMsg" class="error"></p>
-</section>
-
-<section id="appView" class="hidden">
-  <nav class="tabs">
-    <button class="tab active" data-view="dashboard">Dashboard</button>
-    <button class="tab" data-view="customers">Customers</button>
-    <button class="tab" data-view="properties">Properties</button>
-    <button class="tab" data-view="assessments">Inspections</button>
-    <button class="tab" data-view="workorders">Work Orders</button>
-    <button class="tab" data-view="propertyfile">Property File</button>
-    <button class="tab" data-view="report">Report</button>
-  </nav>
-
-  <section id="dashboard" class="view active">
-    <div class="metrics">
-      <div class="metric"><span>Customers</span><strong id="metricCustomers">0</strong></div>
-      <div class="metric"><span>Properties</span><strong id="metricProperties">0</strong></div>
-      <div class="metric"><span>Inspections</span><strong id="metricAssessments">0</strong></div>
-      <div class="metric"><span>Open Work Orders</span><strong id="metricOpenWO">0</strong></div>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html#top" aria-label="Bear Home Management home">
+        <img src="assets/bear-head-header.png" alt="Bear Home Management bear head logo" />
+        <div class="brand-text"><strong>BEAR</strong><span>MAINTENANCE</span><small>Protect. Maintain. Preserve.</small></div>
+      </a>
+      <button class="menu-toggle" aria-label="Open navigation">☰</button>
+      <nav class="site-nav">
+        <a href="index.html">Website</a>
+        <a href="#customer">Customer Access</a>
+        <a href="#ops">Ops Dashboard</a>
+        <a class="call-now" href="tel:9044249092">Call (904) 424-9092</a>
+      </nav>
     </div>
-    <div class="quick-actions">
-      <button id="dashNewInspection">Start Home Health Assessment</button>
-      <button id="dashNewCustomer">Add Customer</button>
-      <button id="dashWorkOrders">View Work Orders</button>
-    </div>
-    <div class="grid two">
-      <div class="card"><h2>Recent Inspections</h2><div id="dashboardAssessments"></div></div>
-      <div class="card"><h2>Open Work Orders</h2><div id="dashboardWorkOrders"></div></div>
-    </div>
-  </section>
+  </header>
 
-  <section id="customers" class="view">
-    <div class="card">
-      <h2>Customer</h2>
-      <input type="hidden" id="customerId">
-      <div class="grid">
-        <label>Full Name<input id="customerName"></label>
-        <label>Email<input id="customerEmail"></label>
-        <label>Phone<input id="customerPhone"></label>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-bg-shapes" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-logo-wrap"><img class="hero-bear" src="assets/bear-head-hero.png" alt="BearTrack bear logo" /></div>
+        <div class="hero-copy">
+          <p class="eyebrow">BearTrack™ App</p>
+          <h1>Customer intake and operations review in one place.</h1>
+          <p class="apartment-message"><strong>Customer requests</strong><span> save to BearTrack and are visible in the Ops dashboard for review, scheduling, and status updates.</span></p>
+          <div class="hero-actions"><a href="#customer" class="button">Customer Access</a><a href="#ops" class="button secondary">Ops Dashboard</a></div>
+        </div>
       </div>
-      <label>Notes<textarea id="customerNotes"></textarea></label>
-      <button id="saveCustomerBtn">Save Customer</button>
-      <button id="clearCustomerBtn">Clear</button>
-    </div>
-    <div class="card"><h2>Customers</h2><div id="customerList"></div></div>
-  </section>
+    </section>
 
-  <section id="properties" class="view">
-    <div class="card">
-      <h2>Property</h2>
-      <input type="hidden" id="propertyId">
-      <div class="grid">
-        <label>Customer<select id="propertyCustomer"></select></label>
-        <label>Address<input id="propertyAddress"></label>
-        <label>City<input id="propertyCity"></label>
-        <label>State<input id="propertyState" value="FL"></label>
-        <label>Zip<input id="propertyZip"></label>
-        <label>Year Built<input id="propertyYear" type="number"></label>
-        <label>Square Feet<input id="propertySqft" type="number"></label>
-        <label>Type<input id="propertyType"></label>
+    <section id="customer" class="section cream">
+      <div class="container app-grid">
+        <div class="app-panel">
+          <p class="eyebrow">Customer access</p>
+          <h2>Log in or create BearTrack™ access.</h2>
+          <p>After access, customers can add home info, request a work order, and request membership review.</p>
+          <form id="login-form" class="portal-form">
+            <h3>Customer Login</h3>
+            <input id="login-email" type="email" placeholder="Email" required />
+            <input id="login-phone" type="tel" placeholder="Phone" />
+            <button class="button" type="submit">Enter BearTrack™</button>
+          </form>
+        </div>
+        <div class="app-panel">
+          <form id="create-account" class="portal-form">
+            <h3>Create Access</h3>
+            <input id="signup-name" placeholder="Full name" required />
+            <input id="signup-email" type="email" placeholder="Email" required />
+            <input id="signup-phone" type="tel" placeholder="Phone" />
+            <button class="button secondary" type="submit">Create BearTrack™ Access</button>
+            <p class="form-note">This opens the customer intake dashboard. Full authentication can be added next.</p>
+          </form>
+        </div>
       </div>
-      <label>Notes<textarea id="propertyNotes"></textarea></label>
-      <button id="savePropertyBtn">Save Property</button>
-      <button id="clearPropertyBtn">Clear</button>
-    </div>
-    <div class="card"><h2>Properties</h2><div id="propertyList"></div></div>
-  </section>
+    </section>
 
-  <section id="assessments" class="view">
-    <div class="grid two">
-      <div class="card">
-        <h2>Start Inspection</h2>
-        <label>Existing Property<select id="assessmentProperty"></select></label>
-        <label>Technician<input id="assessmentTech"></label>
-        <button id="startAssessmentBtn">Start Assessment</button>
-        <hr>
-        <h3>Quick Create</h3>
-        <div class="grid two">
-          <label>Customer<input id="quickCustomer"></label>
-          <label>Email<input id="quickEmail"></label>
-          <label>Phone<input id="quickPhone"></label>
-          <label>Address<input id="quickAddress"></label>
-          <label>City<input id="quickCity"></label>
-          <label>State<input id="quickState" value="FL"></label>
-          <label>Zip<input id="quickZip"></label>
-          <label>Technician<input id="quickTech"></label>
-        </div>
-        <button id="quickStartAssessmentBtn">Create & Start</button>
-      </div>
-      <div class="card">
-        <h2>Saved Inspections</h2>
-        <div id="assessmentList"></div>
-      </div>
-    </div>
-
-    <section id="inspectionEditor" class="hidden inspection-shell">
-      <aside class="bt-sidebar">
-        <div class="bt-brand">
-          <div class="bt-logo">🐻</div>
-          <div><h2>BearTrack™</h2><p>INSPECTION MODE</p></div>
-        </div>
-        <div class="bt-assessment-card">
-          <strong id="sideAssessmentName">Initial Bear Assessment</strong>
-          <span>Level 1 · Home Health Assessment</span>
-          <small id="sidePropertyName"></small>
-        </div>
-        <div class="side-progress">
-          <div><strong>INSPECTION PROGRESS</strong><b id="sideProgressPercent">0%</b></div>
-          <div class="side-bar"><div id="sideBarFill"></div></div>
-        </div>
-        <div id="sideSections" class="side-sections"></div>
-      </aside>
-
-      <section class="bt-workspace">
-        <div class="bt-work-head">
-          <div>
-            <h2 id="sectionTitle">Section</h2>
-            <p id="itemCounter">0 of 0 items completed</p>
-          </div>
-          <div>
-            <button id="saveInspectionMetaBtn">Save Info</button>
-            <button id="generateReportBtn">Complete / Report</button>
-          </div>
-        </div>
-
-        <div class="bt-searchbar">
-          <input id="itemSearch" placeholder="Search items in this section...">
-          <div class="filters">
-            <button class="filter active" data-filter="All">All</button>
-            <button class="filter" data-filter="Good">Good</button>
-            <button class="filter" data-filter="Monitor">Monitor</button>
-            <button class="filter" data-filter="Service Soon">Service Soon</button>
-            <button class="filter" data-filter="Needs Repair">Needs Repair</button>
-            <button class="filter" data-filter="Critical">Critical</button>
-          </div>
-        </div>
-
-        <div class="bt-grid">
-          <div class="bt-list" id="sectionItemList"></div>
-
-          <article class="bt-detail">
-            <div class="detail-top">
-              <span id="detailNumber"></span>
-              <span id="detailStatus" class="status-pill">Good</span>
-            </div>
-            <h2 id="itemTitle"></h2>
-            <p class="provider">Bear Home Management</p>
-
-            <div class="detail-columns">
-              <div>
-                <h4>Observation</h4>
-                <textarea id="observation" placeholder="What did we observe?"></textarea>
-              </div>
-              <div>
-                <h4>Photos <span id="photoCount">0</span></h4>
-                <div id="photoPreview" class="photo-preview"></div>
-                <label class="add-photo">
-                  + Add / Take Photo
-                  <input id="photoInput" type="file" accept="image/*" capture="environment" multiple hidden>
-                </label>
-              </div>
-            </div>
-
-            <div class="answers">
-              <div><b>1. What did we observe?</b><textarea id="answerObserve"></textarea></div>
-              <div><b>2. What does it mean?</b><textarea id="answerMeaning"></textarea></div>
-              <div><b>3. What should happen next?</b><textarea id="recommendation"></textarea></div>
-              <div><b>4. When?</b><input id="whenField" placeholder="Within 3–6 months"></div>
-              <div><b>5. Can Bear Home Management perform it?</b><select id="workOrderNeeded"><option>No</option><option>Yes</option></select></div>
-            </div>
-
-            <div class="detail-controls">
-              <div class="choices">
-                <button class="choice" data-status="Good">Good</button>
-                <button class="choice" data-status="Monitor">Monitor</button>
-                <button class="choice" data-status="Service Soon">Service Soon</button>
-                <button class="choice danger-choice" data-status="Needs Repair">Needs Repair</button>
-                <button class="choice critical-choice" data-status="Critical">Critical</button>
-              </div>
-              <div class="grid">
-                <label>Risk<input id="riskPoints" type="number"></label>
-                <label>Hours<input id="estimatedHours" type="number" step=".25"></label>
-                <label>Cost Range<input id="costRange"></label>
-              </div>
-              <button id="saveItemBtn">Save Item</button>
-              <button id="createWorkOrdersBtn">Create Work Orders</button>
-              <button id="deleteAssessmentBtn" class="danger">Delete Inspection</button>
-            </div>
-          </article>
+    <div id="customer-dashboard" class="customer-dashboard hidden">
+      <section class="section">
+        <div class="container dashboard-welcome-card app-panel">
+          <div><p class="eyebrow">Customer dashboard</p><h2>Welcome to BearTrack™.</h2><p id="customer-welcome-text">Add your home info or submit a work order request.</p><div class="mini-nav"><a href="#profile">Home Profile</a><a href="#workorder">Request Work Order</a><a href="#membership">Membership Request</a></div></div>
+          <button id="logout-button" class="button secondary" type="button">Log Out</button>
         </div>
       </section>
+
+      <section id="profile" class="section cream">
+        <div class="container two-col">
+          <div><p class="eyebrow">Home profile</p><h2>Customer and home information.</h2><p>Complete this once so Bear Home Management can set up the property correctly.</p><ul class="check-list"><li>Personal information</li><li>Property details</li><li>Access notes</li><li>Preferred contact method</li></ul></div>
+          <form id="profile-form" name="beartrack-profile" method="POST" data-netlify="true" class="contact-form portal-form">
+            <input type="hidden" name="form-name" value="beartrack-profile" />
+            <h3>Personal Information</h3>
+            <input name="name" placeholder="Full name" required /><input name="email" type="email" placeholder="Email" required /><input name="phone" type="tel" placeholder="Phone" />
+            <select name="preferred-contact"><option value="">Preferred contact method</option><option>Call</option><option>Text</option><option>Email</option></select>
+            <h3>Home Information</h3>
+            <input name="property-address" placeholder="Property address" required /><input name="property-type" placeholder="Property type: single-family, condo, townhouse, etc." /><input name="year-built" placeholder="Year built, if known" /><input name="home-size" placeholder="Approx. square footage, if known" /><input name="access-notes" placeholder="Gate code, access notes, pets, or parking details" /><textarea name="home-notes" placeholder="Anything else we should know about the home?"></textarea>
+            <button class="button" type="submit">Submit Home Profile</button><p class="form-note save-note"></p>
+          </form>
+        </div>
+      </section>
+
+      <section id="workorder" class="section contact">
+        <div class="container two-col">
+          <div><p class="eyebrow light">Work order request</p><h2>Tell us what needs attention.</h2><p>Use this form for repairs, honey-do items, maintenance concerns, inspection follow-ups, and appointment requests.</p><div class="contact-promise"><strong>Helpful details speed things up.</strong><span>Include issue location, urgency, photos if available, and access information.</span></div></div>
+          <form id="workorder-form" name="beartrack-workorder" method="POST" data-netlify="true" enctype="multipart/form-data" class="portal-form">
+            <input type="hidden" name="form-name" value="beartrack-workorder" />
+            <input name="customer-name" placeholder="Full name" required /><input name="customer-phone" type="tel" placeholder="Phone" /><input name="customer-email" type="email" placeholder="Email" required /><input name="property-address" placeholder="Property address" required />
+            <select name="workorder-type" required><option value="">Work order type</option><option>Repair</option><option>Maintenance</option><option>Honey-Do Item</option><option>Inspection Follow-Up</option><option>Emergency Concern</option><option>Membership / Home Care Hours Request</option><option>Bear Home Assessment™</option></select>
+            <select name="priority" required><option value="">Priority</option><option>Emergency / Immediate</option><option>High - Needs attention soon</option><option>Normal</option><option>Low / Planning ahead</option></select>
+            <input name="issue-location" placeholder="Where is the issue? Kitchen, bathroom, exterior, attic, etc." /><textarea name="issue-description" placeholder="Describe the issue or work requested" required></textarea><input name="preferred-appointment" placeholder="Preferred appointment day/time" /><select name="access-permission"><option value="">Will someone be home?</option><option>Someone will be home</option><option>Permission to enter / access provided</option><option>Please call before arrival</option><option>Need to coordinate with property manager/tenant</option></select><label>Upload photos<input name="photos" type="file" accept="image/*" multiple /></label>
+            <button class="button" type="submit">Submit Work Order Request</button><p class="form-note save-note"></p>
+          </form>
+        </div>
+      </section>
+
+      <section id="membership" class="section cream">
+        <div class="container two-col">
+          <div><p class="eyebrow">Membership request</p><h2>Request a Bear Home Management review.</h2><p>Tell us what kind of support you are interested in.</p></div>
+          <form id="membership-form" name="beartrack-membership" method="POST" data-netlify="true" class="contact-form portal-form">
+            <input type="hidden" name="form-name" value="beartrack-membership" />
+            <input name="name" placeholder="Full name" required /><input name="email" type="email" placeholder="Email" required /><input name="phone" type="tel" placeholder="Phone" /><input name="property-address" placeholder="Property address" />
+            <select name="membership-interest"><option value="">Membership interest</option><option>Bear Essential - 2 hours/month</option><option>Bear Plus - 4 hours/month</option><option>Bear Signature - 6 hours/month</option><option>Not sure - recommend a plan</option><option>One-time service first</option></select>
+            <textarea name="membership-notes" placeholder="What are you hoping Bear Home Management can help with?"></textarea>
+            <button class="button" type="submit">Submit Membership Request</button><p class="form-note save-note"></p>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <section id="ops" class="section">
+      <div class="container">
+        <div id="ops-login" class="app-panel" style="max-width:560px;margin:auto">
+          <p class="eyebrow">Ops access</p><h2>Open Ops Dashboard</h2>
+          <form id="ops-login-form" class="portal-form"><input id="ops-code" placeholder="Ops code" required /><button class="button" type="submit">Open Dashboard</button><p class="form-note">Temporary code: BHMOPS</p></form>
+        </div>
+        <div id="ops-dashboard" class="hidden">
+          <div class="section-heading"><p class="eyebrow">Live queue</p><h2>Work orders</h2><p>Customer work orders submitted in BearTrack appear here. Completed items stay out of active queue and remain in history.</p></div>
+          <table class="app-table"><thead><tr><th>Customer / Property</th><th>Request</th><th>Schedule / Access</th><th>Ops Controls</th></tr></thead><tbody id="workorders-body"></tbody></table>
+          <div class="section-heading" style="margin-top:32px"><p class="eyebrow">Customer intake</p><h2>Profiles and membership requests</h2></div>
+          <div id="profiles-list" class="app-grid"></div>
+          <div id="memberships-list" class="app-grid" style="margin-top:20px"></div>
+        </div>
+      </div>
     </section>
-  </section>
+  </main>
 
-  <section id="workorders" class="view"><div class="card"><h2>Work Orders</h2><div id="workOrderList"></div></div></section>
-
-  <section id="propertyfile" class="view">
-    <div class="card"><h2 id="propertyFileTitle">Property File</h2><p id="propertyFileSub" class="muted">Select a property.</p></div>
-    <div class="metrics small">
-      <div class="metric"><span>Latest Score</span><strong id="pfScore">—</strong></div>
-      <div class="metric"><span>Open WOs</span><strong id="pfOpenWO">0</strong></div>
-      <div class="metric"><span>Completed WOs</span><strong id="pfCompletedWO">0</strong></div>
-      <div class="metric"><span>Inspections</span><strong id="pfAssessments">0</strong></div>
-    </div>
-    <div class="grid two">
-      <div class="card"><h2>Open Work Orders</h2><div id="pfOpenWorkOrders"></div></div>
-      <div class="card"><h2>Completed Work Orders</h2><div id="pfCompletedWorkOrders"></div></div>
-    </div>
-    <div class="card"><h2>Inspection History</h2><div id="pfAssessmentHistory"></div></div>
-  </section>
-
-  <section id="report" class="view">
-    <div class="card">
-      <h2>BearTrack™ Home Health Assessment</h2>
-      <textarea id="reportText"></textarea>
-      <button onclick="window.print()">Print / Save PDF</button>
-    </div>
-  </section>
-</section>
-</main>
-<div id="toast"></div>
-<script src="app.js"></script>
-</body>
-</html>
+  <footer><div class="container footer-grid"><div><strong>Bear Home Management</strong><span>BearTrack™ App</span></div></div></footer>
+  <script src="supabase-config.js"></script><script src="beartrack-cloud.js"></script>
+  <script>
+    const customerDashboard = document.getElementById('customer-dashboard');
+    function showCustomer(name,email,phone){ customerDashboard.classList.remove('hidden'); document.getElementById('customer-welcome-text').textContent = `Signed in as ${name || email}.`; ['profile-form','workorder-form','membership-form'].forEach(id=>{const f=document.getElementById(id); if(!f)return; const emailField=f.querySelector('[name="email"], [name="customer-email"]'); const nameField=f.querySelector('[name="name"], [name="customer-name"]'); const phoneField=f.querySelector('[name="phone"], [name="customer-phone"]'); if(emailField&&!emailField.value) emailField.value=email||''; if(nameField&&!nameField.value) nameField.value=name||''; if(phoneField&&!phoneField.value) phoneField.value=phone||'';}); customerDashboard.scrollIntoView({behavior:'smooth'}); }
+    document.getElementById('login-form').addEventListener('submit', e=>{e.preventDefault(); showCustomer('', document.getElementById('login-email').value, document.getElementById('login-phone').value);});
+    document.getElementById('create-account').addEventListener('submit', e=>{e.preventDefault(); showCustomer(document.getElementById('signup-name').value, document.getElementById('signup-email').value, document.getElementById('signup-phone').value);});
+    document.getElementById('logout-button').addEventListener('click', ()=> customerDashboard.classList.add('hidden'));
+    async function handleSave(formId, type){ const form=document.getElementById(formId); form.addEventListener('submit', async e=>{ e.preventDefault(); const record=BearTrackCloud.formToObject(form); const files=form.querySelector('[type="file"]')?.files || []; await BearTrackCloud.saveRecord(type, record, files); const note=form.querySelector('.save-note'); if(note) note.textContent='Saved to BearTrack. Ops can view and update this in the dashboard.'; if(type==='workorder' && !document.getElementById('ops-dashboard').classList.contains('hidden')) await renderOps(); }); }
+    handleSave('profile-form','profile'); handleSave('workorder-form','workorder'); handleSave('membership-form','membership');
+    const opsLogin = document.getElementById('ops-login'); const opsDash = document.getElementById('ops-dashboard');
+    document.getElementById('ops-login-form').addEventListener('submit', async e=>{e.preventDefault(); if(document.getElementById('ops-code').value.trim().toUpperCase()==='BHMOPS'){opsLogin.classList.add('hidden');opsDash.classList.remove('hidden'); await renderOps();}});
+    function esc(v){return String(v||'').replace(/[&<>]/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));}
+    async function renderOps(){
+      const data = await BearTrackCloud.loadRecords();
+      const active = (data.workorders||[]).filter(w => (w.status||'') !== 'Complete');
+      const history = (data.workorders||[]).filter(w => (w.status||'') === 'Complete');
+      document.getElementById('workorders-body').innerHTML = [...active, ...history].map(w=>`
+        <tr><td><strong>${esc(w['customer-name']||w.name)}</strong><br>${esc(w['customer-email']||w.email)}<br>${esc(w['customer-phone']||w.phone)}<br><span class="small-muted">${esc(w['property-address'])}</span></td>
+        <td><strong>${esc(w['workorder-type'])}</strong><br>${esc(w['issue-location'])}<br>${esc(w['issue-description'])}<br><span class="small-muted">Photos: ${(w.photo_paths||[]).length}</span></td>
+        <td>${esc(w['preferred-appointment'])}<br>${esc(w['access-permission'])}</td>
+        <td><div class="ops-actions"><select data-id="${w.id}" data-field="status"><option>${esc(w.status||'New Request')}</option><option>New Request</option><option>Reviewing</option><option>Scheduled</option><option>Waiting on Customer</option><option>Follow-Up Needed</option><option>Complete</option></select><select data-id="${w.id}" data-field="priority"><option>${esc(w.priority||'Normal')}</option><option>Emergency / Immediate</option><option>High - Needs attention soon</option><option>Normal</option><option>Low / Planning ahead</option></select><input data-id="${w.id}" data-field="ops_notes" placeholder="Ops notes / next action" value="${esc(w.ops_notes)}"><button class="button secondary save-workorder" data-id="${w.id}" type="button">Save</button></div></td></tr>`).join('') || '<tr><td colspan="4">No work orders yet.</td></tr>';
+      document.getElementById('profiles-list').innerHTML = (data.profiles||[]).map(p=>`<div class="record-card"><strong>${esc(p.name)}</strong><p>${esc(p.email)} · ${esc(p.phone)}</p><p>${esc(p['property-address'])}</p><p class="small-muted">${esc(p['access-notes'])} ${esc(p['home-notes'])}</p></div>`).join('') || '<div class="record-card">No profiles yet.</div>';
+      document.getElementById('memberships-list').innerHTML = (data.memberships||[]).map(m=>`<div class="record-card"><strong>${esc(m.name)}</strong><p>${esc(m.email)} · ${esc(m.phone)}</p><p>${esc(m['membership-interest'])}</p><p class="small-muted">${esc(m['membership-notes'])}</p></div>`).join('') || '<div class="record-card">No membership requests yet.</div>';
+      document.querySelectorAll('.save-workorder').forEach(btn=>btn.onclick=async()=>{const id=btn.dataset.id;const updates={};document.querySelectorAll(`[data-id="${id}"]`).forEach(el=>updates[el.dataset.field]=el.value);await BearTrackCloud.updateWorkorder(id, updates);await renderOps();});
+    }
+  </script>
+</body></html>
