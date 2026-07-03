@@ -237,12 +237,19 @@
     </div>
   </footer>
 
+  <script src="supabase-config.js"></script>
+  <script src="beartrack-cloud.js"></script>
   <script>
     const dashboard = document.getElementById('customer-dashboard');
     const loginForm = document.getElementById('login-form');
     const createForm = document.getElementById('create-account');
     const logoutButton = document.getElementById('logout-button');
     const welcomeText = document.getElementById('customer-welcome-text');
+    function showSaved(form, label) {
+      let note = form.querySelector('.save-note');
+      if (!note) { note = document.createElement('p'); note.className = 'form-note save-note'; form.appendChild(note); }
+      note.textContent = label + ' saved to BearTrack. Ops can now view/change it from the Ops Dashboard.';
+    }
 
     function openPortal(nameOrEmail) {
       const label = nameOrEmail || localStorage.getItem('beartrackCustomer') || 'Customer';
@@ -280,6 +287,33 @@
           document.getElementById('login').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
+    });
+
+
+    document.querySelector('form[name="beartrack-profile"]')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      await BearTrackCloud.saveRecord('profile', BearTrackCloud.formToObject(form));
+      showSaved(form, 'Home profile');
+      form.reset();
+    });
+
+    document.querySelector('form[name="beartrack-workorder"]')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const record = BearTrackCloud.formToObject(form);
+      const files = form.querySelector('input[type="file"]')?.files || [];
+      await BearTrackCloud.saveRecord('workorder', record, files);
+      showSaved(form, 'Work order');
+      form.reset();
+    });
+
+    document.querySelector('form[name="beartrack-membership"]')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      await BearTrackCloud.saveRecord('membership', BearTrackCloud.formToObject(form));
+      showSaved(form, 'Membership request');
+      form.reset();
     });
   </script>
 </body>

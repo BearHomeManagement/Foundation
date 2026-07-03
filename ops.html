@@ -1,189 +1,70 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bear Home Management Operations Portal</title>
-  <link rel="stylesheet" href="ops-portal.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BearTrack™ Ops Dashboard | Bear Home Management</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .ops-board{display:grid;grid-template-columns:1fr;gap:20px}.ops-table{width:100%;border-collapse:collapse;background:white;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}.ops-table th,.ops-table td{padding:12px;border-bottom:1px solid #e7ebf0;text-align:left;vertical-align:top}.ops-table th{background:var(--navy);color:white}.ops-actions{display:flex;gap:8px;flex-wrap:wrap}.ops-actions select,.ops-actions input{min-width:150px}.record-card{background:white;border-radius:18px;padding:20px;box-shadow:var(--shadow)}.small-muted{color:var(--muted);font-size:.9rem}.locked{max-width:520px;margin:auto}.hidden{display:none!important}
+  </style>
 </head>
 <body>
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="bear">🐻</div>
-      <div><strong>Bear Home Management</strong><span>Operations Portal</span></div>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html#top" aria-label="Bear Home Management home">
+        <img src="assets/bear-head-header.png" alt="Bear Home Management bear head logo" />
+        <div class="brand-text"><strong>BEAR</strong><span>MAINTENANCE</span><small>Protect. Maintain. Preserve.</small></div>
+      </a>
+      <nav class="site-nav"><a href="index.html">Website</a><a href="portal.html">Customer Portal</a><a class="call-now" href="tel:9044249092">Call (904) 424-9092</a></nav>
     </div>
-    <nav>
-      <a class="active" href="#dashboard">Dashboard</a>
-      <a href="#dispatch">Dispatch Board</a>
-      <a href="#workorders">Work Orders</a>
-      <a href="#inspections">Inspections</a><a href="ops-assessment.html">New Assessment</a>
-      <a href="#routes">Technician Routes</a>
-      <a href="#hours">Home Care Hours™</a>
-      <a href="#partners">Partner Projects</a>
-      <a href="#compliance">Compliance Matrix</a>
-    </nav>
-  </aside>
-
+  </header>
   <main>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Clay County Launch View</p>
-        <h1>Operations Command Center</h1>
-      </div>
-      <div class="top-actions"><a class="button" href="ops-assessment.html">+ New Inspection</a><button>+ New Work Order</button></div>
-    </header>
-
-    <section id="dashboard" class="grid cards">
-      <div class="card metric"><span>Active Members</span><strong>38</strong><small>Clay County pilot</small></div>
-      <div class="card metric"><span>Open Work Orders</span><strong>17</strong><small>6 need scheduling</small></div>
-      <div class="card metric"><span>Inspections Due</span><strong>9</strong><small>Next 14 days</small></div>
-      <div class="card metric"><span>Banked Hours</span><strong>286</strong><small>Across all members</small></div>
-    </section>
-
-    <section id="dispatch" class="section">
-      <div class="section-title"><h2>Dispatch Board</h2><p>Drag jobs from intake to scheduled, in progress, completed, or partner referral.</p></div>
-      <div class="kanban">
-        <div class="lane"><h3>Intake</h3><div class="ticket urgent"><b>Running toilet</b><span>Orange Park • 0.75 hr • Parts: flapper</span></div><div class="ticket"><b>TV mount request</b><span>Middleburg • 1.5 hr</span></div></div>
-        <div class="lane"><h3>Scheduled</h3><div class="ticket"><b>Annual BearTrack Review</b><span>Fleming Island • 2.0 hr</span></div><div class="ticket"><b>Light fixture upgrade</b><span>Lake Asbury • 1.0 hr</span></div></div>
-        <div class="lane"><h3>In Progress</h3><div class="ticket"><b>Dryer vent cleaning</b><span>Doctors Inlet • Tech: Mike</span></div></div>
-        <div class="lane"><h3>Partner / Oversight</h3><div class="ticket warning"><b>Panel issue found</b><span>Licensed electrician required</span></div></div>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-logo-wrap"><img class="hero-bear" src="assets/bear-head-hero.png" alt="BearTrack bear logo" /></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Internal BearTrack™</p>
+          <h1>Ops Dashboard</h1>
+          <p class="hero-lead">Customer profiles, home information, membership requests, and work orders appear here after submission. Ops can change status, priority, appointment notes, and next action.</p>
+        </div>
       </div>
     </section>
-
-    <section id="workorders" class="section two-col">
-      <div class="card wide">
-        <h2>Work Order Queue</h2>
-        <table>
-          <thead><tr><th>Customer</th><th>Request</th><th>Plan</th><th>Hours</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td>Johnson Home</td><td>Install shelves + patch drywall</td><td>Plus</td><td>2.5</td><td><span class="pill blue">Ready</span></td></tr>
-            <tr><td>Morales Rental</td><td>Tenant reported sink leak</td><td>Family Essential</td><td>1.0</td><td><span class="pill gold">Needs approval</span></td></tr>
-            <tr><td>Adams Home</td><td>HVAC capacitor concern</td><td>Signature</td><td>—</td><td><span class="pill red">Verify license</span></td></tr>
-            <tr><td>Bennett Home</td><td>Honey-Do list visit</td><td>Essential</td><td>2.0</td><td><span class="pill green">Scheduled</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card">
-        <h2>Customer Intake</h2>
-        <label>Request type</label><select><option>Maintenance</option><option>Honey-Do / Upgrade</option><option>Inspection</option><option>Partner Project</option></select>
-        <label>Priority</label><select><option>Routine</option><option>High</option><option>Urgent</option></select>
-        <label>Estimated hours</label><input value="1.5" />
-        <button class="full">Create Work Order</button>
+    <section id="ops-login" class="section cream">
+      <div class="container locked record-card">
+        <p class="eyebrow">Ops access</p><h2>Enter Ops Dashboard</h2>
+        <form id="ops-login-form" class="portal-form"><input id="ops-code" placeholder="Ops code" required><button class="button" type="submit">Open Dashboard</button><p class="form-note">Temporary code: BHMOPS</p></form>
       </div>
     </section>
-
-    <section id="inspections" class="section grid two">
-      <div class="card">
-        <h2>Inspection Pipeline</h2>
-        <ul class="timeline">
-          <li><b>New Assessment</b><span>Smith Home • Saturday 9:00 AM</span></li>
-          <li><b>Annual Review</b><span>Watson Home • Home Health 82 → pending</span></li>
-          <li><b>Follow-up Inspection</b><span>Roof staining / moisture concern</span></li>
-        </ul>
-      </div>
-      <div class="card scorecard">
-        <h2>BearTrack™ Scoring Preview</h2>
-        <div><span>Home Health</span><b>78%</b></div>
-        <div><span>Complexity Score</span><b>42</b></div>
-        <div><span>Water Intrusion Risk</span><b class="warn">Moderate</b></div>
-        <div><span>Recommended Tier</span><b>Black Bear • 6 hrs</b></div>
-      </div>
-    </section>
-
-    <section id="routes" class="section">
-      <div class="section-title"><h2>Technician Routes</h2><p>Clay County route grouping to reduce windshield time.</p></div>
-      <div class="grid three">
-        <div class="card route"><h3>Route A</h3><p>Orange Park / Oakleaf</p><ol><li>8:00 Johnson</li><li>9:45 Bennett</li><li>11:30 lunch / supply</li><li>1:00 Morales Rental</li></ol></div>
-        <div class="card route"><h3>Route B</h3><p>Middleburg / Lake Asbury</p><ol><li>8:30 Wilson</li><li>10:00 Carter</li><li>12:30 Honey-Do block</li></ol></div>
-        <div class="card route"><h3>Route C</h3><p>Fleming Island / Doctors Inlet</p><ol><li>9:00 Annual Review</li><li>11:15 Dryer vent</li><li>2:00 Partner walkthrough</li></ol></div>
-      </div>
-    </section>
-
-    <section id="hours" class="section grid two">
-      <div class="card wide">
-        <h2>Home Care Hours™ Bank</h2>
-        <table>
-          <thead><tr><th>Property</th><th>Tier</th><th>Monthly</th><th>Banked</th><th>Usage Trend</th></tr></thead>
-          <tbody>
-            <tr><td>Main Home</td><td>Black Bear</td><td>6</td><td>11.5</td><td>Stable</td></tr>
-            <tr><td>Rental Home</td><td>Cub</td><td>4</td><td>3.0</td><td>Increasing</td></tr>
-            <tr><td>Parent's Home</td><td>Grizzly</td><td>8</td><td>18.0</td><td>Consider downgrade</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card callout">
-        <h2>Annual Tier Recommendation</h2>
-        <p>Based on banked hours, usage, Home Health Score, and upcoming risk, BearTrack recommends whether a home should stay, drop, or increase tier.</p>
-        <button>Run Annual Review</button>
-      </div>
-    </section>
-
-    <section id="partners" class="section two-col">
-      <div class="card wide">
-        <h2>Partner Projects / Oversight</h2>
-        <table>
-          <thead><tr><th>Project</th><th>Partner</th><th>Stage</th><th>Bear Oversight</th></tr></thead>
-          <tbody>
-            <tr><td>Roof replacement review</td><td>Pending bids</td><td>Proposal Review</td><td>Scope verification</td></tr>
-            <tr><td>HVAC replacement</td><td>Trusted HVAC Co.</td><td>Scheduled</td><td>Pre-start photos</td></tr>
-            <tr><td>Electrical panel</td><td>Licensed electrician</td><td>Referral</td><td>Permit/document check</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card">
-        <h2>Partner Checklist</h2>
-        <ul class="checks"><li>License verified</li><li>Insurance verified</li><li>Scope reviewed</li><li>Photos uploaded</li><li>Warranty saved to BearTrack</li></ul>
-      </div>
-    </section>
-
-    
-    <section id="members" class="section">
-      <div class="section-title"><h2>Member Snapshot</h2><p>Active homes, plan level, hours, and current risk.</p></div>
-      <div class="card wide">
-        <table>
-          <thead><tr><th>Member</th><th>Plan</th><th>Monthly Hours</th><th>Banked</th><th>Health</th><th>Next Action</th></tr></thead>
-          <tbody>
-            <tr><td>Johnson Home</td><td>Cub</td><td>4</td><td>6.5</td><td>88</td><td>Gutter clean</td></tr>
-            <tr><td>Morales Rental</td><td>Black Bear</td><td>6</td><td>9.0</td><td>74</td><td>Sink leak follow-up</td></tr>
-            <tr><td>Adams Home</td><td>Grizzly</td><td>8</td><td>14.5</td><td>69</td><td>Electrical partner review</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="reports" class="section grid two">
-      <div class="card">
-        <h2>Report Workflow</h2>
-        <ul class="timeline">
-          <li><b>Assessment Complete</b><span>Technician completes checklist and photos.</span></li>
-          <li><b>Review Findings</b><span>Owner-facing wording is cleaned and prioritized.</span></li>
-          <li><b>Create Work Orders</b><span>Approved items become scheduled work.</span></li>
-          <li><b>Update BearTrack™</b><span>Scores, timeline, and documents are updated.</span></li>
-        </ul>
-      </div>
-      <div class="card callout">
-        <h2>Next Build</h2>
-        <p>Connect this portal to real customer records, saved inspections, photo upload, user login, and report generation.</p>
-        <a class="button" href="ops-assessment.html">Open Inspection Tool</a>
-      </div>
-    </section>
-
-    <section id="compliance" class="section">
-    
-      <div class="section-title"><h2>Compliance Matrix</h2><p>Operational guardrail for Clay, Duval, and St. Johns work.</p></div>
-      <div class="card wide">
-        <table>
-          <thead><tr><th>Service</th><th>Clay Launch Status</th><th>Action</th></tr></thead>
-          <tbody>
-            <tr><td>TV mounting / shelves / honey-do items</td><td><span class="pill green">Bear-performed</span></td><td>Proceed</td></tr>
-            <tr><td>Toilet flapper / fill valve / P-trap</td><td><span class="pill gold">Verify scope</span></td><td>Use approved service rules</td></tr>
-            <tr><td>Light fixture / fan replacement</td><td><span class="pill gold">Verify locally</span></td><td>Compliance check before scheduling</td></tr>
-            <tr><td>HVAC capacitor / contactor</td><td><span class="pill red">Partner likely</span></td><td>Licensed HVAC partner</td></tr>
-            <tr><td>Roof, panel, water heater, repipe</td><td><span class="pill red">Licensed partner</span></td><td>Oversight only</td></tr>
-          </tbody>
-        </table>
+    <section id="ops-dashboard" class="section hidden">
+      <div class="container ops-board">
+        <div class="section-heading"><p class="eyebrow">Live queue</p><h2>Work orders</h2><p>Completed items stay out of the active queue and remain in history.</p></div>
+        <table class="ops-table"><thead><tr><th>Customer / Property</th><th>Request</th><th>Schedule / Access</th><th>Ops Controls</th></tr></thead><tbody id="workorders-body"></tbody></table>
+        <div class="section-heading"><p class="eyebrow">Customer intake</p><h2>Profiles and membership requests</h2></div>
+        <div id="profiles-list" class="ops-board"></div>
+        <div id="memberships-list" class="ops-board"></div>
       </div>
     </section>
   </main>
-</body>
-</html>
+  <footer><div class="container footer-grid"><div><strong>Bear Home Management</strong><span>Internal BearTrack™ Ops Dashboard</span></div></div></footer>
+  <script src="supabase-config.js"></script><script src="beartrack-cloud.js"></script>
+  <script>
+    const login = document.getElementById('ops-login'); const dash = document.getElementById('ops-dashboard');
+    document.getElementById('ops-login-form').addEventListener('submit', async e=>{e.preventDefault(); if(document.getElementById('ops-code').value.trim().toUpperCase()==='BHMOPS'){login.classList.add('hidden');dash.classList.remove('hidden'); await renderOps();}});
+    function esc(v){return String(v||'').replace(/[&<>]/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));}
+    async function renderOps(){
+      const data = await BearTrackCloud.loadRecords();
+      const active = (data.workorders||[]).filter(w => (w.status||'') !== 'Complete');
+      const history = (data.workorders||[]).filter(w => (w.status||'') === 'Complete');
+      document.getElementById('workorders-body').innerHTML = [...active, ...history].map(w=>`
+        <tr><td><strong>${esc(w['customer-name']||w.name)}</strong><br>${esc(w['customer-email']||w.email)}<br>${esc(w['customer-phone']||w.phone)}<br><span class="small-muted">${esc(w['property-address'])}</span></td>
+        <td><strong>${esc(w['workorder-type'])}</strong><br>${esc(w['issue-location'])}<br>${esc(w['issue-description'])}<br><span class="small-muted">Photos: ${(w.photo_paths||[]).length}</span></td>
+        <td>${esc(w['preferred-appointment'])}<br>${esc(w['access-permission'])}</td>
+        <td><div class="ops-actions"><select data-id="${w.id}" data-field="status"><option>${esc(w.status||'New Request')}</option><option>New Request</option><option>Reviewing</option><option>Scheduled</option><option>Waiting on Customer</option><option>Follow-Up Needed</option><option>Complete</option></select><select data-id="${w.id}" data-field="priority"><option>${esc(w.priority||'Normal')}</option><option>Emergency / Immediate</option><option>High - Needs attention soon</option><option>Normal</option><option>Low / Planning ahead</option></select><input data-id="${w.id}" data-field="ops_notes" placeholder="Ops notes / next action" value="${esc(w.ops_notes)}"><button class="button secondary save-workorder" data-id="${w.id}" type="button">Save</button></div></td></tr>`).join('') || '<tr><td colspan="4">No work orders yet.</td></tr>';
+      document.getElementById('profiles-list').innerHTML = (data.profiles||[]).map(p=>`<div class="record-card"><strong>${esc(p.name)}</strong><p>${esc(p.email)} · ${esc(p.phone)}</p><p>${esc(p['property-address'])}</p><p class="small-muted">${esc(p['access-notes'])} ${esc(p['home-notes'])}</p></div>`).join('') || '<div class="record-card">No profiles yet.</div>';
+      document.getElementById('memberships-list').innerHTML = (data.memberships||[]).map(m=>`<div class="record-card"><strong>${esc(m.name)}</strong><p>${esc(m.email)} · ${esc(m.phone)}</p><p>${esc(m['membership-interest'])}</p><p class="small-muted">${esc(m['membership-notes'])}</p></div>`).join('') || '<div class="record-card">No membership requests yet.</div>';
+      document.querySelectorAll('.save-workorder').forEach(btn=>btn.onclick=async()=>{const id=btn.dataset.id;const updates={};document.querySelectorAll(`[data-id="${id}"]`).forEach(el=>updates[el.dataset.field]=el.value);await BearTrackCloud.updateWorkorder(id, updates);await renderOps();});
+    }
+  </script>
+</body></html>
