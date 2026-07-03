@@ -33,9 +33,9 @@
       <a class="brand" href="#top" aria-label="Bear Home Management home">
         <img src="assets/bear-head-header.png" alt="Bear Home Management bear head logo" />
         <div class="brand-text">
-          <strong>BEAR</strong>
-          <span>MAINTENANCE</span>
-          <small>Protect. Maintain. Preserve.</small>
+          <strong>BEAR HOME</strong>
+          <span>MANAGEMENT</span>
+          <small>Powered by BearTrack™</small>
         </div>
       </a>
       <button class="menu-toggle" aria-label="Open navigation">☰</button>
@@ -46,10 +46,11 @@
         <a href="#compliance">Compliance</a>
         <a href="#brand-ecosystem">Ecosystem</a>
         <a href="#beartrack">BearTrack™</a>
+        <a href="app.html" class="nav-button beartrack-nav">BearTrack Portal</a>
         <a href="#inspection-process">Inspection Process</a>
         <a href="#buying-selling">Buying & Selling</a>
         <a href="#contact" class="nav-button">Schedule Inspection</a>
-      <a class="call-now" href="tel:9044249092">Call (904) 424-9092</a></nav>
+      <a class="call-now" href="tel:9044249092">Call</a></nav>
     </div>
   </header>
 
@@ -137,6 +138,7 @@
         <p class="eyebrow">BearTrack™</p>
         <h2>Your home’s digital maintenance record.</h2>
         <p class="lead">BearTrack organizes the home like a facility manager would: condition, history, photos, documents, warranties, upcoming repairs, and long-term planning in one place.</p>
+        <p><a href="app.html" class="button beartrack-portal-button">Enter BearTrack™ Portal</a></p>
         <div class="cards three">
           <article class="card"><h3>Home Health Score</h3><p>A clear condition score based on inspections, completed repairs, deferred maintenance, safety items, and risk reduction.</p></article>
           <article class="card"><h3>Complexity Score</h3><p>A plan recommendation based on size, age, bathrooms, systems, exterior, lot features, and actual condition.</p></article>
@@ -147,10 +149,6 @@
           <div><span>Complexity Score</span><strong>38</strong><small>Recommended: Home Plus</small></div>
           <div><span>Hours Available</span><strong>10.5</strong><small>Banked and ready</small></div>
           <div><span>Risk Index</span><strong>Low</strong><small>Monitored annually</small></div>
-        </div>
-        <div class="beartrack-portal-cta">
-          <a href="app.html" class="button">Enter BearTrack™ Portal</a>
-          <p>Customers enter BearTrack™ to submit and track requests. Operations manages submitted information internally.</p>
         </div>
       </div>
     </section>
@@ -513,9 +511,9 @@
   <p class="hidden" style="display:none;">
     <label>Don’t fill this out if you’re human: <input name="bot-field"></label>
   </p>
-          <input type="text" placeholder="Name" / name="name">
-          <input type="email" placeholder="Email" / name="email">
-          <input type="tel" placeholder="Phone" / name="phone">
+          <input type="text" placeholder="Name" name="name" required>
+          <input type="email" placeholder="Email" name="email" required>
+          <input type="tel" placeholder="Phone" name="phone">
           <select name="service">
             <option>Schedule a full-home inspection</option>
             <option>Request a one-time service</option>
@@ -523,7 +521,7 @@
             <option>Buying or selling support</option>
             <option>Multi-home / portfolio care</option>
           </select>
-          <textarea placeholder="Tell us about the home or work needed"></textarea>
+          <textarea name="message" placeholder="Tell us about the home or work needed"></textarea>
           <button type="submit" class="button">Submit Request</button>
         </form>
       </div>
