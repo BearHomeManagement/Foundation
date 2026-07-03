@@ -241,3 +241,14 @@ footer{background:#061727;color:#dceaf0;padding:28px 0}.footer-grid{display:flex
 .beartrack-portal-button{display:inline-block;margin:8px 0 18px;}
 .call-now{padding:8px 12px;font-size:.9rem;line-height:1;}
 @media(max-width:800px){.beartrack-nav{display:block;text-align:center;margin-top:10px}.call-now{display:block;margin:10px 0 0;text-align:center}}
+
+
+/* BHM stable v1.1 QA fixes */
+html, body { max-width: 100%; overflow-x: hidden; }
+.site-nav { flex-wrap: wrap; justify-content: flex-end; row-gap: 10px; }
+.site-nav a { display: inline-flex; align-items: center; line-height: 1.15; }
+.site-nav a[href="#brand-ecosystem"] { align-self: center; }
+.beartrack-portal-button + .button { margin-left: 10px; }
+.membership-startup { margin-top: 28px; }
+.startup-inner .button { margin-top: 12px; }
+@media(max-width:1300px){ .site-nav{gap:9px;font-size:10px}.nav-button{padding:10px 12px}.call-now{padding:7px 10px}.brand{min-width:250px}.brand strong{font-size:34px}}
