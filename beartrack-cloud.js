@@ -56,21 +56,7 @@ async function updateWorkorder(id, updates) {
   records.workorders = records.workorders.map(w => w.id === id ? { ...w, ...updates, updated_at: new Date().toISOString() } : w);
   setLocalRecords(records);
   const supabase = await getSupabase();
-  if (supabase) await supabase.from('workorders').update({ ...updates, updated_at: new Date().toISOString() }).eq('id', id);
-}
-async function updateProfile(id, updates) {
-  const records = getLocalRecords();
-  records.profiles = records.profiles.map(p => p.id === id ? { ...p, ...updates, updated_at: new Date().toISOString() } : p);
-  setLocalRecords(records);
-  const supabase = await getSupabase();
-  if (supabase) await supabase.from('profiles').update({ ...updates, updated_at: new Date().toISOString() }).eq('id', id);
-}
-async function updateMembership(id, updates) {
-  const records = getLocalRecords();
-  records.memberships = records.memberships.map(m => m.id === id ? { ...m, ...updates, updated_at: new Date().toISOString() } : m);
-  setLocalRecords(records);
-  const supabase = await getSupabase();
-  if (supabase) await supabase.from('memberships').update({ ...updates, updated_at: new Date().toISOString() }).eq('id', id);
+  if (supabase) await supabase.from('workorders').update(updates).eq('id', id);
 }
 async function loadRecords() {
   const local = getLocalRecords();
@@ -87,4 +73,4 @@ async function loadRecords() {
     memberships: memberships.data || local.memberships
   };
 }
-window.BearTrackCloud = { formToObject, saveRecord, loadRecords, updateWorkorder, updateProfile, updateMembership, getLocalRecords };
+window.BearTrackCloud = { formToObject, saveRecord, loadRecords, updateWorkorder, getLocalRecords };
