@@ -51,7 +51,7 @@
         <a href="#inspection-process">Inspection Process</a>
         <a href="#buying-selling">Buying & Selling</a>
         <a href="customer.html" class="nav-button">Schedule Inspection</a>
-      <a class="call-now" href="tel:9044249092">Call</a></nav>
+      <a class="call-now" id="callButton" href="tel:9044249092">📞 (904) 424-9092</a></nav>
     </div>
   </header>
 
@@ -548,5 +548,14 @@
 
   <script src="script.js"></script>
 
+
+<script>
+(function(){
+  const btn=document.getElementById('callButton');
+  if(btn && !/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
+    btn.addEventListener('click',function(e){e.preventDefault();navigator.clipboard&&navigator.clipboard.writeText('904-424-9092');alert('Phone number copied: (904) 424-9092');});
+  }
+})();
+</script>
 </body>
 </html>

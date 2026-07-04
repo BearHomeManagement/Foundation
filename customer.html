@@ -1,132 +1,151 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Customer Portal | Bear Home Management</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="theme-color" content="#071f34" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Bear Home" />
-  <link rel="apple-touch-icon" href="assets/icon-180.png" />
-  <script src="supabase-config.js"></script>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Portal | Bear Home Management</title>
+<link href="styles.css" rel="stylesheet"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<meta content="#071f34" name="theme-color"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="Bear Home" name="apple-mobile-web-app-title"/>
+<link href="assets/icon-180.png" rel="apple-touch-icon"/>
+<script src="supabase-config.js"></script>
+<style>
     body{background:var(--cream)}
     .portal-wrap{max-width:1180px;margin:38px auto;padding:0 28px}
     .portal-card{background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:28px;box-shadow:0 18px 40px rgba(7,31,52,.10);margin-bottom:22px}
     .portal-head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;overflow:hidden;position:relative;background:linear-gradient(135deg,var(--paper),#fff 52%,#eef3ea)}
     .portal-head:after{content:"";position:absolute;right:-70px;top:-90px;width:260px;height:260px;background:rgba(242,184,75,.22);border-radius:50%}
-    .portal-head>*{position:relative;z-index:1}.portal-head img{width:92px;height:78px;object-fit:contain}.portal-head h1{font-size:clamp(30px,5vw,48px);margin:0;line-height:1.03}.login-grid,.portal-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.portal-hidden{display:none!important}
-    label{display:block;font-weight:900;color:var(--navy);margin:12px 0 6px}input,select,textarea{width:100%;font:inherit;padding:13px;border:1px solid var(--line);border-radius:12px;background:white}textarea{min-height:115px;resize:vertical}.success{background:#e7f6e9;border:1px solid #a9d8b0;color:#1f7a35;border-radius:16px;padding:14px;font-weight:900;margin-top:14px;display:none}.portal-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}.small-note{color:var(--muted);font-size:14px}.policy-box{background:#fff8e7;border:1px solid #f0d48c;border-radius:18px;padding:16px;grid-column:1/-1}.policy-box label{display:flex;gap:10px;align-items:flex-start;margin:0}.policy-box input{width:auto;margin-top:4px}.app-header{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:stretch}.home-summary{background:linear-gradient(135deg,#071f34,#0f2d52);color:white;border-radius:28px;padding:26px;box-shadow:0 22px 50px rgba(7,31,52,.20)}.home-summary h2{font-size:clamp(28px,4vw,44px);line-height:1.03;margin:0 0 8px}.home-summary p{color:#dbe6ed}.score-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.score-strip div{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:14px}.score-strip strong{display:block;color:var(--gold);font-size:26px}.ecosystem-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.eco-card{background:white;border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 16px 38px rgba(7,31,52,.08);display:flex;flex-direction:column;min-height:230px}.eco-card h3{margin:0 0 8px;color:var(--navy);font-size:24px}.eco-card .metric{font-size:36px;font-weight:900;color:var(--navy);line-height:1}.eco-card p,.eco-card li{color:var(--muted)}.eco-card ul{padding-left:18px;margin:10px 0}.eco-actions{margin-top:auto;display:flex;gap:10px;flex-wrap:wrap}.mini-button{display:inline-block;background:var(--navy);color:white;border:0;border-radius:10px;padding:10px 12px;font-weight:900;cursor:pointer}.mini-button.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#061727}.mini-button.light{background:#f6efe4;color:var(--navy);border:1px solid var(--line)}.drawer{position:fixed;inset:0;background:rgba(7,31,52,.55);display:none;align-items:flex-end;justify-content:center;padding:18px;z-index:30}.drawer.open{display:flex}.drawer-panel{background:var(--paper);border-radius:26px;max-width:860px;width:100%;max-height:92vh;overflow:auto;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.25)}.work-list{display:grid;gap:10px}.work-row{border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px}.pill{display:inline-block;border-radius:999px;background:#eaf1ff;color:#174ea6;padding:5px 9px;font-size:12px;font-weight:900}.pwa-note{background:white;border:1px solid var(--line);border-radius:18px;padding:16px}.site-nav .beartrack-nav{display:none}.install-banner{display:none;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#061727;border-radius:18px;padding:14px 16px;margin-bottom:18px;box-shadow:0 16px 35px rgba(201,138,30,.20)}.install-banner.show{display:flex}.install-banner strong{display:block}.install-banner button{background:#071f34;color:white;border:0;border-radius:10px;padding:10px 12px;font-weight:900;cursor:pointer}.install-banner small{color:#263241}@media(max-width:920px){.login-grid,.portal-grid,.app-header,.ecosystem-grid,.score-strip{grid-template-columns:1fr}.portal-wrap{padding:0 18px}.brand{min-width:0}.site-nav{gap:8px}.portal-card{padding:22px}.eco-card{min-height:auto}}
+    .portal-head>*{position:relative;z-index:1}.portal-head img{width:92px;height:78px;object-fit:contain}.portal-head h1{font-size:clamp(30px,5vw,48px);margin:0;line-height:1.03}.login-grid,.portal-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.auth-panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px}.auth-panel h3{margin-top:0;color:var(--navy)}.pass-wrap{position:relative}.pass-wrap input{padding-right:74px}.show-pass{position:absolute;right:8px;top:7px;border:0;background:#f6efe4;color:var(--navy);font-weight:900;border-radius:9px;padding:7px 9px;cursor:pointer}.requirements{background:#fbfdff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:10px;font-size:14px}.requirements div{color:#8b1f1f}.requirements div.ok{color:#1f7a35}.match-msg{font-weight:900;margin-top:8px}.match-ok{color:#1f7a35}.match-bad{color:#b7281f}.auth-message{background:#fff8e7;border:1px solid #f0d48c;border-radius:14px;padding:12px;margin-top:12px;display:none}.portal-hidden{display:none!important}
+    label{display:block;font-weight:900;color:var(--navy);margin:12px 0 6px}input,select,textarea{width:100%;font:inherit;padding:13px;border:1px solid var(--line);border-radius:12px;background:white}textarea{min-height:115px;resize:vertical}.success{background:#e7f6e9;border:1px solid #a9d8b0;color:#1f7a35;border-radius:16px;padding:14px;font-weight:900;margin-top:14px;display:none}.portal-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}.small-note{color:var(--muted);font-size:14px}.policy-box{background:#fff8e7;border:1px solid #f0d48c;border-radius:18px;padding:16px;grid-column:1/-1}.policy-box label{display:flex;gap:10px;align-items:flex-start;margin:0}.policy-box input{width:auto;margin-top:4px}.app-header{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:stretch}.home-summary{background:linear-gradient(135deg,#071f34,#0f2d52);color:white;border-radius:28px;padding:26px;box-shadow:0 22px 50px rgba(7,31,52,.20)}.home-summary h2{font-size:clamp(28px,4vw,44px);line-height:1.03;margin:0 0 8px}.home-summary p{color:#f8fbff;font-weight:800}.home-summary #ecoHomeName{color:#ffffff;text-shadow:0 1px 2px rgba(0,0,0,.35)}.score-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.score-strip div{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:14px}.score-strip strong{display:block;color:var(--gold);font-size:26px}.ecosystem-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.eco-card{background:white;border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 16px 38px rgba(7,31,52,.08);display:flex;flex-direction:column;min-height:230px}.eco-card h3{margin:0 0 8px;color:var(--navy);font-size:24px}.eco-card .metric{font-size:36px;font-weight:900;color:var(--navy);line-height:1}.eco-card p,.eco-card li{color:var(--muted)}.eco-card ul{padding-left:18px;margin:10px 0}.eco-actions{margin-top:auto;display:flex;gap:10px;flex-wrap:wrap}.mini-button{display:inline-block;background:var(--navy);color:white;border:0;border-radius:10px;padding:10px 12px;font-weight:900;cursor:pointer}.mini-button.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#061727}.mini-button.light{background:#f6efe4;color:var(--navy);border:1px solid var(--line)}.drawer{position:fixed;inset:0;background:rgba(7,31,52,.55);display:none;align-items:flex-end;justify-content:center;padding:18px;z-index:30}.drawer.open{display:flex}.drawer-panel{background:var(--paper);border-radius:26px;max-width:860px;width:100%;max-height:92vh;overflow:auto;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.25)}.work-list{display:grid;gap:10px}.work-row{border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px}.pill{display:inline-block;border-radius:999px;background:#eaf1ff;color:#174ea6;padding:5px 9px;font-size:12px;font-weight:900}.pwa-note{background:white;border:1px solid var(--line);border-radius:18px;padding:16px}.site-nav .beartrack-nav{display:none}.install-banner{display:none;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#061727;border-radius:18px;padding:14px 16px;margin-bottom:18px;box-shadow:0 16px 35px rgba(201,138,30,.20)}.install-banner.show{display:flex}.install-banner strong{display:block}.install-banner button{background:#071f34;color:white;border:0;border-radius:10px;padding:10px 12px;font-weight:900;cursor:pointer}.install-banner small{color:#263241}@media(max-width:920px){.login-grid,.portal-grid,.auth-grid,.app-header,.ecosystem-grid,.score-strip{grid-template-columns:1fr}.portal-wrap{padding:0 18px}.brand{min-width:0}.site-nav{gap:8px}.portal-card{padding:22px}.eco-card{min-height:auto}}
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="index.html" aria-label="Bear Home Management home">
-        <img src="assets/bear-head-header.png" alt="Bear Home Management bear head logo" />
-        <div class="brand-text"><strong>BEAR HOME</strong><span>MANAGEMENT</span><small>Powered by BearTrack™</small></div>
-      </a>
-      <nav class="site-nav"><a href="index.html">Website</a><a class="call-now" href="tel:9044249092">Call</a></nav>
-    </div>
-  </header>
-
-  <main class="portal-wrap">
-    <div class="install-banner" id="installBanner"><div><strong>Install Bear Home on this phone</strong><small>For testing: add the Customer Ecosystem to your home screen.</small></div><button id="installAppBtn" type="button">Install App</button></div>
-    <section class="portal-card portal-head">
-      <div><p class="eyebrow">Customer Portal</p><h1>Your home ecosystem starts here.</h1><p class="hero-lead">Create your customer access, add your property, request service, then manage your home from a mobile-friendly ecosystem app.</p></div>
-      <img src="assets/bear-head-header.png" alt="Bear Home Management logo">
-    </section>
-
-    <section id="login" class="portal-card">
-      <h2>Customer access</h2>
-      <p class="small-note">Create an account or log in. Customer data now saves to the BearTrack cloud database.</p>
-      <div class="login-grid">
-        <label>Name<input id="loginName" placeholder="Full name"></label>
-        <label>Email<input id="loginEmail" type="email" placeholder="you@email.com"></label>
-        <label>Phone<input id="loginPhone" placeholder="904-424-9092"></label>
-        <label>Password<input id="loginPassword" type="password" placeholder="Create or enter password"></label>
-        <label>Confirm Password<input id="loginPassword2" type="password" placeholder="New accounts only"></label>
-        <label>Preferred Contact<select id="loginContact"><option>Text</option><option>Call</option><option>Email</option></select></label>
-      </div>
-      <div class="portal-actions"><button class="button" id="enterPortal" type="button">Create / Log In</button><a class="button secondary" href="index.html">Back to Website</a></div>
-    </section>
-
-    <section id="onboarding" class="portal-hidden">
-      <div class="portal-card"><p class="eyebrow">One-time setup</p><h2 id="welcomeName">Welcome</h2><p>Complete your home profile and first request. After setup, you will land in your Home Ecosystem.</p></div>
-      <div class="portal-card">
-        <h2>Home / Property Information</h2>
-        <form id="profileForm" class="portal-grid">
-          <label>Property Nickname<input name="homeName" placeholder="Example: Richardson Home"></label>
-          <label>Property Address<input name="address" required></label>
-          <label>Property Type<select name="propertyType"><option>Single-family</option><option>Condo</option><option>Townhouse</option><option>Rental</option><option>Vacation Home</option></select></label>
-          <label>Year Built<input name="yearBuilt" placeholder="Optional"></label>
-          <label>Square Footage<input name="squareFeet" placeholder="Optional"></label>
-          <label>Number of Stories<input name="stories"></label>
-          <label>HVAC Systems<input name="hvacCount" placeholder="Example: 1"></label>
-          <label>Primary Filter Size<input name="filterSize" placeholder="Example: 16x20x1, or unknown"></label>
-          <label>Filter / Return Photo<input name="filterPhoto" type="file" accept="image/*" capture="environment"><small class="small-note">Optional. A photo can help BHM confirm the filter size.</small></label>
-          <label>Primary Service Interest<select name="service" id="primaryService"><option>Startup Special - $99 (no HVAC condensate clearing/filter change)</option><option>Initial Home Health Assessment - $149 (includes HVAC condensate clearing/filter change where accessible)</option><option>Membership Request</option><option>Home Repair Visit</option><option>Fixture & Face-Lift Visit</option><option>TV Mounting & Shelving</option><option>Move-In / Honey-Do List</option><option>Buying / Selling Support</option><option>Multi-home / Portfolio Care</option></select></label>
-          <label>Preferred Appointment<input name="preferred" placeholder="Tomorrow morning, Friday afternoon, etc."></label>
-          <label>Access / Gate / Pet Notes<textarea name="accessNotes"></textarea></label>
-          <div class="policy-box"><label><input name="adultAck" type="checkbox" required><span><strong>Adult presence required.</strong> An adult 18 years or older must be present on the property during the entire Bear Home Management visit. BHM does not perform inspections or services on occupied properties without an adult present. No exceptions.</span></label></div>
-          <label style="grid-column:1/-1">First Request / Notes<textarea name="description" required placeholder="Tell us what you need help with."></textarea></label>
-          <label>Upload Photos<input name="photos" type="file" multiple accept="image/*" capture="environment"></label>
-          <div><button class="button" type="submit">Finish Setup & Open My Ecosystem</button></div>
-        </form><div class="success" id="profileSaved">Setup complete. Opening your Home Ecosystem.</div>
-      </div>
-    </section>
-
-    <section id="ecosystem" class="portal-hidden">
-      <div class="app-header">
-        <div class="home-summary">
-          <p class="eyebrow light">Home Ecosystem</p>
-          <h2 id="ecoHomeName">My Home</h2>
-          <p id="ecoAddress">Property profile</p>
-          <div class="score-strip">
-            <div><span>Health</span><strong id="ecoHealth">—</strong><small>Home Health Score™</small></div>
-            <div><span>Complexity</span><strong id="ecoComplexity">—</strong><small>Complexity Score™</small></div>
-            <div><span>Next Visit</span><strong id="ecoNext">Pending</strong><small>Smart scheduling</small></div>
-          </div>
-        </div>
-        <div class="portal-card pwa-note">
-          <p class="eyebrow">Mobile app model</p>
-          <h2>Save this to your phone.</h2>
-          <p>This Customer Ecosystem is built mobile-first. On your phone, use the browser menu and choose <strong>Add to Home Screen</strong>.</p>
-          <div class="portal-actions"><button class="button" id="newWorkBtn" type="button">+ Add Work Order</button><button class="button secondary" id="editProfileBtn" type="button">Edit Profile</button></div>
-        </div>
-      </div>
-
-      <div class="ecosystem-grid">
-        <article class="eco-card"><h3>BearTrack™</h3><div class="metric" id="openWorkCount">0</div><p>Open work orders and appointment activity.</p><div class="work-list" id="recentWork"></div><div class="eco-actions"><button class="mini-button gold" id="newWorkBtn2">Request Work</button></div></article>
-        <article class="eco-card"><h3>Home Care Hours™</h3><div class="metric" id="hoursAvailable">—</div><p id="membershipText">Membership not selected.</p><ul><li>Hours used: <span id="hoursUsed">0</span></li><li>Banked hours: <span id="bankedHours">0</span></li></ul></article>
-        <article class="eco-card"><h3>The Bear Method™</h3><p>Inspect → Plan → Maintain → Improve → Protect</p><ul id="methodList"><li>Initial profile created</li><li>First request pending BHM review</li></ul></article>
-        <article class="eco-card"><h3>Home Health Score™</h3><div class="metric" id="healthMetric">—</div><p>Updates after inspections and completed recommendations.</p><div class="eco-actions"><button class="mini-button light">View Factors</button></div></article>
-        <article class="eco-card"><h3>Complexity Score™</h3><div class="metric" id="complexityMetric">—</div><p>Based on home age, size, stories, systems, and property type.</p><ul id="complexityList"></ul></article>
-        <article class="eco-card"><h3>Honey-Do List™</h3><div class="metric" id="honeyDoCount">0</div><p>Customer requests and BHM recommendations live here.</p><div class="eco-actions"><button class="mini-button gold" id="newWorkBtn3">+ Add Item</button></div></article>
-        <article class="eco-card"><h3>My Home</h3><p>Your digital home record.</p><ul id="myHomeList"></ul><div class="eco-actions"><button class="mini-button light" id="editProfileBtn2">Update Home Info</button></div></article>
-      </div>
-    </section>
-  </main>
-
-  <div class="drawer" id="workDrawer" aria-hidden="true">
-    <div class="drawer-panel">
-      <h2>Request Work Order</h2>
-      <form id="workOrderForm" class="portal-grid">
-        <label>Service Type<select name="service" id="serviceType"><option>Home Repair Visit</option><option>Startup Special - $99 (no HVAC condensate clearing/filter change)</option><option>Initial Home Health Assessment - $149 (includes HVAC condensate clearing/filter change where accessible)</option><option>Fixture & Face-Lift Visit</option><option>TV Mounting & Shelving</option><option>Move-In / Honey-Do List</option><option>Membership Consultation</option><option>Follow-up Inspection</option></select></label>
-        <label>Priority<select name="priority"><option>Normal</option><option>Service Soon</option><option>Urgent</option><option>Critical</option></select></label>
-        <label>Preferred Appointment<input name="preferred" placeholder="Tomorrow morning, Friday afternoon, etc."></label>
-        <label>HVAC Filter Size<input name="filterSize" placeholder="Example: 16x20x1, or unknown"></label>
-        <label>Filter Size Photo<input name="filterPhoto" type="file" accept="image/*" capture="environment"></label>
-        <label>Upload Photos<input name="photos" type="file" multiple accept="image/*" capture="environment"></label>
-        <div class="policy-box"><label><input name="adultAck" type="checkbox" required><span><strong>Adult presence required.</strong> An adult 18+ will be present for the entire appointment. No exceptions.</span></label></div>
-        <label style="grid-column:1/-1">Description<textarea name="description" required placeholder="Tell us what you need help with."></textarea></label>
-        <div class="portal-actions"><button class="button" type="submit">Submit Work Order</button><button class="button secondary" id="closeWorkDrawer" type="button">Cancel</button></div>
-      </form><div class="success" id="requestSaved">Request submitted to BearTrack Operations.</div>
-    </div>
-  </div>
-
+<header class="site-header">
+<div class="container nav">
+<a aria-label="Bear Home Management home" class="brand" href="index.html">
+<img alt="Bear Home Management bear head logo" src="assets/bear-head-header.png"/>
+<div class="brand-text"><strong>BEAR HOME</strong><span>MANAGEMENT</span><small>Powered by BearTrack™</small></div>
+</a>
+<nav class="site-nav"><a href="index.html">Website</a><a class="call-now" href="tel:9044249092" id="callButton">📞 (904) 424-9092</a></nav>
+</div>
+</header>
+<main class="portal-wrap">
+<div class="install-banner" id="installBanner"><div><strong>Install Bear Home on this phone</strong><small>For testing: add the Customer Ecosystem to your home screen.</small></div><button id="installAppBtn" type="button">Install App</button></div>
+<section class="portal-card portal-head">
+<div><p class="eyebrow">Customer Portal</p><h1>Your home ecosystem starts here.</h1><p class="hero-lead">Create your customer access, add your property, request service, then manage your home from a mobile-friendly ecosystem app.</p></div>
+<img alt="Bear Home Management logo" src="assets/bear-head-header.png"/>
+</section>
+<section class="portal-card" id="login">
+<h2>Customer access</h2>
+<p class="small-note">Log in to your Home Ecosystem or create a new Bear Home Management account.</p>
+<div class="auth-grid">
+<div class="auth-panel" id="loginPanel">
+<h3>Log In</h3>
+<label>Email<input autocomplete="email" id="loginEmail" placeholder="you@example.com" type="email"/></label>
+<label>Password<div class="pass-wrap"><input autocomplete="current-password" id="loginPassword" placeholder="Enter password" type="password"/><button class="show-pass" data-toggle="loginPassword" type="button">Show</button></div></label>
+<div class="portal-actions"><button class="button" id="loginBtn" type="button">Log In</button></div>
+<p><button class="mini-button light" id="forgotBtn" type="button">Forgot / Reset Password</button></p>
+</div>
+<div class="auth-panel" id="createPanel">
+<h3>Create Account</h3>
+<label>Name<input autocomplete="name" id="createName" placeholder="John Smith"/></label>
+<label>Email<input autocomplete="email" id="createEmail" placeholder="you@example.com" type="email"/></label>
+<label>Phone<input autocomplete="tel" id="createPhone" placeholder="(904) 555-1234"/></label>
+<label>Preferred Contact<select id="createContact"><option>Text</option><option>Call</option><option>Email</option></select></label>
+<label>Password<div class="pass-wrap"><input autocomplete="new-password" id="createPassword" placeholder="Create password" type="password"/><button class="show-pass" data-toggle="createPassword" type="button">Show</button></div></label>
+<label>Confirm Password<div class="pass-wrap"><input autocomplete="new-password" id="createPassword2" placeholder="Confirm password" type="password"/><button class="show-pass" data-toggle="createPassword2" type="button">Show</button></div></label>
+<div class="requirements" id="passwordReqs"><strong>Password requirements</strong><div id="reqLen">At least 8 characters</div><div id="reqUpper">One uppercase letter</div><div id="reqLower">One lowercase letter</div><div id="reqNum">One number</div><div id="reqSpecial">One special character</div><div id="reqMatch">Passwords match</div></div>
+<div class="portal-actions"><button class="button" disabled="" id="createBtn" type="button">Create Account</button></div>
+</div>
+</div>
+<div class="auth-message" id="authMessage"></div>
+<div class="auth-panel portal-hidden" id="resetPanel" style="margin-top:18px">
+<h3>Reset Password</h3>
+<p class="small-note">Enter your email and we will send reset instructions.</p>
+<label>Email<input id="resetEmail" placeholder="you@example.com" type="email"/></label>
+<div class="portal-actions"><button class="button" id="resetBtn" type="button">Send Reset Email</button><button class="button secondary" id="cancelResetBtn" type="button">Cancel</button></div>
+</div>
+<div class="auth-panel portal-hidden" id="newPasswordPanel" style="margin-top:18px">
+<h3>Set New Password</h3>
+<label>New Password<div class="pass-wrap"><input autocomplete="new-password" id="newPassword" type="password"/><button class="show-pass" data-toggle="newPassword" type="button">Show</button></div></label>
+<label>Confirm New Password<div class="pass-wrap"><input autocomplete="new-password" id="newPassword2" type="password"/><button class="show-pass" data-toggle="newPassword2" type="button">Show</button></div></label>
+<div class="portal-actions"><button class="button" id="saveNewPasswordBtn" type="button">Update Password</button></div>
+</div>
+<div class="portal-actions"><a class="button secondary" href="index.html">Back to Website</a></div>
+</section>
+<section class="portal-hidden" id="onboarding">
+<div class="portal-card"><p class="eyebrow">One-time setup</p><h2 id="welcomeName">Welcome</h2><p>Complete your home profile and first request. After setup, you will land in your Home Ecosystem.</p></div>
+<div class="portal-card">
+<h2>Home / Property Information</h2>
+<form class="portal-grid" id="profileForm">
+<label>Property Nickname<input name="homeName" placeholder="Example: Richardson Home"/></label>
+<label>Property Address<input name="address" required=""/></label>
+<label>Property Type<select name="propertyType"><option>Single-family</option><option>Condo</option><option>Townhouse</option><option>Rental</option><option>Vacation Home</option></select></label>
+<label>Year Built<input name="yearBuilt" placeholder="Optional"/></label>
+<label>Square Footage<input name="squareFeet" placeholder="Optional"/></label>
+<label>Number of Stories<input name="stories"/></label>
+<label>HVAC Systems<input name="hvacCount" placeholder="Example: 1"/></label>
+<label>Primary Filter Size<input name="filterSize" placeholder="Example: 16x20x1, or unknown"/></label>
+<label>Filter / Return Photo<input accept="image/*" capture="environment" name="filterPhoto" type="file"/><small class="small-note">Optional. A photo can help BHM confirm the filter size.</small></label>
+<label>Primary Service Interest<select id="primaryService" name="service"><option>Startup Special - $99 (no HVAC condensate clearing/filter change)</option><option>Initial Home Health Assessment - $149 (includes HVAC condensate clearing/filter change where accessible)</option><option>Membership Request</option><option>Home Repair Visit</option><option>Fixture &amp; Face-Lift Visit</option><option>TV Mounting &amp; Shelving</option><option>Move-In / Honey-Do List</option><option>Buying / Selling Support</option><option>Multi-home / Portfolio Care</option></select></label>
+<label>Preferred Appointment<input name="preferred" placeholder="Tomorrow morning, Friday afternoon, etc."/></label>
+<label>Access / Gate / Pet Notes<textarea name="accessNotes"></textarea></label>
+<div class="policy-box"><label><input name="adultAck" required="" type="checkbox"/><span><strong>Adult presence required.</strong> An adult 18 years or older must be present on the property during the entire Bear Home Management visit. BHM does not perform inspections or services on occupied properties without an adult present. No exceptions.</span></label></div>
+<label style="grid-column:1/-1">First Request / Notes<textarea name="description" placeholder="Tell us what you need help with." required=""></textarea></label>
+<label>Upload Photos<input accept="image/*" capture="environment" multiple="" name="photos" type="file"/></label>
+<div><button class="button" type="submit">Finish Setup &amp; Open My Ecosystem</button></div>
+</form><div class="success" id="profileSaved">Setup complete. Opening your Home Ecosystem.</div>
+</div>
+</section>
+<section class="portal-hidden" id="ecosystem">
+<div class="app-header">
+<div class="home-summary">
+<p class="eyebrow light">Home Ecosystem</p>
+<h2 id="ecoHomeName">My Home</h2>
+<p id="ecoAddress">Property profile</p>
+<div class="score-strip">
+<div><span>Health</span><strong id="ecoHealth">—</strong><small>Home Health Score™</small></div>
+<div><span>Complexity</span><strong id="ecoComplexity">—</strong><small>Complexity Score™</small></div>
+<div><span>Next Visit</span><strong id="ecoNext">Pending</strong><small>Smart scheduling</small></div>
+</div>
+</div>
+<div class="portal-card pwa-note">
+<p class="eyebrow">Mobile app model</p>
+<h2>Save this to your phone.</h2>
+<p>This Customer Ecosystem is built mobile-first. On your phone, use the browser menu and choose <strong>Add to Home Screen</strong>.</p>
+<div class="portal-actions"><button class="button" id="newWorkBtn" type="button">+ Add Work Order</button><button class="button secondary" id="editProfileBtn" type="button">Edit Profile</button><button class="button secondary" id="logoutBtn" type="button">Log Out / Switch Customer</button></div>
+</div>
+</div>
+<div class="ecosystem-grid">
+<article class="eco-card"><h3>BearTrack™</h3><div class="metric" id="openWorkCount">0</div><p>Open work orders and appointment activity.</p><div class="work-list" id="recentWork"></div><div class="eco-actions"><button class="mini-button gold" id="newWorkBtn2">Request Work</button></div></article>
+<article class="eco-card"><h3>Home Care Hours™</h3><div class="metric" id="hoursAvailable">—</div><p id="membershipText">Membership not selected.</p><ul><li>Hours used: <span id="hoursUsed">0</span></li><li>Banked hours: <span id="bankedHours">0</span></li></ul></article>
+<article class="eco-card"><h3>The Bear Method™</h3><p>Inspect → Plan → Maintain → Improve → Protect</p><ul id="methodList"><li>Initial profile created</li><li>First request pending BHM review</li></ul></article>
+<article class="eco-card"><h3>Home Health Score™</h3><div class="metric" id="healthMetric">—</div><p>Updates after inspections and completed recommendations.</p><div class="eco-actions"><button class="mini-button light">View Factors</button></div></article>
+<article class="eco-card"><h3>Complexity Score™</h3><div class="metric" id="complexityMetric">—</div><p>Based on home age, size, stories, systems, and property type.</p><ul id="complexityList"></ul></article>
+<article class="eco-card"><h3>Honey-Do List™</h3><div class="metric" id="honeyDoCount">0</div><p>Customer requests and BHM recommendations live here.</p><div class="eco-actions"><button class="mini-button gold" id="newWorkBtn3">+ Add Item</button></div></article>
+<article class="eco-card"><h3>My Home</h3><p>Your digital home record.</p><ul id="myHomeList"></ul><div class="eco-actions"><button class="mini-button light" id="editProfileBtn2">Update Home Info</button></div></article>
+</div>
+</section>
+</main>
+<div aria-hidden="true" class="drawer" id="workDrawer">
+<div class="drawer-panel">
+<h2>Request Work Order</h2>
+<form class="portal-grid" id="workOrderForm">
+<label>Service Type<select id="serviceType" name="service"><option>Home Repair Visit</option><option>Startup Special - $99 (no HVAC condensate clearing/filter change)</option><option>Initial Home Health Assessment - $149 (includes HVAC condensate clearing/filter change where accessible)</option><option>Fixture &amp; Face-Lift Visit</option><option>TV Mounting &amp; Shelving</option><option>Move-In / Honey-Do List</option><option>Membership Consultation</option><option>Follow-up Inspection</option></select></label>
+<label>Priority<select name="priority"><option>Normal</option><option>Service Soon</option><option>Urgent</option><option>Critical</option></select></label>
+<label>Preferred Appointment<input name="preferred" placeholder="Tomorrow morning, Friday afternoon, etc."/></label>
+<label>HVAC Filter Size<input name="filterSize" placeholder="Example: 16x20x1, or unknown"/></label>
+<label>Filter Size Photo<input accept="image/*" capture="environment" name="filterPhoto" type="file"/></label>
+<label>Upload Photos<input accept="image/*" capture="environment" multiple="" name="photos" type="file"/></label>
+<div class="policy-box"><label><input name="adultAck" required="" type="checkbox"/><span><strong>Adult presence required.</strong> An adult 18+ will be present for the entire appointment. No exceptions.</span></label></div>
+<label style="grid-column:1/-1">Description<textarea name="description" placeholder="Tell us what you need help with." required=""></textarea></label>
+<div class="portal-actions"><button class="button" type="submit">Submit Work Order</button><button class="button secondary" id="closeWorkDrawer" type="button">Cancel</button></div>
+</form><div class="success" id="requestSaved">Request submitted to BearTrack Operations.</div>
+</div>
+</div>
 <script>
 const $=s=>document.querySelector(s);const $$=s=>Array.from(document.querySelectorAll(s));let customer={},property={};
 const SB=window.BHM_SUPABASE||{};
@@ -149,7 +168,7 @@ async function signUpOrLogin(email,password,name,phone,contact){
   await sb('/rest/v1/user_profiles?on_conflict=email',{method:'POST',body:JSON.stringify([{auth_user_id:bhmSession.user?.id,role:'customer',name,email,phone,preferred_contact:contact}]),headers:{Prefer:'resolution=merge-duplicates,return=representation'}});
   return bhmSession;
 }
-async function cloudUpsertProperty(prop){return sb('/rest/v1/properties?on_conflict=customer_email',{method:'POST',body:JSON.stringify([{customer_email:customer.email,home_name:prop.homeName,address:prop.address,property_type:prop.propertyType,year_built:prop.yearBuilt,square_feet:prop.squareFeet,stories:prop.stories,hvac_count:prop.hvacCount,filter_size:prop.filterSize,access_notes:prop.accessNotes,complexity_score:calcComplexity(prop)}]),headers:{Prefer:'resolution=merge-duplicates,return=representation'}})}
+async function cloudUpsertProperty(prop){return sb('/rest/v1/properties?on_conflict=customer_email',{method:'POST',body:JSON.stringify([{customer_email:customer.email,home_name:prop.homeName,address:fullAddress(prop)||prop.address,property_type:prop.propertyType,year_built:prop.yearBuilt,square_feet:prop.squareFeet,stories:prop.stories,hvac_count:prop.hvacCount,filter_size:prop.filterSize,access_notes:prop.accessNotes,complexity_score:calcComplexity(prop)}]),headers:{Prefer:'resolution=merge-duplicates,return=representation'}})}
 async function cloudInsertWorkOrder(wo){return sb('/rest/v1/work_orders',{method:'POST',body:JSON.stringify([{id:wo.id,customer_email:wo.email,name:wo.name,phone:wo.phone,address:wo.address,home_name:wo.homeName,property_type:wo.propertyType,service:wo.service,priority:wo.priority,description:wo.description,preferred:wo.preferred,status:wo.status,appointment:wo.appointment,assigned:wo.assigned,membership:wo.membership,ops_notes:wo.opsNotes}])})}
 async function cloudLoadCustomer(){if(!customer.email||!SB.url)return; try{let props=await sb('/rest/v1/properties?customer_email=eq.'+encodeURIComponent(customer.email)+'&order=created_at.desc&limit=1',{method:'GET'}); if(props&&props[0]){property={...property,homeName:props[0].home_name,address:props[0].address,propertyType:props[0].property_type,yearBuilt:props[0].year_built,squareFeet:props[0].square_feet,stories:props[0].stories,hvacCount:props[0].hvac_count,filterSize:props[0].filter_size,accessNotes:props[0].access_notes}; saveProfile();} let wos=await sb('/rest/v1/work_orders?customer_email=eq.'+encodeURIComponent(customer.email)+'&order=created_at.desc',{method:'GET'}); if(wos){let local=records().filter(r=>(r.email||'').toLowerCase()!==customer.email.toLowerCase()); wos.forEach(w=>local.push({id:w.id,name:w.name,email:w.customer_email||customer.email,phone:w.phone,address:w.address,homeName:w.home_name,propertyType:w.property_type,service:w.service,priority:w.priority,description:w.description,preferred:w.preferred,status:w.status,appointment:w.appointment,assigned:w.assigned,membership:w.membership,opsNotes:w.ops_notes,homeHealth:w.home_health,recommendedMembership:w.recommended_membership,inspectionStatus:w.inspection_status})); saveRecords(local);}}catch(e){console.warn('Cloud load failed',e)}}
 function records(){return JSON.parse(localStorage.getItem('bhm_records')||'[]')}function saveRecords(r){localStorage.setItem('bhm_records',JSON.stringify(r));}
@@ -159,19 +178,40 @@ function nextId(r){return 'BHM-'+new Date().getFullYear()+'-'+String(r.length+1)
 function show(which){['login','onboarding','ecosystem'].forEach(id=>$('#'+id).classList.toggle('portal-hidden',id!==which));}
 function calcComplexity(p){let score=20;let year=parseInt(p.yearBuilt||'0',10);if(year&&year<1990)score+=18;else if(year&&year<2010)score+=10;let sf=parseInt((p.squareFeet||'').replace(/\D/g,''),10);if(sf>3000)score+=14;else if(sf>2000)score+=8;let stories=parseInt(p.stories||'1',10);if(stories>1)score+=8;let hvac=parseInt(p.hvacCount||'1',10);if(hvac>1)score+=8;if((p.propertyType||'').includes('Condo'))score+=4;return Math.min(score,99)}
 function membershipHours(service){if((service||'').includes('Bear Essential'))return 2;if((service||'').includes('Bear Plus')||(service||'').includes('Membership'))return 4;if((service||'').includes('Bear Signature'))return 6;return '—'}
+function fullAddress(p){return [p.address,p.city,p.state,p.zip].filter(Boolean).join(', ')}
 function customerRecords(){let email=(customer.email||'').toLowerCase();return records().filter(r=>(r.email||'').toLowerCase()===email)}
-function renderEco(){let rs=customerRecords();let open=rs.filter(r=>r.status!=='Complete');let complete=rs.filter(r=>r.status==='Complete');let comp=calcComplexity(property);let health=Math.max(62,96-Math.floor(comp/3)-open.length*3);$('#ecoHomeName').textContent=property.homeName||((customer.name||'Customer').split(' ')[0]+' Home');$('#ecoAddress').textContent=property.address||'Property profile';$('#ecoComplexity').textContent=comp;$('#complexityMetric').textContent=comp;$('#ecoHealth').textContent=health;$('#healthMetric').textContent=health;$('#ecoNext').textContent=(open.find(r=>r.appointment&& !String(r.appointment).includes('Pending'))||{}).appointment||'Pending';$('#openWorkCount').textContent=open.length;$('#honeyDoCount').textContent=open.length;$('#membershipText').textContent=property.service||'Membership not selected.';$('#hoursAvailable').textContent=membershipHours(property.service);$('#hoursUsed').textContent=complete.length;$('#bankedHours').textContent=membershipHours(property.service)==='—'?'0':Math.max(0,membershipHours(property.service)-complete.length);$('#recentWork').innerHTML=open.slice(-3).map(r=>`<div class="work-row"><strong>${r.service||'Service'}</strong><br><span class="pill">${r.status||'Scheduled'}</span><p>${r.description||''}</p></div>`).join('')||'<p>No open work orders yet.</p>';$('#complexityList').innerHTML=`<li>Type: ${property.propertyType||'—'}</li><li>Stories: ${property.stories||'—'}</li><li>HVAC systems: ${property.hvacCount||'—'}</li>`;$('#myHomeList').innerHTML=`<li>Filter size: ${property.filterSize||'Unknown'}</li><li>Year built: ${property.yearBuilt||'—'}</li><li>Square feet: ${property.squareFeet||'—'}</li><li>Adult-present policy accepted</li>`;}
-$('#enterPortal').onclick=async()=>{try{customer={name:$('#loginName').value||'Customer',email:$('#loginEmail').value||'',phone:$('#loginPhone').value||'',contact:$('#loginContact').value};const pw=$('#loginPassword').value;const pw2=$('#loginPassword2').value;if(!customer.email||!pw){alert('Email and password are required.');return;}if(pw2&&pw!==pw2){alert('Passwords do not match.');return;}await signUpOrLogin(customer.email,pw,customer.name,customer.phone,customer.contact);await cloudLoadCustomer();let saved=loadProfile();if(saved&&saved.customer&&saved.customer.email===customer.email){customer={...customer,...saved.customer};property=saved.property||{};show('ecosystem');renderEco();}else{$('#welcomeName').textContent='Welcome, '+customer.name;show('onboarding');}}catch(err){alert(err.message||err);}}
-$('#profileForm').onsubmit=e=>{e.preventDefault();property=Object.fromEntries(new FormData(e.target));saveProfile();let r=records();let id=nextId(r);r.push({id,name:customer.name,email:customer.email,phone:customer.phone,contact:customer.contact,address:property.address||'',homeName:property.homeName||'',propertyType:property.propertyType||'',service:property.service,priority:'Normal',description:property.description,preferred:property.preferred||'Needs scheduling',status:'Scheduled',appointment:'Pending smart schedule',assigned:'Unassigned',membership:(property.service||'').includes('Membership')?'Requested':'None',opsNotes:'Customer setup complete. Adult presence acknowledged. Access notes: '+(property.accessNotes||'')+' | Filter size: '+(property.filterSize||'Not provided')});saveRecords(r); cloudUpsertProperty(property).catch(console.warn); cloudInsertWorkOrder(r[r.length-1]).catch(console.warn); $('#profileSaved').style.display='block';setTimeout(()=>{show('ecosystem');renderEco();},350)}
+function renderEco(){let rs=customerRecords();let open=rs.filter(r=>!['Complete','Archived'].includes(r.status));let complete=rs.filter(r=>['Complete','Archived'].includes(r.status));let comp=calcComplexity(property);let health=Math.max(62,96-Math.floor(comp/3)-open.length*3);$('#ecoHomeName').textContent=property.homeName||((customer.name||'Customer').split(' ')[0]+' Home');$('#ecoAddress').textContent=fullAddress(property)||'Property profile';$('#ecoComplexity').textContent=comp;$('#complexityMetric').textContent=comp;$('#ecoHealth').textContent=health;$('#healthMetric').textContent=health;$('#ecoNext').textContent=(open.find(r=>r.appointment&& !String(r.appointment).includes('Pending'))||{}).appointment||'Pending';$('#openWorkCount').textContent=open.length;$('#honeyDoCount').textContent=open.length;$('#membershipText').textContent=property.service||'Membership not selected.';$('#hoursAvailable').textContent=membershipHours(property.service);$('#hoursUsed').textContent=complete.length;$('#bankedHours').textContent=membershipHours(property.service)==='—'?'0':Math.max(0,membershipHours(property.service)-complete.length);$('#recentWork').innerHTML=open.slice(-3).map(r=>`<div class="work-row"><strong>${r.service||'Service'}</strong><br><span class="pill">${r.status||'Scheduled'}</span><p>${r.description||''}</p></div>`).join('')||'<p>No open work orders yet.</p>';$('#complexityList').innerHTML=`<li>Type: ${property.propertyType||'—'}</li><li>Stories: ${property.stories||'—'}</li><li>HVAC systems: ${property.hvacCount||'—'}</li>`;$('#myHomeList').innerHTML=`<li>Filter size: ${property.filterSize||'Unknown'}</li><li>Year built: ${property.yearBuilt||'—'}</li><li>Square feet: ${property.squareFeet||'—'}</li><li>Location: ${[property.city,property.state,property.zip].filter(Boolean).join(', ')||'—'}</li><li>Adult-present policy accepted</li>`;}
+
+function passwordChecks(p,p2){return {len:p.length>=8,upper:/[A-Z]/.test(p),lower:/[a-z]/.test(p),num:/\d/.test(p),special:/[^A-Za-z0-9]/.test(p),match:p&&p===p2}}
+function updatePasswordUI(){let p=$('#createPassword')?.value||'', p2=$('#createPassword2')?.value||'', r=passwordChecks(p,p2);[['#reqLen',r.len],['#reqUpper',r.upper],['#reqLower',r.lower],['#reqNum',r.num],['#reqSpecial',r.special],['#reqMatch',r.match]].forEach(([id,ok])=>{$(id)?.classList.toggle('ok',!!ok)});if($('#createBtn')) $('#createBtn').disabled=!Object.values(r).every(Boolean)}
+function resetAccessForms(){['createName','createEmail','createPhone','createPassword','createPassword2','loginPassword','resetEmail','newPassword','newPassword2'].forEach(id=>{let el=$('#'+id); if(el) el.value=''}); if($('#createContact')) $('#createContact').value='Text'; updatePasswordUI();}
+function authMsg(msg){let el=$('#authMessage'); if(el){el.textContent=msg; el.style.display='block';}}
+function looksLikeEmail(v){return /@/.test(v||'')}
+$$('.show-pass').forEach(b=>b.onclick=()=>{let el=$('#'+b.dataset.toggle); if(!el)return; el.type=el.type==='password'?'text':'password'; b.textContent=el.type==='password'?'Show':'Hide'});
+['createPassword','createPassword2'].forEach(id=>$('#'+id)?.addEventListener('input',updatePasswordUI)); updatePasswordUI();
+$('#forgotBtn')?.addEventListener('click',()=>{$('#resetPanel').classList.remove('portal-hidden');$('#resetEmail').value=$('#loginEmail').value||''});
+$('#cancelResetBtn')?.addEventListener('click',()=>$('#resetPanel').classList.add('portal-hidden'));
+async function signIn(email,password){let res=await fetch(SB.url+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SB.anonKey,'Content-Type':'application/json'},body:JSON.stringify({email,password})}); if(!res.ok) throw new Error('Unable to log in. Check the email and password, or verify the account email first.'); bhmSession=await res.json(); localStorage.setItem('bhm_session',JSON.stringify(bhmSession)); return bhmSession;}
+async function createAccount(email,password,name,phone,contact){let sign=await fetch(SB.url+'/auth/v1/signup',{method:'POST',headers:{apikey:SB.anonKey,'Content-Type':'application/json'},body:JSON.stringify({email,password,data:{name,phone,preferred_contact:contact}})}); if(!sign.ok){let e=await sign.json().catch(()=>({})); throw new Error(e.msg||e.error_description||'Unable to create account.');} await sb('/rest/v1/user_profiles?on_conflict=email',{method:'POST',body:JSON.stringify([{role:'customer',name,email,phone,preferred_contact:contact}]),headers:{Prefer:'resolution=merge-duplicates,return=representation'}}).catch(()=>{}); return sign.json();}
+$('#loginBtn')?.addEventListener('click',async()=>{try{customer={email:$('#loginEmail').value.trim(),name:'Customer',phone:'',contact:'Text'};await signIn(customer.email,$('#loginPassword').value);await cloudLoadCustomer();let saved=loadProfile();if(saved&&saved.customer&&saved.customer.email===customer.email){customer={...customer,...saved.customer};property=saved.property||{};} if(property&&property.address){show('ecosystem');renderEco();}else{$('#welcomeName').textContent='Welcome';show('onboarding');} resetAccessForms();}catch(err){authMsg(err.message||String(err));}});
+$('#createBtn')?.addEventListener('click',async()=>{try{let name=$('#createName').value.trim(), email=$('#createEmail').value.trim(), phone=$('#createPhone').value.trim(), contact=$('#createContact').value;if(!name||looksLikeEmail(name)){authMsg('Please enter your name. Your email belongs in the Email field.');return;}let p=$('#createPassword').value,p2=$('#createPassword2').value;if(!Object.values(passwordChecks(p,p2)).every(Boolean)){authMsg('Please complete the password requirements before creating the account.');return;}await createAccount(email,p,name,phone,contact);customer={name,email,phone,contact};saveProfile();authMsg('Account created. Please verify your email, then log in to continue to Property Setup.');resetAccessForms();}catch(err){authMsg(err.message||String(err));}});
+$('#resetBtn')?.addEventListener('click',async()=>{let email=$('#resetEmail').value.trim();try{await fetch(SB.url+'/auth/v1/recover',{method:'POST',headers:{apikey:SB.anonKey,'Content-Type':'application/json'},body:JSON.stringify({email,redirect_to:location.origin+location.pathname+'?reset=1'})});authMsg('If an account exists for this email, password reset instructions have been sent.');resetAccessForms();$('#resetPanel').classList.add('portal-hidden');}catch(e){authMsg('If an account exists for this email, password reset instructions have been sent.')}});
+function hashParams(){let h=location.hash.replace(/^#/,'');return Object.fromEntries(new URLSearchParams(h));}
+let hp=hashParams(); if(hp.access_token){bhmSession={access_token:hp.access_token,refresh_token:hp.refresh_token,token_type:hp.token_type}; localStorage.setItem('bhm_session',JSON.stringify(bhmSession)); if(hp.type==='recovery'||location.search.includes('reset=1')){$('#newPasswordPanel')?.classList.remove('portal-hidden');}else{authMsg('Email verified. Please complete Property Setup.');show('onboarding');}}
+$('#saveNewPasswordBtn')?.addEventListener('click',async()=>{let p=$('#newPassword').value,p2=$('#newPassword2').value;if(!Object.values(passwordChecks(p,p2)).every(Boolean)){authMsg('New password does not meet requirements or does not match.');return;}try{let res=await fetch(SB.url+'/auth/v1/user',{method:'PUT',headers:{apikey:SB.anonKey,Authorization:'Bearer '+(bhmSession?.access_token||''),'Content-Type':'application/json'},body:JSON.stringify({password:p})});if(!res.ok)throw new Error('Unable to update password. Try the reset link again.');authMsg('Password updated successfully. Please log in with your new password.');$('#newPasswordPanel').classList.add('portal-hidden');resetAccessForms();}catch(e){authMsg(e.message||String(e));}});
+$('#profileForm').onsubmit=e=>{e.preventDefault();property=Object.fromEntries(new FormData(e.target));saveProfile();let r=records();let id=nextId(r);r.push({id,name:customer.name,email:customer.email,phone:customer.phone,contact:customer.contact,address:fullAddress(property)||'',homeName:property.homeName||'',propertyType:property.propertyType||'',service:property.service,priority:'Normal',description:property.description,preferred:property.preferred||'Needs scheduling',status:'Scheduled',appointment:'Pending smart schedule',assigned:'Unassigned',membership:(property.service||'').includes('Membership')?'Requested':'None',opsNotes:'Customer setup complete. Adult presence acknowledged. Access notes: '+(property.accessNotes||'')+' | Filter size: '+(property.filterSize||'Not provided')});saveRecords(r); cloudUpsertProperty(property).catch(console.warn); cloudInsertWorkOrder(r[r.length-1]).catch(console.warn); $('#profileSaved').style.display='block';setTimeout(()=>{show('ecosystem');renderEco();},350)}
 function openWork(){ $('#workDrawer').classList.add('open');$('#requestSaved').style.display='none';}
 function closeWork(){ $('#workDrawer').classList.remove('open');}
-['#newWorkBtn','#newWorkBtn2','#newWorkBtn3'].forEach(s=>$(s).onclick=openWork);['#editProfileBtn','#editProfileBtn2'].forEach(s=>$(s).onclick=()=>show('onboarding'));$('#closeWorkDrawer').onclick=closeWork;
-$('#workOrderForm').onsubmit=e=>{e.preventDefault();let f=Object.fromEntries(new FormData(e.target));let r=records();let id=nextId(r);r.push({id,name:customer.name,email:customer.email,phone:customer.phone,contact:customer.contact,address:property.address||'',homeName:property.homeName||'',propertyType:property.propertyType||'',service:f.service,priority:f.priority,description:f.description,preferred:f.preferred,status:'Scheduled',appointment:'Pending smart schedule',assigned:'Unassigned',membership:(property.service||'').includes('Membership')?'Requested':'None',opsNotes:'Adult presence acknowledged. Filter size: '+(f.filterSize||property.filterSize||'Not provided')});saveRecords(r); cloudInsertWorkOrder(r[r.length-1]).catch(console.warn); $('#requestSaved').style.display='block';e.target.reset();renderEco();setTimeout(closeWork,650)}
+['#newWorkBtn','#newWorkBtn2','#newWorkBtn3'].forEach(s=>$(s).onclick=openWork);['#editProfileBtn','#editProfileBtn2'].forEach(s=>$(s).onclick=()=>show('onboarding'));$('#logoutBtn')?.addEventListener('click',()=>{localStorage.removeItem('bhm_customer_profile');localStorage.removeItem('bhm_session');customer={};property={};resetAccessForms();show('login');});$('#closeWorkDrawer').onclick=closeWork;
+$('#workOrderForm').onsubmit=e=>{e.preventDefault();let f=Object.fromEntries(new FormData(e.target));let r=records();let id=nextId(r);r.push({id,name:customer.name,email:customer.email,phone:customer.phone,contact:customer.contact,address:fullAddress(property)||'',homeName:property.homeName||'',propertyType:property.propertyType||'',service:f.service,priority:f.priority,description:f.description,preferred:f.preferred,status:'Scheduled',appointment:'Pending smart schedule',assigned:'Unassigned',membership:(property.service||'').includes('Membership')?'Requested':'None',opsNotes:'Adult presence acknowledged. Filter size: '+(f.filterSize||property.filterSize||'Not provided')});saveRecords(r); cloudInsertWorkOrder(r[r.length-1]).catch(console.warn); $('#requestSaved').style.display='block';e.target.reset();renderEco();setTimeout(closeWork,650)}
 let saved=loadProfile();if(saved&&saved.customer&&saved.property){customer=saved.customer;property=saved.property;cloudLoadCustomer().finally(()=>{show('ecosystem');renderEco();});}
 let deferredInstallPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;$('#installBanner').classList.add('show');});
 $('#installAppBtn').onclick=async()=>{if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;$('#installBanner').classList.remove('show');}else{alert('On iPhone: open Safari, tap Share, then Add to Home Screen. On Android: open Chrome menu and tap Install app or Add to Home screen.');}};
 window.addEventListener('appinstalled',()=>{$('#installBanner').classList.remove('show');});
+
+const callBtn=$('#callButton'); if(callBtn && !/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){callBtn.addEventListener('click',e=>{e.preventDefault();navigator.clipboard?.writeText('904-424-9092');alert('Phone number copied: (904) 424-9092');});}
+
 if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').catch(()=>{});}
 </script>
 </body></html>
