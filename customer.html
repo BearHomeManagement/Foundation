@@ -11,6 +11,7 @@
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="Bear Home" name="apple-mobile-web-app-title"/>
 <link href="assets/icon-180.png" rel="apple-touch-icon"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <style>
     body{background:var(--cream)}
@@ -150,6 +151,7 @@
 <script>
 const $=s=>document.querySelector(s);const $$=s=>Array.from(document.querySelectorAll(s));let customer={},property={};
 const SB=window.BHM_SUPABASE||{};
+const sbAuth = (window.supabase && SB.url && SB.anonKey) ? window.supabase.createClient(SB.url, SB.anonKey, { auth: { detectSessionInUrl: true, persistSession: true, autoRefreshToken: true } }) : null;
 let bhmSession=JSON.parse(localStorage.getItem('bhm_session')||'null');
 function sbHeaders(extra={}){return {'apikey':SB.anonKey,'Authorization':'Bearer '+(bhmSession?.access_token||SB.anonKey),'Content-Type':'application/json','Prefer':'return=representation',...extra};}
 async function sb(path,opts={}){const res=await fetch(SB.url+path,{...opts,headers:sbHeaders(opts.headers||{})}); if(!res.ok){throw new Error(await res.text())} return res.status===204?null:res.json();}
@@ -205,22 +207,104 @@ showAuthPanel('login');
 
 $$('.show-pass').forEach(b=>b.onclick=()=>{let el=$('#'+b.dataset.toggle); if(!el)return; el.type=el.type==='password'?'text':'password'; b.textContent=el.type==='password'?'Show':'Hide'});
 ['createPassword','createPassword2'].forEach(id=>$('#'+id)?.addEventListener('input',updatePasswordUI)); updatePasswordUI();
+
 $('#forgotBtn')?.addEventListener('click',()=>{$('#resetPanel').classList.remove('portal-hidden');$('#resetEmail').value=$('#loginEmail').value||''});
 $('#cancelResetBtn')?.addEventListener('click',()=>$('#resetPanel').classList.add('portal-hidden'));
-async function signIn(email,password){let res=await fetch(SB.url+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SB.anonKey,'Content-Type':'application/json'},body:JSON.stringify({email,password})}); if(!res.ok) throw new Error('Unable to log in. Check the email and password, or verify the account email first.'); bhmSession=await res.json(); localStorage.setItem('bhm_session',JSON.stringify(bhmSession)); return bhmSession;}
-async function createAccount(email,password,name,phone,contact){if(!SB.url||!SB.anonKey) throw new Error('Supabase is not configured.'); const redirect=encodeURIComponent(location.origin+location.pathname+'?verified=1'); let sign=await fetch(SB.url+'/auth/v1/signup?redirect_to='+redirect,{method:'POST',headers:{apikey:SB.anonKey,'Content-Type':'application/json'},body:JSON.stringify({email,password,data:{name,phone,preferred_contact:contact}})}); if(!sign.ok){let e=await sign.json().catch(()=>({})); throw new Error(e.msg||e.error_description||'Unable to create account.');} return sign.json();}
-$('#loginBtn')?.addEventListener('click',async()=>{try{customer={email:$('#loginEmail').value.trim(),name:'Customer',phone:'',contact:'Text'};await signIn(customer.email,$('#loginPassword').value);await cloudLoadCustomer();let saved=loadProfile();if(saved&&saved.customer&&saved.customer.email===customer.email){customer={...customer,...saved.customer};property=saved.property||{};} if(property&&property.address){show('ecosystem');renderEco();}else{$('#welcomeName').textContent='Welcome';show('onboarding');} resetAccessForms();}catch(err){authMsg(err.message||String(err));}});
-$('#createBtn')?.addEventListener('click',async()=>{try{let name=$('#createName').value.trim(), email=$('#createEmail').value.trim(), phone=$('#createPhone').value.trim(), contact=$('#createContact').value;if(!name||looksLikeEmail(name)){authMsg('Please enter your name. Your email belongs in the Email field.');return;}let p=$('#createPassword').value,p2=$('#createPassword2').value;if(!Object.values(passwordChecks(p,p2)).every(Boolean)){authMsg('Please complete the password requirements before creating the account.');return;}await createAccount(email,p,name,phone,contact); localStorage.removeItem('bhm_customer_profile'); customer={}; property={}; authMsg('Account created. Please check your email and verify the account. After verification, log in to continue to Property Setup.'); resetAccessForms(); showAuthPanel('login');}catch(err){authMsg(err.message||String(err));}});
-$('#resetBtn')?.addEventListener('click',async()=>{let email=$('#resetEmail').value.trim();try{await fetch(SB.url+'/auth/v1/recover',{method:'POST',headers:{apikey:SB.anonKey,'Content-Type':'application/json'},body:JSON.stringify({email,redirect_to:location.origin+location.pathname+'?reset=1'})});authMsg('If an account exists for this email, password reset instructions have been sent.');resetAccessForms();$('#resetPanel').classList.add('portal-hidden');}catch(e){authMsg('If an account exists for this email, password reset instructions have been sent.')}});
-function hashParams(){let h=location.hash.replace(/^#/,'');return Object.fromEntries(new URLSearchParams(h));}
-let hp=hashParams(); if(hp.access_token){bhmSession={access_token:hp.access_token,refresh_token:hp.refresh_token,token_type:hp.token_type}; localStorage.setItem('bhm_session',JSON.stringify(bhmSession)); if(hp.type==='recovery'||location.search.includes('reset=1')){$('#newPasswordPanel')?.classList.remove('portal-hidden');}else{(async()=>{try{let u=await fetch(SB.url+'/auth/v1/user',{headers:{apikey:SB.anonKey,Authorization:'Bearer '+bhmSession.access_token}}).then(r=>r.json());customer={name:u.user_metadata?.name||'Customer',email:u.email||'',phone:u.user_metadata?.phone||'',contact:u.user_metadata?.preferred_contact||'Text'}; property={}; saveProfile();}catch(e){} authMsg('Email verified. Please complete Property Setup.');show('onboarding');})();}}
-$('#saveNewPasswordBtn')?.addEventListener('click',async()=>{let p=$('#newPassword').value,p2=$('#newPassword2').value;if(!Object.values(passwordChecks(p,p2)).every(Boolean)){authMsg('New password does not meet requirements or does not match.');return;}try{let res=await fetch(SB.url+'/auth/v1/user',{method:'PUT',headers:{apikey:SB.anonKey,Authorization:'Bearer '+(bhmSession?.access_token||''),'Content-Type':'application/json'},body:JSON.stringify({password:p})});if(!res.ok)throw new Error('Unable to update password. Try the reset link again.');authMsg('Password updated successfully. Please log in with your new password.');$('#newPasswordPanel').classList.add('portal-hidden');resetAccessForms();}catch(e){authMsg(e.message||String(e));}});
+const customerUrl = () => location.origin + location.pathname;
+async function getAuthUser(){
+  if(!sbAuth) return null;
+  const {data,error}=await sbAuth.auth.getUser();
+  if(error||!data?.user) return null;
+  return data.user;
+}
+async function signIn(email,password){
+  if(!sbAuth) throw new Error('Supabase is not configured.');
+  const {data,error}=await sbAuth.auth.signInWithPassword({email,password});
+  if(error) throw new Error(error.message || 'Unable to log in. Verify your email first, then try again.');
+  bhmSession=data.session; localStorage.setItem('bhm_session',JSON.stringify(bhmSession));
+  return data.session;
+}
+async function createAccount(email,password,name,phone,contact){
+  if(!sbAuth) throw new Error('Supabase is not configured.');
+  const {data,error}=await sbAuth.auth.signUp({
+    email,password,
+    options:{emailRedirectTo: customerUrl()+'?verified=1', data:{name,phone,preferred_contact:contact}}
+  });
+  if(error) throw new Error(error.message || 'Unable to create account.');
+  await sbAuth.auth.signOut().catch(()=>{});
+  localStorage.removeItem('bhm_session');
+  return data;
+}
+async function routeAfterVerifiedOrLogin(){
+  const user=await getAuthUser();
+  if(!user){show('login');authMsg('Please log in to continue. If you just verified your email, use the login form.');return;}
+  customer={name:user.user_metadata?.name||'Customer',email:user.email||'',phone:user.user_metadata?.phone||'',contact:user.user_metadata?.preferred_contact||'Text'};
+  await cloudLoadCustomer();
+  let saved=loadProfile();
+  if(saved&&saved.customer&&saved.customer.email===customer.email){customer={...customer,...saved.customer};property=saved.property||{};}
+  if(property&&fullAddress(property)){show('ecosystem');renderEco();}
+  else{$('#welcomeName').textContent=(customer.name||'Welcome').split(' ')[0];authMsg('Email verified. Please complete Property Setup before entering your Home Ecosystem.');show('onboarding');}
+}
+$('#loginBtn')?.addEventListener('click',async()=>{try{
+  customer={email:$('#loginEmail').value.trim(),name:'Customer',phone:'',contact:'Text'};
+  await signIn(customer.email,$('#loginPassword').value);
+  await routeAfterVerifiedOrLogin();
+  resetAccessForms();
+}catch(err){authMsg(err.message||String(err));}});
+$('#createBtn')?.addEventListener('click',async()=>{try{
+  let name=$('#createName').value.trim(), email=$('#createEmail').value.trim(), phone=$('#createPhone').value.trim(), contact=$('#createContact').value;
+  if(!name||looksLikeEmail(name)){authMsg('Please enter your name. Your email belongs in the Email field.');return;}
+  let p=$('#createPassword').value,p2=$('#createPassword2').value;
+  if(!Object.values(passwordChecks(p,p2)).every(Boolean)){authMsg('Please complete the password requirements before creating the account.');return;}
+  await createAccount(email,p,name,phone,contact);
+  localStorage.removeItem('bhm_customer_profile'); customer={}; property={};
+  authMsg('Account created. Please check your email and click the verification link. After verification, log in and complete Property Setup.');
+  resetAccessForms(); showAuthPanel('login'); show('login');
+}catch(err){authMsg(err.message||String(err));}});
+$('#resetBtn')?.addEventListener('click',async()=>{let email=$('#resetEmail').value.trim();try{
+  if(sbAuth){await sbAuth.auth.resetPasswordForEmail(email,{redirectTo:customerUrl()+'?reset=1'});} else {throw new Error('Supabase is not configured.');}
+  authMsg('If an account exists for this email, password reset instructions have been sent.');
+  resetAccessForms();$('#resetPanel').classList.add('portal-hidden');
+}catch(e){authMsg('If an account exists for this email, password reset instructions have been sent.')}});
+async function handleAuthRedirect(){
+  const qs=new URLSearchParams(location.search);
+  if(!sbAuth) return false;
+  if(qs.get('reset')==='1'){
+    await sbAuth.auth.getSession().catch(()=>{});
+    show('login'); $('#newPasswordPanel')?.classList.remove('portal-hidden'); authMsg('Enter a new password to finish resetting your account.');
+    return true;
+  }
+  if(qs.get('verified')==='1'){
+    await sbAuth.auth.getSession().catch(()=>{});
+    await routeAfterVerifiedOrLogin();
+    return true;
+  }
+  return false;
+}
+$('#saveNewPasswordBtn')?.addEventListener('click',async()=>{let p=$('#newPassword').value,p2=$('#newPassword2').value;if(!Object.values(passwordChecks(p,p2)).every(Boolean)){authMsg('New password does not meet requirements or does not match.');return;}try{
+  if(!sbAuth) throw new Error('Supabase is not configured.');
+  const {error}=await sbAuth.auth.updateUser({password:p});
+  if(error) throw error;
+  authMsg('Password updated successfully. Please log in with your new password.');
+  $('#newPasswordPanel').classList.add('portal-hidden');
+  await sbAuth.auth.signOut().catch(()=>{}); localStorage.removeItem('bhm_session'); resetAccessForms(); show('login');
+}catch(e){authMsg(e.message||String(e));}});
 $('#profileForm').onsubmit=e=>{e.preventDefault();property=Object.fromEntries(new FormData(e.target));saveProfile();let r=records();let id=nextId(r);r.push({id,name:customer.name,email:customer.email,phone:customer.phone,contact:customer.contact,address:fullAddress(property)||'',homeName:property.homeName||'',propertyType:property.propertyType||'',service:property.service,priority:'Normal',description:property.description,preferred:property.preferred||'Needs scheduling',status:'Scheduled',appointment:'Pending smart schedule',assigned:'Unassigned',membership:(property.service||'').includes('Membership')?'Requested':'None',opsNotes:'Customer setup complete. Adult presence acknowledged. Access notes: '+(property.accessNotes||'')+' | Filter size: '+(property.filterSize||'Not provided')});saveRecords(r); cloudUpsertProfile().then(()=>cloudUpsertProperty(property)).then(()=>cloudInsertWorkOrder(r[r.length-1])).catch(console.warn); $('#profileSaved').style.display='block';setTimeout(()=>{show('ecosystem');renderEco();},350)}
 function openWork(){ $('#workDrawer').classList.add('open');$('#requestSaved').style.display='none';}
 function closeWork(){ $('#workDrawer').classList.remove('open');}
 ['#newWorkBtn','#newWorkBtn2','#newWorkBtn3'].forEach(s=>$(s).onclick=openWork);['#editProfileBtn','#editProfileBtn2'].forEach(s=>$(s).onclick=()=>show('onboarding'));$('#logoutBtn')?.addEventListener('click',()=>{localStorage.removeItem('bhm_customer_profile');localStorage.removeItem('bhm_session');customer={};property={};resetAccessForms();show('login');});$('#closeWorkDrawer').onclick=closeWork;
 $('#workOrderForm').onsubmit=e=>{e.preventDefault();let f=Object.fromEntries(new FormData(e.target));let r=records();let id=nextId(r);r.push({id,name:customer.name,email:customer.email,phone:customer.phone,contact:customer.contact,address:fullAddress(property)||'',homeName:property.homeName||'',propertyType:property.propertyType||'',service:f.service,priority:f.priority,description:f.description,preferred:f.preferred,status:'Scheduled',appointment:'Pending smart schedule',assigned:'Unassigned',membership:(property.service||'').includes('Membership')?'Requested':'None',opsNotes:'Adult presence acknowledged. Filter size: '+(f.filterSize||property.filterSize||'Not provided')});saveRecords(r); cloudInsertWorkOrder(r[r.length-1]).catch(console.warn); $('#requestSaved').style.display='block';e.target.reset();renderEco();setTimeout(closeWork,650)}
-let saved=loadProfile();let sessionSaved=localStorage.getItem('bhm_session');if(saved&&saved.customer&&saved.property&&sessionSaved){customer=saved.customer;property=saved.property;cloudLoadCustomer().finally(()=>{ if(property&&fullAddress(property)){show('ecosystem');renderEco();} else {show('onboarding');} });}else{show('login');resetAccessForms();}
+
+(async function bootCustomerPortal(){
+  const handled=await handleAuthRedirect();
+  if(handled) return;
+  let saved=loadProfile();let sessionSaved=localStorage.getItem('bhm_session');
+  if(saved&&saved.customer&&saved.property&&sessionSaved){
+    customer=saved.customer;property=saved.property;
+    cloudLoadCustomer().finally(()=>{ if(property&&fullAddress(property)){show('ecosystem');renderEco();} else {show('onboarding');} });
+  }else{show('login');resetAccessForms();}
+})();
+
 let deferredInstallPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;$('#installBanner').classList.add('show');});
 $('#installAppBtn').onclick=async()=>{if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;$('#installBanner').classList.remove('show');}else{alert('On iPhone: open Safari, tap Share, then Add to Home Screen. On Android: open Chrome menu and tap Install app or Add to Home screen.');}};
