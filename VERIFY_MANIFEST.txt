@@ -1,16 +1,5 @@
-BHM repo-root restore package
-
-Upload THESE CONTENTS directly into the GitHub repo root.
-Do not upload a containing folder.
-
-Expected live routes after Netlify deploy:
-- https://bearhomemanagement.com/       -> public website (index.html)
-- https://bearhomemanagement.com/app/   -> BearTrack Ops Portal (app/index.html)
-
-Files included:
-- index.html        public Bear Home Management website
-- styles.css        public website styling
-- script.js         public website mobile nav
-- app/index.html    BearTrack Ops Portal with Customers, Work Orders, Schedule Board, monthly schedule, and logo mark
-
-I verified this zip has index.html at the repo root, not inside a Foundation folder.
+Verified structure:
+/index.html -> public marketing website
+/styles.css -> public website styling
+/script.js -> public website mobile menu script
+/app/index.html -> BearTrack Ops Portal with customers/work orders saving locally and monthly schedule view
