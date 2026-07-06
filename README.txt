@@ -1,15 +1,15 @@
-BHM Portal Restore Patch
+BHM Route Fix + Monthly Schedule Patch
 
-Replace this file in your GitHub repo:
-Foundation/app/index.html
+Upload the included Foundation folder contents to GitHub.
 
-Then commit/push and let Netlify deploy.
+This restores the proper route structure:
+- Foundation/index.html = public Bear Home Management website
+- Foundation/styles.css = public website styling
+- Foundation/script.js = public website menu script
+- Foundation/app/index.html = BearTrack / Ops Portal
 
-Restored:
-- Bear Home Management header/logo area
-- Customers tab and Add Customer profile creation
-- Work Orders button and work order creation
-- Schedule Board drag/drop
-- Monthly schedule view
-- Inspection photo upload per section/item
-- Bear Home Management wording cleanup
+After deploy:
+- bearhomemanagement.com should show the public website
+- bearhomemanagement.com/app/ should show the BearTrack Ops Portal
+
+The app file includes the monthly schedule view and bear SVG logo patch.
