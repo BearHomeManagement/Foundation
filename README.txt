@@ -1,16 +1,15 @@
-Bear Maintenance Website - Version 1.0
+BHM Portal Restore Patch
 
-How to open:
-1. Extract this ZIP file.
-2. Open the extracted folder.
-3. Double-click index.html.
-4. The website opens locally in your browser.
+Replace this file in your GitHub repo:
+Foundation/app/index.html
 
-Files:
-- index.html: website content
-- styles.css: colors, layout, and responsive design
-- script.js: small mobile-menu behavior
-- assets/: bear head images
+Then commit/push and let Netlify deploy.
 
-Notes:
-This is a static concept website. The contact form and portal previews are visual only. A production version would need hosting, form handling, user accounts, database, payments, scheduling, and admin tools.
+Restored:
+- Bear Home Management header/logo area
+- Customers tab and Add Customer profile creation
+- Work Orders button and work order creation
+- Schedule Board drag/drop
+- Monthly schedule view
+- Inspection photo upload per section/item
+- Bear Home Management wording cleanup
