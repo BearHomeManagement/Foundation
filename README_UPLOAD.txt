@@ -1,19 +1,5 @@
-BHM v1.8 app-only patch
+BHM v1.8C Dashboard Month Schedule
 
-Upload/replace ONLY this file in GitHub root:
-- app.html
+Replace ONLY app.html. Do not upload or change any other file.
 
-Do NOT upload or replace:
-- index.html
-- customer.html
-- styles.css
-- assets/
-
-Changes included:
-- Bear logo in portal header and BearTrack inspection header uses existing assets/bear-head-header.png
-- Schedule Board now has Day / Week / Month views
-- Calendar supports dragging jobs onto dates
-- Click a date to create a scheduled work order
-- Unscheduled/Pending jobs panel added
-- Customer profile now shows active/upcoming and completed work orders
-- Fixed active work order counter logic in app.html
+Adds Day/Week/Month schedule controls directly to the Ops Center Live Schedule Board. Keeps the existing table and status board.
