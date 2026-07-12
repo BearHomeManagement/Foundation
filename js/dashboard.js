@@ -66,7 +66,7 @@
 
   function workOrderCard(w) {
     return `
-      <div class="job ${jobClass(w)}">
+      <div class="job ${jobClass(w)} scheduled-workorder" data-workorder-id="${w.id}">
         <strong>${esc(w.title || w.service || 'Work Order')}</strong>
         <small>${esc(w.scheduled_time || '')} · ${esc(w.properties?.address || w.address || 'No address')} · ${esc(w.assigned_to || w.assigned || 'Unassigned')}</small>
       </div>`;
@@ -148,7 +148,7 @@
       cells.push(`
         <div class="day-cell scheduler-slot" data-date="${key}" data-time="" style="cursor:pointer">
           <div class="num">${day}</div>
-          ${items.work.slice(0, 4).map(w => `<div class="month-job ${jobClass(w)}">${esc(w.title || 'Work Order')}</div>`).join('')}
+          ${items.work.slice(0, 4).map(w => `<div class="month-job ${jobClass(w)} scheduled-workorder" data-workorder-id="${w.id}">${esc(w.title || 'Work Order')}</div>`).join('')}
           ${items.assessments.slice(0, 3).map(a => `<div class="month-job assessment">${esc(a.assessment_type || 'Assessment')}</div>`).join('')}
           ${!items.work.length && !items.assessments.length ? '<small class="muted">Click to schedule</small>' : ''}
         </div>`);
@@ -412,6 +412,23 @@
           date: slot.dataset.date,
           time: slot.dataset.time || ''
         });
+      };
+    });
+
+    el.querySelectorAll('.scheduled-workorder').forEach(card => {
+      card.onclick = event => {
+        event.stopPropagation();
+        const workOrder = window.BearTrackWorkOrders?.getById?.(card.dataset.workorderId);
+        if (!workOrder) return;
+
+        document.querySelector('#nav [data-page="workorders"]')?.click();
+        document.dispatchEvent(new CustomEvent('beartrack:edit-workorder', {
+          detail: { workOrder }
+        }));
+        setTimeout(() => {
+          document.getElementById('workOrderTitle')?.focus();
+          document.getElementById('workorders')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
       };
     });
 
