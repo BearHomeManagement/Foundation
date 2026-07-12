@@ -24,7 +24,6 @@
       technician_id: workOrder.technician_id || null,
       assigned_to: workOrder.assigned_to || '',
       created_at: workOrder.created_at || null,
-      updated_at: workOrder.updated_at || null,
       completed_at: workOrder.completed_at || null,
       properties: workOrder.properties || null
     };
@@ -88,10 +87,7 @@
       throw new Error('Work order title is required.');
     }
 
-    const saved = await window.BearTrackDB.update('work_orders', id, {
-      ...record,
-      updated_at: new Date().toISOString()
-    });
+    const saved = await window.BearTrackDB.update('work_orders', id, record);
 
     const index = workOrders.findIndex(workOrder => workOrder.id === id);
 
@@ -110,7 +106,6 @@
   async function updateStatus(id, status) {
     const updates = {
       status,
-      updated_at: new Date().toISOString(),
       completed_at: isComplete(status) ? new Date().toISOString() : null
     };
 
@@ -134,8 +129,7 @@
       status: 'scheduled',
       scheduled_date: date || null,
       scheduled_time: time || null,
-      assigned_to: assignedTo || null,
-      updated_at: new Date().toISOString()
+      assigned_to: assignedTo || null
     };
 
     const saved = await window.BearTrackDB.update('work_orders', id, updates);
@@ -408,4 +402,3 @@
     getAll: () => [...workOrders]
   };
 })();
-
