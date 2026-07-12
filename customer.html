@@ -38,6 +38,18 @@
 <div><p class="eyebrow">Customer Portal</p><h1>Your home ecosystem starts here.</h1><p class="hero-lead">Create your customer access, add your property, request service, then manage your home from a mobile-friendly ecosystem app.</p></div>
 <img alt="Bear Home Management logo" src="assets/bear-head-header.png"/>
 </section>
+<section class="portal-card portal-hidden" id="welcome">
+  <div style="text-align:center;max-width:720px;margin:0 auto">
+    <img alt="Bear Home Management logo" src="assets/bear-head-header.png" style="width:120px;height:auto;margin-bottom:12px"/>
+    <p class="eyebrow">Bear Home Management</p>
+    <h1>Welcome to Bear Home Management!</h1>
+    <p class="hero-lead">Thank you for verifying your email. Your Home Ecosystem is almost ready.</p>
+    <div class="portal-actions" style="justify-content:center">
+      <button class="button" id="welcomeLoginBtn" type="button">Log In</button>
+    </div>
+  </div>
+</section>
+
 <section class="portal-card" id="login">
 <h2>Customer access</h2>
 <p class="small-note">Log in to your Home Ecosystem or create a new Bear Home Management account.</p>
@@ -80,7 +92,21 @@
 <section class="portal-hidden" id="onboarding">
 <div class="portal-card"><p class="eyebrow">One-time setup</p><h2 id="welcomeName">Welcome</h2><p id="onboardingIntro">First, tell us about your home. Then we will schedule your initial inspection.</p></div>
 
-<div class="onboarding-step active" id="homeStep">
+<div class="onboarding-step active" id="homeIntroStep">
+  <div class="portal-card">
+    <div style="text-align:center;max-width:760px;margin:0 auto">
+      <img alt="Bear Home Management logo" src="assets/bear-head-header.png" style="width:110px;height:auto;margin-bottom:10px"/>
+      <p class="eyebrow">Your Home Ecosystem</p>
+      <h2>Let’s build your Home Ecosystem.</h2>
+      <p class="hero-lead">We need a little information about your home to personalize inspections, maintenance reminders, and your Home Health Score™.</p>
+      <div class="portal-actions" style="justify-content:center">
+        <button class="button" id="tellUsHomeBtn" type="button">Tell Us About Your Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="onboarding-step" id="homeStep">
 <div class="portal-card">
 <h2>Step 1 of 2 — Home / Property Information</h2>
 <form class="portal-grid" id="homeForm">
@@ -237,7 +263,7 @@ function saveProfile(){
 }
 function loadProfile(){try{return JSON.parse(localStorage.getItem('bhm_customer_profile')||'null')}catch(e){return null}}
 function nextId(r){return 'BHM-'+new Date().getFullYear()+'-'+String(r.length+1).padStart(4,'0')}
-function show(which){['login','onboarding','ecosystem'].forEach(id=>$('#'+id).classList.toggle('portal-hidden',id!==which));}
+function show(which){['welcome','login','onboarding','ecosystem'].forEach(id=>$('#'+id).classList.toggle('portal-hidden',id!==which));}
 function calcComplexity(p){let score=20;let year=parseInt(p.yearBuilt||'0',10);if(year&&year<1990)score+=18;else if(year&&year<2010)score+=10;let sf=parseInt((p.squareFeet||'').replace(/\D/g,''),10);if(sf>3000)score+=14;else if(sf>2000)score+=8;let stories=parseInt(p.stories||'1',10);if(stories>1)score+=8;let hvac=parseInt(p.hvacCount||'1',10);if(hvac>1)score+=8;if((p.propertyType||'').includes('Condo'))score+=4;return Math.min(score,99)}
 function membershipHours(service){if((service||'').includes('Bear Essential'))return 2;if((service||'').includes('Bear Plus')||(service||'').includes('Membership'))return 4;if((service||'').includes('Bear Signature'))return 6;return '—'}
 function fullAddress(p){return [p.address,p.city,p.state,p.zip].filter(Boolean).join(', ')}
@@ -262,6 +288,19 @@ function showAuthPanel(which){
 $('#showLoginPanel')?.addEventListener('click',()=>showAuthPanel('login'));
 $('#showCreatePanel')?.addEventListener('click',()=>showAuthPanel('create'));
 showAuthPanel('login');
+$('#tellUsHomeBtn')?.addEventListener('click',()=>{
+  setOnboardingStep('home');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+$('#welcomeLoginBtn')?.addEventListener('click',()=>{
+  localStorage.removeItem('bhm_session');
+  bhmSession=null;
+  show('login');
+  showAuthPanel('login');
+  $('#loginEmail')?.focus();
+});
+
 
 $$('.show-pass').forEach(b=>b.onclick=()=>{let el=$('#'+b.dataset.toggle); if(!el)return; el.type=el.type==='password'?'text':'password'; b.textContent=el.type==='password'?'Show':'Hide'});
 ['createPassword','createPassword2'].forEach(id=>$('#'+id)?.addEventListener('input',updatePasswordUI)); updatePasswordUI();
@@ -280,6 +319,7 @@ async function cloudLoadProfileByEmail(email){
   return rows&&rows[0]?rows[0]:null;
 }
 function setOnboardingStep(step){
+  $('#homeIntroStep')?.classList.toggle('active',step==='intro');
   $('#homeStep')?.classList.toggle('active',step==='home');
   $('#inspectionStep')?.classList.toggle('active',step==='inspection');
 }
@@ -318,7 +358,7 @@ async function routeCustomer(){
 
   if(!propertyFound || !property.address){
     $('#welcomeName').textContent='Welcome, '+((customer.name||'Customer').split(' ')[0]);
-    setOnboardingStep('home');
+    setOnboardingStep('intro');
     show('onboarding');
     return;
   }
@@ -385,9 +425,8 @@ if(hp.access_token){
   if(hp.type==='recovery'||location.search.includes('reset=1')){
     $('#newPasswordPanel')?.classList.remove('portal-hidden');
   }else{
-    authMsg('Email verified. Continue with your home setup.');
     history.replaceState({},document.title,location.pathname);
-    routeCustomer().catch(err=>authMsg(err.message||String(err)));
+    show('welcome');
   }
 }
 $('#saveNewPasswordBtn')?.addEventListener('click',async()=>{let p=$('#newPassword').value,p2=$('#newPassword2').value;if(!Object.values(passwordChecks(p,p2)).every(Boolean)){authMsg('New password does not meet requirements or does not match.');return;}try{let res=await fetch(SB.url+'/auth/v1/user',{method:'PUT',headers:{apikey:SB.anonKey,Authorization:'Bearer '+(bhmSession?.access_token||''),'Content-Type':'application/json'},body:JSON.stringify({password:p})});if(!res.ok)throw new Error('Unable to update password. Try the reset link again.');authMsg('Password updated successfully. Please log in with your new password.');$('#newPasswordPanel').classList.add('portal-hidden');resetAccessForms();}catch(e){authMsg(e.message||String(e));}});
