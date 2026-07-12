@@ -5,6 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Customer Portal | Bear Home Management</title>
+<meta name="bhm-build" content="customer-server-fix-20260712-2">
 <link href="styles.css" rel="stylesheet"/>
 <link href="manifest.webmanifest" rel="manifest"/>
 <meta content="#071f34" name="theme-color"/>
@@ -194,22 +195,7 @@ let bhmSession=JSON.parse(localStorage.getItem('bhm_session')||'null');
 let bhmProfileOwner=localStorage.getItem('bhm_profile_owner')||'';
 function sbHeaders(extra={}){return {'apikey':SB.anonKey,'Authorization':'Bearer '+(bhmSession?.access_token||SB.anonKey),'Content-Type':'application/json','Prefer':'return=representation',...extra};}
 async function sb(path,opts={}){const res=await fetch(SB.url+path,{...opts,headers:sbHeaders(opts.headers||{})}); if(!res.ok){throw new Error(await res.text())} return res.status===204?null:res.json();}
-async function signUpOrLogin(email,password,name,phone,contact){
-  if(!SB.url||!SB.anonKey) throw new Error('Supabase config missing');
-  let tokenRes;
-  try{
-    tokenRes=await fetch(SB.url+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SB.anonKey,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
-    if(!tokenRes.ok) throw new Error('login failed');
-  }catch(e){
-    const sign=await fetch(SB.url+'/auth/v1/signup',{method:'POST',headers:{apikey:SB.anonKey,'Content-Type':'application/json'},body:JSON.stringify({email,password,data:{name,phone}})});
-    if(!sign.ok) throw new Error(await sign.text());
-    tokenRes=await fetch(SB.url+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SB.anonKey,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
-    if(!tokenRes.ok) throw new Error('Account created. If Supabase email confirmation is enabled, verify the email first, then log in.');
-  }
-  bhmSession=await tokenRes.json(); localStorage.setItem('bhm_session',JSON.stringify(bhmSession));
-  await sb('/rest/v1/user_profiles?on_conflict=email',{method:'POST',body:JSON.stringify([{auth_user_id:bhmSession.user?.id,role:'customer',name,email,phone,preferred_contact:contact}]),headers:{Prefer:'resolution=merge-duplicates,return=representation'}});
-  return bhmSession;
-}
+
 
 async function cloudFindOrCreateCustomer(){
   if(!customer.email) throw new Error('Customer email is required.');
@@ -440,11 +426,7 @@ async function getAuthUser(){
   if(!res.ok) return null;
   return res.json();
 }
-async function cloudLoadProfileByEmail(email){
-  if(!email) return null;
-  const rows=await sb('/rest/v1/user_profiles?email=eq.'+encodeURIComponent(email)+'&limit=1',{method:'GET'});
-  return rows&&rows[0]?rows[0]:null;
-}
+
 function setOnboardingStep(step){
   $('#homeIntroStep')?.classList.toggle('active',step==='intro');
   $('#homeStep')?.classList.toggle('active',step==='home');
@@ -470,15 +452,6 @@ async function routeCustomer(){
     phone:meta.phone||'',
     contact:meta.preferred_contact||'Text'
   };
-
-  try{
-    const profile=await cloudLoadProfileByEmail(customer.email);
-    if(profile){
-      customer.name=profile.name||customer.name;
-      customer.phone=profile.phone||customer.phone;
-      customer.contact=profile.preferred_contact||customer.contact;
-    }
-  }catch(e){console.warn('Profile load failed',e)}
 
   const propertyFound=await cloudLoadCustomer();
   saveProfile();
@@ -639,6 +612,10 @@ window.addEventListener('appinstalled',()=>{$('#installBanner').classList.remove
 
 const callBtn=$('#callButton'); if(callBtn && !/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){callBtn.addEventListener('click',e=>{e.preventDefault();navigator.clipboard?.writeText('904-424-9092');alert('Phone number copied: (904) 424-9092');});}
 
-if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').catch(()=>{});}
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations()
+    .then(registrations=>registrations.forEach(registration=>registration.unregister()))
+    .catch(()=>{});
+}
 </script>
 </body></html>
