@@ -171,6 +171,179 @@
     };
   }
 
+
+  function ensureWorkOrderModal() {
+    if (document.getElementById('workOrderModal')) return;
+
+    document.body.insertAdjacentHTML('beforeend', `
+      <div class="modal" id="workOrderModal">
+        <div class="modal-box">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+            <h3 id="workOrderModalTitle">Edit Work Order</h3>
+            <button class="btn" id="closeWorkOrderModal" type="button">Close</button>
+          </div>
+
+          <input type="hidden" id="modalWorkOrderId">
+
+          <div class="form-grid">
+            <div class="field">
+              <label>Property</label>
+              <select id="modalWorkOrderProperty"></select>
+            </div>
+
+            <div class="field">
+              <label>Title</label>
+              <input id="modalWorkOrderTitle">
+            </div>
+
+            <div class="field">
+              <label>Priority</label>
+              <select id="modalWorkOrderPriority">
+                <option value="normal">Normal</option>
+                <option value="high">High</option>
+                <option value="emergency">Emergency</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Status</label>
+              <select id="modalWorkOrderStatus">
+                <option value="open">Open</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="complete">Complete</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Estimated Hours</label>
+              <input id="modalWorkOrderHours" type="number" step="0.25">
+            </div>
+
+            <div class="field">
+              <label>Estimated Cost</label>
+              <input id="modalWorkOrderCost">
+            </div>
+
+            <div class="field">
+              <label>Scheduled Date</label>
+              <input id="modalWorkOrderDate" type="date">
+            </div>
+
+            <div class="field">
+              <label>Scheduled Time</label>
+              <input id="modalWorkOrderTime" type="time">
+            </div>
+
+            <div class="field" style="grid-column:1/-1">
+              <label>Assigned To</label>
+              <input id="modalWorkOrderAssigned">
+            </div>
+
+            <div class="field" style="grid-column:1/-1">
+              <label>Description</label>
+              <textarea id="modalWorkOrderDescription"></textarea>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn gold" id="saveWorkOrderModal" type="button">Save Changes</button>
+            <button class="btn red" id="deleteWorkOrderModal" type="button">Delete Work Order</button>
+          </div>
+        </div>
+      </div>
+    `);
+
+    const modal = document.getElementById('workOrderModal');
+
+    document.getElementById('closeWorkOrderModal').onclick = () => {
+      modal.classList.remove('show');
+    };
+
+    modal.addEventListener('click', event => {
+      if (event.target === modal) modal.classList.remove('show');
+    });
+
+    document.getElementById('saveWorkOrderModal').onclick = async () => {
+      const id = document.getElementById('modalWorkOrderId').value;
+
+      const payload = {
+        property_id: document.getElementById('modalWorkOrderProperty').value,
+        title: document.getElementById('modalWorkOrderTitle').value,
+        description: document.getElementById('modalWorkOrderDescription').value,
+        priority: document.getElementById('modalWorkOrderPriority').value,
+        status: document.getElementById('modalWorkOrderStatus').value,
+        estimated_hours: document.getElementById('modalWorkOrderHours').value,
+        estimated_cost: document.getElementById('modalWorkOrderCost').value,
+        scheduled_date: document.getElementById('modalWorkOrderDate').value,
+        scheduled_time: document.getElementById('modalWorkOrderTime').value,
+        assigned_to: document.getElementById('modalWorkOrderAssigned').value
+      };
+
+      try {
+        await update(id, payload);
+        modal.classList.remove('show');
+
+        document.dispatchEvent(new CustomEvent('beartrack:toast', {
+          detail: { message: 'Work order updated' }
+        }));
+      } catch (error) {
+        alert(error.message || String(error));
+      }
+    };
+
+    document.getElementById('deleteWorkOrderModal').onclick = async () => {
+      const id = document.getElementById('modalWorkOrderId').value;
+      if (!confirm('Delete this work order?')) return;
+
+      try {
+        await remove(id);
+        modal.classList.remove('show');
+
+        document.dispatchEvent(new CustomEvent('beartrack:toast', {
+          detail: { message: 'Work order deleted' }
+        }));
+      } catch (error) {
+        alert(error.message || String(error));
+      }
+    };
+  }
+
+  function populateModalPropertySelect() {
+    const select = document.getElementById('modalWorkOrderProperty');
+    if (!select || !window.BearTrackProperties) return;
+
+    const properties = window.BearTrackProperties.getAll();
+
+    select.innerHTML = properties
+      .map(property => `
+        <option value="${property.id}">
+          ${escapeHtml(property.address)}
+        </option>
+      `)
+      .join('');
+  }
+
+  function openWorkOrderModal(workOrder) {
+    if (!workOrder) return;
+
+    ensureWorkOrderModal();
+    populateModalPropertySelect();
+
+    setValue('modalWorkOrderId', workOrder.id);
+    setValue('modalWorkOrderProperty', workOrder.property_id || '');
+    setValue('modalWorkOrderTitle', workOrder.title || '');
+    setValue('modalWorkOrderDescription', workOrder.description || '');
+    setValue('modalWorkOrderPriority', workOrder.priority || 'normal');
+    setValue('modalWorkOrderStatus', workOrder.status || 'open');
+    setValue('modalWorkOrderHours', workOrder.estimated_hours || 0);
+    setValue('modalWorkOrderCost', workOrder.estimated_cost || '');
+    setValue('modalWorkOrderDate', workOrder.scheduled_date || '');
+    setValue('modalWorkOrderTime', workOrder.scheduled_time || '');
+    setValue('modalWorkOrderAssigned', workOrder.assigned_to || '');
+
+    document.getElementById('workOrderModal').classList.add('show');
+  }
+
   function render() {
     const list = document.getElementById('workOrderList');
     const dashboard = document.getElementById('dashboardWorkOrders');
@@ -204,7 +377,7 @@
           <button type="button" class="edit-workorder" data-id="${workOrder.id}">
             Edit
           </button>
-          <button type="button" class="schedule-workorder" data-id="${workOrder.id}">
+          <button type="button" class="wo-status" data-id="${workOrder.id}" data-status="scheduled">
             Schedule
           </button>
           <button type="button" class="wo-status" data-id="${workOrder.id}" data-status="complete">
@@ -221,21 +394,7 @@
     container.querySelectorAll('.edit-workorder').forEach(button => {
       button.addEventListener('click', () => {
         const workOrder = getById(button.dataset.id);
-
-        document.dispatchEvent(new CustomEvent('beartrack:edit-workorder', {
-          detail: { workOrder }
-        }));
-      });
-    });
-
-    container.querySelectorAll('.schedule-workorder').forEach(button => {
-      button.addEventListener('click', () => {
-        document.dispatchEvent(new CustomEvent('beartrack:open-scheduler', {
-          detail: {
-            itemType: 'workorder',
-            itemId: button.dataset.id
-          }
-        }));
+        openWorkOrderModal(workOrder);
       });
     });
 
@@ -388,10 +547,12 @@
 
   document.addEventListener('beartrack:properties-loaded', () => {
     populatePropertySelect();
+    ensureWorkOrderModal();
+    populateModalPropertySelect();
   });
 
   document.addEventListener('beartrack:edit-workorder', event => {
-    fillForm(event.detail.workOrder);
+    openWorkOrderModal(event.detail.workOrder);
   });
 
   window.BearTrackWorkOrders = {
@@ -410,6 +571,7 @@
     getById,
     getByPropertyId,
     getOpen,
+    openWorkOrderModal,
     getAll: () => [...workOrders]
   };
 })();
