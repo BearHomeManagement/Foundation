@@ -204,7 +204,7 @@
           <button type="button" class="edit-workorder" data-id="${workOrder.id}">
             Edit
           </button>
-          <button type="button" class="wo-status" data-id="${workOrder.id}" data-status="scheduled">
+          <button type="button" class="schedule-workorder" data-id="${workOrder.id}">
             Schedule
           </button>
           <button type="button" class="wo-status" data-id="${workOrder.id}" data-status="complete">
@@ -224,6 +224,17 @@
 
         document.dispatchEvent(new CustomEvent('beartrack:edit-workorder', {
           detail: { workOrder }
+        }));
+      });
+    });
+
+    container.querySelectorAll('.schedule-workorder').forEach(button => {
+      button.addEventListener('click', () => {
+        document.dispatchEvent(new CustomEvent('beartrack:open-scheduler', {
+          detail: {
+            itemType: 'workorder',
+            itemId: button.dataset.id
+          }
         }));
       });
     });
