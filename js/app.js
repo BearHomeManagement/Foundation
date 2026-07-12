@@ -1,4 +1,4 @@
-// BearTrack application shell
+// BearTrack application shell - resilient bootstrap
 (() => {
   'use strict';
 
@@ -34,81 +34,139 @@
     settings:['Settings','Company and system settings.']
   };
 
-  let currentPage='dashboard';
+  let currentPage = 'dashboard';
 
-  function renderNav(){
-    const nav=document.getElementById('nav');
-    nav.innerHTML=navItems.map(([id,ico,label]) =>
-      `<button class="${id===currentPage?'active':''}" data-page="${id}">
+  function renderNav() {
+    const nav = document.getElementById('nav');
+    if (!nav) return;
+
+    nav.innerHTML = navItems.map(([id, ico, label]) => `
+      <button class="${id === currentPage ? 'active' : ''}" data-page="${id}">
         <span class="ico">${ico}</span>${label}
-      </button>`).join('');
-    nav.querySelectorAll('button').forEach(button=>{
-      button.addEventListener('click',()=>showPage(button.dataset.page));
+      </button>
+    `).join('');
+
+    nav.querySelectorAll('button').forEach(button => {
+      button.addEventListener('click', () => showPage(button.dataset.page));
     });
   }
 
-  function showPage(page){
-    currentPage=page;
-    document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===page));
-    const [title,sub]=titles[page]||[page,''];
-    document.getElementById('pageTitle').textContent=title;
-    document.getElementById('pageSub').textContent=sub;
+  function showPage(page) {
+    currentPage = page;
+
+    document.querySelectorAll('.page').forEach(el => {
+      el.classList.toggle('active', el.id === page);
+    });
+
+    const [title, sub] = titles[page] || [page, ''];
+    const titleEl = document.getElementById('pageTitle');
+    const subEl = document.getElementById('pageSub');
+
+    if (titleEl) titleEl.textContent = title;
+    if (subEl) subEl.textContent = sub;
+
     renderNav();
 
-    if(page==='dashboard') window.BearTrackDashboard?.render?.();
-    if(page==='customers') window.BearTrackCustomers?.render?.();
-    if(page==='properties') window.BearTrackProperties?.render?.();
-    if(page==='workorders') window.BearTrackWorkOrders?.render?.();
-    if(page==='assessments') window.BearTrackAssessments?.render?.();
-    if(page==='memberships') window.BearTrackMemberships?.render?.();
+    const renderers = {
+      dashboard: window.BearTrackDashboard,
+      customers: window.BearTrackCustomers,
+      properties: window.BearTrackProperties,
+      workorders: window.BearTrackWorkOrders,
+      assessments: window.BearTrackAssessments,
+      memberships: window.BearTrackMemberships
+    };
+
+    renderers[page]?.render?.();
   }
 
-  function setClock(){
-    const d=new Date();
-    document.getElementById('todayText').textContent=d.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-    document.getElementById('timeText').textContent=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+  function setClock() {
+    const d = new Date();
+    const today = document.getElementById('todayText');
+    const time = document.getElementById('timeText');
+
+    if (today) {
+      today.textContent = d.toLocaleDateString([], {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      });
+    }
+
+    if (time) {
+      time.textContent = d.toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    }
   }
 
-  async function loadCore(){
-    await window.BearTrackCustomers.load();
-    await window.BearTrackProperties.load();
-    await window.BearTrackWorkOrders.load();
-    await window.BearTrackAssessments.load();
-    try{await window.BearTrackMemberships.load();}catch(error){console.warn(error);}
-    await window.BearTrackDashboard.refresh();
+  async function safeLoad(name, moduleObject) {
+    if (!moduleObject?.load) {
+      console.warn(`${name} module is not available.`);
+      return;
+    }
+
+    try {
+      await moduleObject.load();
+    } catch (error) {
+      console.warn(`${name} module did not load:`, error);
+    }
   }
 
-  function bindRefresh(){
-    document.getElementById('refreshBtn')?.addEventListener('click',async()=>{
-      try{
-        await loadCore();
-        window.BearTrackUI?.toast?.('BearTrack refreshed','success');
-      }catch(error){
-        window.BearTrackUI?.toast?.(error.message||String(error),'error',5000);
+  async function loadCore() {
+    await safeLoad('Customers', window.BearTrackCustomers);
+    await safeLoad('Properties', window.BearTrackProperties);
+    await safeLoad('Work Orders', window.BearTrackWorkOrders);
+    await safeLoad('Assessments', window.BearTrackAssessments);
+    await safeLoad('Memberships', window.BearTrackMemberships);
+
+    try {
+      if (window.BearTrackDashboard?.refresh) {
+        await window.BearTrackDashboard.refresh();
+      } else {
+        console.warn('Dashboard module is not available.');
       }
+    } catch (error) {
+      console.error('Dashboard failed to render:', error);
+      window.BearTrackDashboard?.render?.();
+    }
+  }
+
+  function bindRefresh() {
+    document.getElementById('refreshBtn')?.addEventListener('click', async () => {
+      await loadCore();
+      window.BearTrackUI?.toast?.('BearTrack refreshed', 'success');
     });
   }
 
-  document.addEventListener('beartrack:auth',async event=>{
-    if(event.detail.state==='signed-in'){
-      try{await loadCore();}catch(error){
-        window.BearTrackUI?.toast?.(error.message||String(error),'error',5000);
-      }
+  document.addEventListener('beartrack:auth', async event => {
+    if (event.detail?.state === 'signed-in') {
+      await loadCore();
+      showPage('dashboard');
     }
   });
 
-  async function init(){
+  async function init() {
     renderNav();
     setClock();
-    setInterval(setClock,30000);
+    setInterval(setClock, 30000);
     bindRefresh();
-    window.BearTrackAuth.bind();
     showPage('dashboard');
-    const session=await window.BearTrackAuth.checkSession();
-    if(session){
-      try{await loadCore();}catch(error){
-        window.BearTrackUI?.toast?.(error.message||String(error),'error',5000);
-      }
+
+    if (!window.BearTrackAuth) {
+      console.error('Auth module is not available.');
+      document.getElementById('appView')?.classList.remove('hidden');
+      await loadCore();
+      return;
+    }
+
+    window.BearTrackAuth.bind?.();
+    const session = await window.BearTrackAuth.checkSession();
+
+    if (session) {
+      await loadCore();
+      showPage('dashboard');
     }
   }
 
