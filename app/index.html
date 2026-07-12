@@ -1,16 +1,19 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BearTrack Operations Center | Bear Home Management</title>
 <script src="../config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--navy:#08243b;--panel:#102b42;--line:#29465d;--gold:#f5b83b;--gold2:#ffd56b;--text:#f7fbff;--muted:#a9bdd0;--green:#42d36e;--red:#ef4d43;--bg:#071b2c;--shadow:0 20px 50px rgba(0,0,0,.32);--radius:16px}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,#15334d 0,#071b2c 45%,#051522 100%);color:var(--text);min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
-.login-shell{max-width:520px;margin:8vh auto;padding:24px}.panel{background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panel-pad{padding:18px}.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}.side{background:linear-gradient(180deg,#071d31,#061827);border-right:1px solid var(--line);padding:18px 16px;position:sticky;top:0;height:100vh;overflow:auto}.brand{display:flex;align-items:center;gap:12px;margin:4px 0 24px}.brand-mark{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:grid;place-items:center;overflow:hidden}.brand-mark img{width:100%;height:100%;object-fit:contain}.brand h1{font-size:18px;line-height:1.05;margin:0;font-weight:900}.brand small{display:block;color:var(--gold2);font-weight:900;font-size:10px;letter-spacing:.14em;margin-top:3px}.side-label{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:18px 10px 10px}.nav button{width:100%;display:flex;align-items:center;gap:12px;background:transparent;color:#e7f2ff;border:1px solid transparent;border-radius:12px;padding:12px;margin:5px 0;text-align:left;font-weight:800}.nav button:hover{background:rgba(255,255,255,.06)}.nav button.active{background:linear-gradient(135deg,rgba(245,184,59,.18),rgba(245,184,59,.05));border-color:rgba(245,184,59,.5)}.main{padding:22px 26px 34px;min-width:0}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.title small{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.16em}.title h2{font-size:28px;margin:4px 0 2px}.title p{margin:0;color:#c3d4e4}.btn{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;padding:10px 14px;font-weight:900}.btn.gold{background:var(--gold);color:#071827;border-color:transparent}.btn.red{background:#ad2f2b;border-color:#ad2f2b}.grid{display:grid;gap:14px}.stats{grid-template-columns:repeat(4,minmax(150px,1fr));margin-bottom:16px}.stat{padding:16px}.stat strong{display:block;font-size:30px;color:var(--gold2)}.page{display:none}.page.active{display:block}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;border-bottom:1px solid rgba(255,255,255,.07);padding:12px}.table th{color:var(--gold2);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#0b263d;color:#fff;border-radius:10px;padding:10px}.field textarea{min-height:90px}.row,.assessment-row{background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}.row h3,.assessment-row h3{margin-top:0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.muted{color:var(--muted)}.status{display:inline-block;border-radius:999px;padding:5px 9px;background:rgba(66,211,110,.18);color:#b9ffc9;font-weight:900;font-size:12px}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.error-box{padding:12px;border:1px solid rgba(239,77,67,.6);background:rgba(239,77,67,.15);border-radius:12px;margin-bottom:12px}
-@media(max-width:900px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.nav{display:grid;grid-template-columns:repeat(2,1fr)}.stats,.two-col,.form-grid{grid-template-columns:1fr}}
+:root{--navy:#08243b;--navy2:#061a2b;--panel:#102b42;--panel2:#17364f;--line:#29465d;--gold:#f5b83b;--gold2:#ffd56b;--text:#f7fbff;--muted:#a9bdd0;--white:#fff;--green:#42d36e;--blue:#3d8cff;--orange:#f29c2b;--red:#ef4d43;--purple:#9b6cff;--gray:#708090;--bg:#071b2c;--soft:#0c253b;--shadow:0 20px 50px rgba(0,0,0,.32);--radius:16px}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,#15334d 0,#071b2c 45%,#051522 100%);color:var(--text);min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}.side{background:linear-gradient(180deg,#071d31,#061827);border-right:1px solid var(--line);padding:18px 16px;position:sticky;top:0;height:100vh;overflow:auto}.brand{display:flex;align-items:center;gap:12px;margin:4px 0 24px}.brand-mark{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:grid;place-items:center;box-shadow:0 10px 30px rgba(245,184,59,.22);overflow:hidden}.brand-mark img{width:100%;height:100%;object-fit:contain}.brand-mark span{font-size:30px}.brand h1{font-size:18px;line-height:1.05;margin:0;font-weight:900;letter-spacing:.02em}.brand small{display:block;color:var(--gold2);font-weight:900;font-size:10px;letter-spacing:.14em;margin-top:3px}.side-label{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:18px 10px 10px}.nav button{width:100%;display:flex;align-items:center;gap:12px;background:transparent;color:#e7f2ff;border:1px solid transparent;border-radius:12px;padding:12px 12px;margin:5px 0;text-align:left;font-weight:800}.nav button:hover{background:rgba(255,255,255,.06)}.nav button.active{background:linear-gradient(135deg,rgba(245,184,59,.18),rgba(245,184,59,.05));border-color:rgba(245,184,59,.5);color:#fff}.nav .ico{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;color:var(--gold);background:rgba(255,255,255,.08)}.system-card{margin-top:34px;border:1px solid var(--line);border-radius:14px;padding:16px;background:rgba(255,255,255,.04)}.status-dot{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--green);margin-right:8px}.main{padding:22px 26px 34px;min-width:0}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.title small{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.16em}.title h2{font-size:28px;margin:4px 0 2px}.title p{margin:0;color:#c3d4e4}.top-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:#d8e5f2}.pill{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-weight:800}.profile{display:flex;align-items:center;gap:10px}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--gold),#875f11);color:#061827}.btn{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;padding:10px 14px;font-weight:900}.btn:hover{background:rgba(255,255,255,.1)}.btn.gold{background:var(--gold);color:#071827;border-color:transparent}.btn.blue{background:#216de0;border-color:#216de0}.btn.red{background:#ad2f2b;border-color:#ad2f2b}.btn.ghost{background:transparent}.grid{display:grid;gap:14px}.stats{grid-template-columns:repeat(6,minmax(130px,1fr));margin-bottom:16px}.stat{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));border:1px solid var(--line);border-radius:var(--radius);padding:15px;display:flex;align-items:center;gap:12px;min-height:88px}.stat .icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px}.stat strong{font-size:28px;line-height:1}.stat span{display:block;color:#d8e8f7;font-size:13px;font-weight:800}.stat small{color:var(--muted)}.page{display:none}.page.active{display:block}.dashboard-grid{display:grid;grid-template-columns:280px minmax(540px,1fr) 320px;gap:16px}.panel{background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panel-pad{padding:16px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px;border-bottom:1px solid rgba(255,255,255,.08)}.panel-head h3{margin:0;color:var(--gold2);text-transform:uppercase;letter-spacing:.06em;font-size:14px}.list{display:grid}.list-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07)}.list-row:last-child{border-bottom:0}.badge{min-width:24px;height:24px;border-radius:999px;background:var(--red);display:grid;place-items:center;font-size:12px;font-weight:900}.alert-ico{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:rgba(239,77,67,.22);color:#ffb2ae}.alert-ico.orange{background:rgba(242,156,43,.2);color:#ffd7a3}.row-main{flex:1;min-width:0}.row-main strong{display:block}.row-main small{color:var(--muted)}.schedule-card{padding:0}.schedule-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:14px;border-bottom:1px solid rgba(255,255,255,.08)}.tabs{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}.tabs button{background:transparent;border:0;color:#dce9f6;padding:9px 16px;font-weight:900}.tabs button.active{background:rgba(245,184,59,.18);color:var(--gold2)}.date-control{display:flex;align-items:center;gap:8px}.date-control button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff}.techs{display:grid;grid-template-columns:70px repeat(5,1fr);border-bottom:1px solid rgba(255,255,255,.08)}.tech-head{padding:12px;border-right:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px;min-height:60px}.tech-head:last-child{border-right:0}.mini-face{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#334d63;color:#fff;font-weight:900}.mini-face.green{background:#17683a}.mini-face.gold{background:#956914}.mini-face.gray{background:#485763}.schedule-day{display:grid;grid-template-columns:70px repeat(5,1fr);min-height:520px}.time-col,.tech-col{border-right:1px solid rgba(255,255,255,.08);position:relative}.tech-col:last-child{border-right:0}.time-row{height:70px;border-bottom:1px solid rgba(255,255,255,.055);color:var(--muted);font-size:12px;text-align:right;padding:8px}.slot{height:70px;border-bottom:1px solid rgba(255,255,255,.055);padding:6px}.job{border-left:5px solid var(--blue);background:rgba(61,140,255,.22);border-radius:9px;padding:7px 8px;margin-bottom:6px;color:#fff;font-size:12px;box-shadow:0 10px 22px rgba(0,0,0,.22);cursor:pointer}.job strong{display:block;font-size:12px}.job small{display:block;color:#dbe9f7}.job.assessment{border-color:var(--green);background:rgba(66,211,110,.18)}.job.follow-up{border-color:var(--orange);background:rgba(242,156,43,.2)}.job.emergency{border-color:var(--red);background:rgba(239,77,67,.2)}.job.inspection{border-color:var(--purple);background:rgba(155,108,255,.19)}.job.complete{border-color:#8493a1;background:rgba(132,147,161,.14);opacity:.7}.legend{display:flex;gap:12px;flex-wrap:wrap;color:#d4e2f0;font-size:12px;padding:12px 16px;border-top:1px solid rgba(255,255,255,.08)}.legend span:before{content:'';width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;background:var(--blue)}.legend .assessment:before{background:var(--green)}.legend .follow:before{background:var(--orange)}.legend .inspection:before{background:var(--purple)}.legend .emergency:before{background:var(--red)}.month-grid{display:none;grid-template-columns:repeat(7,1fr);gap:1px;background:rgba(255,255,255,.08);padding:1px}.month-grid.active{display:grid}.dow,.day-cell{background:rgba(7,27,44,.96);padding:10px}.dow{color:var(--gold2);font-weight:900;text-transform:uppercase;font-size:11px}.day-cell{min-height:125px}.day-cell .num{font-weight:900;margin-bottom:7px}.capacity{height:6px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;margin:6px 0}.capacity span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:999px}.month-job{font-size:11px;padding:5px 6px;border-radius:7px;background:rgba(61,140,255,.2);margin:4px 0;border-left:3px solid var(--blue);cursor:pointer}.month-job.assessment{background:rgba(66,211,110,.15);border-color:var(--green)}.month-job.follow-up{background:rgba(242,156,43,.16);border-color:var(--orange)}.month-job.emergency{background:rgba(239,77,67,.16);border-color:var(--red)}.month-job.inspection{background:rgba(155,108,255,.15);border-color:var(--purple)}.week-grid{display:none;grid-template-columns:repeat(7,1fr);gap:1px;background:rgba(255,255,255,.08);padding:1px}.week-grid.active{display:grid}.week-day{background:rgba(7,27,44,.96);min-height:360px;padding:10px}.week-day h4{margin:0 0 10px;color:var(--gold2)}.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px}.quick-grid button{min-height:72px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:#fff;border-radius:12px;font-weight:900}.quick-grid button span{display:block;font-size:22px;margin-bottom:4px;color:var(--gold2)}.health-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}.health-item{display:flex;gap:10px;align-items:center}.health-item .icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(66,211,110,.18);font-size:20px}.health-item strong{display:block;font-size:20px}.ai{margin-top:16px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}.ai ul{columns:2;margin:8px 0 0;padding-left:20px;color:#d8e8f7}.ai li{margin:6px 0}.content-list{display:grid;gap:12px}.record-card{background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:8px}.record-card h4{margin:0}.record-card p{margin:0;color:var(--muted)}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;border-bottom:1px solid rgba(255,255,255,.07);padding:12px}.table th{color:var(--gold2);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.status{display:inline-block;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900}.status.Scheduled{background:rgba(61,140,255,.18);color:#a9ccff}.status.Unassigned{background:rgba(132,147,161,.18);color:#d9e3ed}.status.InProgress{background:rgba(66,211,110,.18);color:#b9ffc9}.status.FollowupRequired{background:rgba(242,156,43,.18);color:#ffd7a3}.status.Complete{background:rgba(132,147,161,.18);color:#ccd6df}.drawer,.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:100}.drawer.show,.modal.show{display:block}.drawer-panel{position:absolute;right:0;top:0;height:100%;width:min(520px,100%);background:#071d31;border-left:1px solid var(--line);box-shadow:var(--shadow);padding:20px;overflow:auto}.modal-box{width:min(680px,calc(100% - 28px));background:#071d31;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px;margin:6vh auto;max-height:88vh;overflow:auto}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#0b263d;color:#fff;border-radius:10px;padding:10px}.field textarea{min-height:90px}.drawer h3,.modal h3{margin-top:0}.timeline{border-left:2px solid var(--line);margin-left:10px;padding-left:16px}.timeline div{margin:14px 0}.timeline strong{display:block;color:var(--gold2)}.mobile-note{display:none}@media(max-width:1300px){.stats{grid-template-columns:repeat(3,1fr)}.dashboard-grid{grid-template-columns:1fr}.side{position:relative;height:auto}.app{grid-template-columns:1fr}.nav{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.system-card{display:none}.ai{grid-template-columns:1fr}.ai ul{columns:1}}@media(max-width:760px){.main{padding:14px}.topbar{display:block}.stats{grid-template-columns:1fr 1fr}.nav{grid-template-columns:1fr 1fr}.schedule-day,.techs{grid-template-columns:50px repeat(2,1fr);overflow:auto}.tech-head:nth-child(n+4),.tech-col:nth-child(n+4){display:none}.month-grid,.week-grid{grid-template-columns:1fr}.dow{display:none}.form-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr 1fr}}
+
+.hidden{display:none!important}
+.login-shell{max-width:520px;margin:8vh auto;padding:24px}
+.error-box{padding:12px;border:1px solid rgba(239,77,67,.6);background:rgba(239,77,67,.15);border-radius:12px;margin-bottom:12px}
+.dashboard-empty{color:var(--muted);padding:14px}
 </style>
 </head>
 <body>
@@ -26,130 +29,54 @@
   <button id="loginBtn" class="btn gold" type="button">Log In</button>
 </section>
 
-<div id="appView" class="app hidden">
+<div class="app hidden" id="appView">
   <aside class="side">
     <div class="brand">
       <div class="brand-mark"><img src="../assets/bear-head-hero.png?v=8" alt="Bear Home Management"></div>
       <div><h1>BEAR HOME<br>MANAGEMENT</h1><small>POWERED BY BEARTRACK™</small></div>
     </div>
     <div class="side-label">BearTrack Operations Center</div>
-    <nav class="nav" id="nav">
-      <button data-view="dashboard" class="active">🏠 Dashboard</button>
-      <button data-view="customers">👥 Customers</button>
-      <button data-view="properties">🏡 Homes</button>
-      <button data-view="workorders">🛠️ Work Orders</button>
-      <button data-view="assessments">🛡️ Assessments</button>
-      <button data-view="memberships">🧩 Memberships</button>
-      <button data-view="settings">⚙️ Settings</button>
-    </nav>
+    <nav class="nav" id="nav"></nav>
+    <div class="system-card">
+      <p><span class="status-dot"></span><strong>System Status</strong></p>
+      <p style="color:var(--muted);margin-bottom:22px">All Systems Operational</p>
+      <hr style="border-color:rgba(255,255,255,.08);border-style:solid none none">
+      <p style="color:var(--muted)">Version 2.1.0<br>© 2026 Bear Home Management</p>
+    </div>
   </aside>
 
   <main class="main">
     <div class="topbar">
-      <div class="title"><small>BearTrack Operations Center</small><h2 id="pageTitle">Dashboard</h2><p id="pageSub">BearTrack home base.</p></div>
-      <div><button id="refreshBtn" class="btn" type="button">Refresh</button> <button id="logoutBtn" class="btn" type="button">Log Out</button></div>
+      <div class="title">
+        <small>BearTrack Operations Center</small>
+        <h2 id="pageTitle">Good Morning, Harley! 👋</h2>
+        <p id="pageSub">Here's what's happening with your operations today.</p>
+      </div>
+      <div class="top-meta">
+        <span id="todayText">Today</span>
+        <span id="timeText">8:02 AM</span>
+        <div class="profile">
+          <div class="avatar">H</div>
+          <div><strong>Harley</strong><br><small style="color:var(--muted)">Operations Manager</small></div>
+        </div>
+        <button id="refreshBtn" class="btn" type="button">Refresh</button>
+        <button id="logoutBtn" class="btn" type="button">Log Out</button>
+      </div>
     </div>
 
-    <section class="page active" id="dashboard">
-      <div class="grid stats">
-        <div class="panel stat"><strong id="metricCustomers">0</strong><span>Customers</span></div>
-        <div class="panel stat"><strong id="metricProperties">0</strong><span>Homes</span></div>
-        <div class="panel stat"><strong id="metricAssessments">0</strong><span>Assessments</span></div>
-        <div class="panel stat"><strong id="metricOpenWO">0</strong><span>Open Work Orders</span></div>
-      </div>
-      <div class="two-col">
-        <div class="panel panel-pad"><h3>Recent Assessments</h3><div id="dashboardAssessments"></div></div>
-        <div class="panel panel-pad"><h3>Open Work Orders</h3><div id="dashboardWorkOrders"></div></div>
-      </div>
-      <div class="panel panel-pad" style="margin-top:16px"><div id="dashboardOperationalSummary"></div></div>
-    </section>
-
-    <section class="page" id="customers">
-      <div class="two-col">
-        <div class="panel panel-pad">
-          <h3>Customer</h3>
-          <input type="hidden" id="customerId">
-          <div class="form-grid">
-            <div class="field"><label>Full Name</label><input id="customerName"></div>
-            <div class="field"><label>Email</label><input id="customerEmail" type="email"></div>
-            <div class="field"><label>Phone</label><input id="customerPhone"></div>
-            <div class="field"><label>Preferred Contact</label><select id="customerPreferred"><option>Text</option><option>Call</option><option>Email</option></select></div>
-            <div class="field"><label>Status</label><select id="customerStatus"><option>Lead</option><option>Active</option><option>Inactive</option></select></div>
-            <div class="field" style="grid-column:1/-1"><label>Notes</label><textarea id="customerNotes"></textarea></div>
-          </div>
-          <div class="actions"><button id="saveCustomerBtn" class="btn gold">Save Customer</button><button id="clearCustomerBtn" class="btn">Clear</button></div>
-        </div>
-        <div class="panel panel-pad"><h3>Customer List</h3><div id="customerList"></div></div>
-      </div>
-    </section>
-
-    <section class="page" id="properties">
-      <div class="two-col">
-        <div class="panel panel-pad">
-          <h3>Home / Property</h3>
-          <input type="hidden" id="propertyId">
-          <div class="form-grid">
-            <div class="field"><label>Customer</label><select id="propertyCustomer"></select></div>
-            <div class="field"><label>Property Type</label><input id="propertyType"></div>
-            <div class="field" style="grid-column:1/-1"><label>Address</label><input id="propertyAddress"></div>
-            <div class="field"><label>City</label><input id="propertyCity"></div>
-            <div class="field"><label>State</label><input id="propertyState" value="FL"></div>
-            <div class="field"><label>ZIP</label><input id="propertyZip"></div>
-            <div class="field"><label>Year Built</label><input id="propertyYear" type="number"></div>
-            <div class="field"><label>Square Feet</label><input id="propertySqft" type="number"></div>
-            <div class="field" style="grid-column:1/-1"><label>Notes</label><textarea id="propertyNotes"></textarea></div>
-          </div>
-          <div class="actions"><button id="savePropertyBtn" class="btn gold">Save Home</button><button id="clearPropertyBtn" class="btn">Clear</button></div>
-        </div>
-        <div class="panel panel-pad"><h3>Homes</h3><div id="propertyList"></div></div>
-      </div>
-    </section>
-
-    <section class="page" id="workorders">
-      <div class="two-col">
-        <div class="panel panel-pad">
-          <h3>Work Order</h3>
-          <input type="hidden" id="workOrderId">
-          <div class="form-grid">
-            <div class="field"><label>Home</label><select id="workOrderProperty"></select></div>
-            <div class="field"><label>Title</label><input id="workOrderTitle"></div>
-            <div class="field"><label>Priority</label><select id="workOrderPriority"><option value="normal">Normal</option><option value="high">High</option><option value="emergency">Emergency</option></select></div>
-            <div class="field"><label>Status</label><select id="workOrderStatus"><option value="open">Open</option><option value="scheduled">Scheduled</option><option value="complete">Complete</option></select></div>
-            <div class="field"><label>Estimated Hours</label><input id="workOrderHours" type="number" step="0.25"></div>
-            <div class="field"><label>Estimated Cost</label><input id="workOrderCost"></div>
-            <div class="field"><label>Date</label><input id="workOrderDate" type="date"></div>
-            <div class="field"><label>Time</label><input id="workOrderTime" type="time"></div>
-            <div class="field"><label>Assigned To</label><input id="workOrderAssigned"></div>
-            <div class="field" style="grid-column:1/-1"><label>Description</label><textarea id="workOrderDescription"></textarea></div>
-          </div>
-          <div class="actions"><button id="saveWorkOrderBtn" class="btn gold">Save Work Order</button><button id="clearWorkOrderBtn" class="btn">Clear</button></div>
-        </div>
-        <div class="panel panel-pad"><h3>Work Orders</h3><div id="workOrderList"></div></div>
-      </div>
-    </section>
-
-    <section class="page" id="assessments">
-      <div class="panel panel-pad">
-        <div class="section-head"><h3>Start Assessment</h3></div>
-        <div class="form-grid">
-          <div class="field"><label>Home</label><select id="assessmentProperty"></select></div>
-          <div class="field"><label>Technician</label><input id="assessmentTech"></div>
-        </div>
-        <div class="actions"><button id="startAssessmentBtn" class="btn gold">Start Assessment</button></div>
-      </div>
-      <div class="panel panel-pad"><h3>Assessments</h3><div id="assessmentList"></div></div>
-    </section>
-
-    <section class="page" id="memberships">
-      <div class="panel panel-pad"><h3>Memberships</h3><div id="membershipList"></div></div>
-    </section>
-
-    <section class="page" id="settings">
-      <div class="panel panel-pad">
-        <h3>BearTrack Foundation</h3>
-        <p>Modules connected: Supabase, Auth, UI, Customers, Properties, Work Orders, Assessments, Memberships, Dashboard.</p>
-      </div>
-    </section>
+    <section class="page active" id="dashboard"></section>
+    <section class="page" id="customers"><div class="panel panel-pad"><h3>Customers</h3><div id="customerList"></div></div></section>
+    <section class="page" id="properties"><div class="panel panel-pad"><h3>Homes</h3><div id="propertyList"></div></div></section>
+    <section class="page" id="workorders"><div class="panel panel-pad"><h3>Work Orders</h3><div id="workOrderList"></div></div></section>
+    <section class="page" id="schedule"><div class="panel panel-pad"><h3>Schedule</h3><div id="scheduleModule"></div></div></section>
+    <section class="page" id="assessments"><div class="panel panel-pad"><h3>Assessments</h3><div id="assessmentList"></div></div></section>
+    <section class="page" id="memberships"><div class="panel panel-pad"><h3>Memberships</h3><div id="membershipList"></div></div></section>
+    <section class="page" id="technicians"><div class="panel panel-pad"><h3>Technicians</h3><div id="technicianList"></div></div></section>
+    <section class="page" id="reports"><div class="panel panel-pad"><h3>Reports</h3><p class="muted">Reporting module coming next.</p></div></section>
+    <section class="page" id="documents"><div class="panel panel-pad"><h3>Documents</h3><p class="muted">Document module coming next.</p></div></section>
+    <section class="page" id="messages"><div class="panel panel-pad"><h3>Messages</h3><p class="muted">Message module coming next.</p></div></section>
+    <section class="page" id="invoices"><div class="panel panel-pad"><h3>Invoices</h3><p class="muted">Invoice module coming next.</p></div></section>
+    <section class="page" id="settings"><div class="panel panel-pad"><h3>Settings</h3><p class="muted">BearTrack modular foundation is active.</p></div></section>
   </main>
 </div>
 

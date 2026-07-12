@@ -1,159 +1,113 @@
-// ============================================
-// BearTrack App Bootstrap
-// ============================================
-
+// BearTrack application shell
 (() => {
   'use strict';
 
+  const navItems = [
+    ['dashboard','🏠','Dashboard'],
+    ['customers','👥','Customers'],
+    ['properties','🏡','Homes'],
+    ['workorders','🛠️','Work Orders'],
+    ['schedule','📅','Schedule'],
+    ['assessments','🛡️','Assessments'],
+    ['memberships','🧩','Memberships'],
+    ['technicians','👷','Technicians'],
+    ['reports','📊','Reports'],
+    ['documents','📄','Documents'],
+    ['messages','✉️','Messages'],
+    ['invoices','💵','Invoices'],
+    ['settings','⚙️','Settings']
+  ];
+
   const titles = {
-    dashboard: ['Dashboard', 'BearTrack home base.'],
-    customers: ['Customers', 'Manage customer records.'],
-    properties: ['Homes', 'Manage permanent property records.'],
-    workorders: ['Work Orders', 'Create, schedule, and complete work.'],
-    assessments: ['Assessments', 'Home Health Assessment workflow.'],
-    memberships: ['Memberships', 'Plans, Home Care Hours, families, and Recovery.'],
-    settings: ['Settings', 'BearTrack system status.']
+    dashboard:['Good Morning, Harley! 👋',"Here's what's happening with your operations today."],
+    customers:['Customers','Manage Bear Home Management customers.'],
+    properties:['Homes','Each home has its own BearTrack record.'],
+    workorders:['Work Orders','Manage active and completed work.'],
+    schedule:['Schedule','Day, week, and month scheduling.'],
+    assessments:['Assessments','BearTrack Home Health Assessment workflow.'],
+    memberships:['Memberships','Home Care Hours, family accounts, and Recovery.'],
+    technicians:['Technicians','Team status and capacity.'],
+    reports:['Reports','Company health and performance.'],
+    documents:['Documents','Photos, warranties, reports, and files.'],
+    messages:['Messages','Customer calls, emails, and follow-ups.'],
+    invoices:['Invoices','Invoice and payment tracking.'],
+    settings:['Settings','Company and system settings.']
   };
 
-  function setView(view) {
-    document.querySelectorAll('.page').forEach(page => {
-      page.classList.toggle('active', page.id === view);
-    });
+  let currentPage='dashboard';
 
-    document.querySelectorAll('#nav [data-view]').forEach(button => {
-      button.classList.toggle('active', button.dataset.view === view);
-    });
-
-    const [title, subtitle] = titles[view] || [view, ''];
-    document.getElementById('pageTitle').textContent = title;
-    document.getElementById('pageSub').textContent = subtitle;
-  }
-
-  function bindNavigation() {
-    document.querySelectorAll('#nav [data-view]').forEach(button => {
-      button.addEventListener('click', () => setView(button.dataset.view));
+  function renderNav(){
+    const nav=document.getElementById('nav');
+    nav.innerHTML=navItems.map(([id,ico,label]) =>
+      `<button class="${id===currentPage?'active':''}" data-page="${id}">
+        <span class="ico">${ico}</span>${label}
+      </button>`).join('');
+    nav.querySelectorAll('button').forEach(button=>{
+      button.addEventListener('click',()=>showPage(button.dataset.page));
     });
   }
 
-  function bindCustomers() {
-    const save = document.getElementById('saveCustomerBtn');
-    const clear = document.getElementById('clearCustomerBtn');
+  function showPage(page){
+    currentPage=page;
+    document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===page));
+    const [title,sub]=titles[page]||[page,''];
+    document.getElementById('pageTitle').textContent=title;
+    document.getElementById('pageSub').textContent=sub;
+    renderNav();
 
-    save?.addEventListener('click', async () => {
-      try {
-        const id = document.getElementById('customerId').value;
-        const payload = {
-          full_name: document.getElementById('customerName').value,
-          email: document.getElementById('customerEmail').value,
-          phone: document.getElementById('customerPhone').value,
-          preferred_contact: document.getElementById('customerPreferred').value,
-          status: document.getElementById('customerStatus').value,
-          notes: document.getElementById('customerNotes').value
-        };
-
-        if (id) await BearTrackCustomers.update(id, payload);
-        else await BearTrackCustomers.create(payload);
-
-        clearCustomerForm();
-        BearTrackUI.toast('Customer saved', 'success');
-        await BearTrackProperties.load();
-        BearTrackDashboard.render();
-      } catch (error) {
-        BearTrackUI.toast(error.message || String(error), 'error', 5000);
-      }
-    });
-
-    clear?.addEventListener('click', clearCustomerForm);
-
-    document.addEventListener('beartrack:edit-customer', event => {
-      const c = event.detail.customer;
-      if (!c) return;
-
-      document.getElementById('customerId').value = c.id || '';
-      document.getElementById('customerName').value = c.full_name || '';
-      document.getElementById('customerEmail').value = c.email || '';
-      document.getElementById('customerPhone').value = c.phone || '';
-      document.getElementById('customerPreferred').value = c.preferred_contact || 'Text';
-      document.getElementById('customerStatus').value = c.status || 'Lead';
-      document.getElementById('customerNotes').value = c.notes || '';
-      setView('customers');
-    });
+    if(page==='dashboard') window.BearTrackDashboard?.render?.();
+    if(page==='customers') window.BearTrackCustomers?.render?.();
+    if(page==='properties') window.BearTrackProperties?.render?.();
+    if(page==='workorders') window.BearTrackWorkOrders?.render?.();
+    if(page==='assessments') window.BearTrackAssessments?.render?.();
+    if(page==='memberships') window.BearTrackMemberships?.render?.();
   }
 
-  function clearCustomerForm() {
-    ['customerId','customerName','customerEmail','customerPhone','customerNotes']
-      .forEach(id => document.getElementById(id).value = '');
-    document.getElementById('customerPreferred').value = 'Text';
-    document.getElementById('customerStatus').value = 'Lead';
+  function setClock(){
+    const d=new Date();
+    document.getElementById('todayText').textContent=d.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    document.getElementById('timeText').textContent=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
   }
 
-  async function loadCore() {
-    await BearTrackCustomers.load();
-    BearTrackProperties.bindForm();
-    await BearTrackProperties.load();
-    BearTrackWorkOrders.bindForm();
-    await BearTrackWorkOrders.load();
-    BearTrackAssessments.bindStartButtons();
-    await BearTrackAssessments.load();
-
-    try {
-      await BearTrackMemberships.load();
-    } catch (error) {
-      console.warn('Membership module not loaded:', error);
-    }
-
-    await BearTrackDashboard.refresh();
+  async function loadCore(){
+    await window.BearTrackCustomers.load();
+    await window.BearTrackProperties.load();
+    await window.BearTrackWorkOrders.load();
+    await window.BearTrackAssessments.load();
+    try{await window.BearTrackMemberships.load();}catch(error){console.warn(error);}
+    await window.BearTrackDashboard.refresh();
   }
 
-  function bindRefresh() {
-    document.getElementById('refreshBtn')?.addEventListener('click', async () => {
-      try {
+  function bindRefresh(){
+    document.getElementById('refreshBtn')?.addEventListener('click',async()=>{
+      try{
         await loadCore();
-        BearTrackUI.toast('BearTrack refreshed', 'success');
-      } catch (error) {
-        BearTrackUI.toast(error.message || String(error), 'error', 5000);
+        window.BearTrackUI?.toast?.('BearTrack refreshed','success');
+      }catch(error){
+        window.BearTrackUI?.toast?.(error.message||String(error),'error',5000);
       }
     });
   }
 
-  document.addEventListener('beartrack:auth', async event => {
-    if (event.detail.state === 'signed-in') {
-      try {
-        await loadCore();
-      } catch (error) {
-        BearTrackUI.toast(error.message || String(error), 'error', 5000);
+  document.addEventListener('beartrack:auth',async event=>{
+    if(event.detail.state==='signed-in'){
+      try{await loadCore();}catch(error){
+        window.BearTrackUI?.toast?.(error.message||String(error),'error',5000);
       }
     }
   });
 
-  document.addEventListener('beartrack:open-assessment', event => {
-    BearTrackUI.toast(
-      `Assessment ${event.detail.assessmentId} is ready to open in the full inspection editor.`,
-      'success',
-      4000
-    );
-  });
-
-  document.addEventListener('beartrack:open-property-file', event => {
-    const property = event.detail.property;
-    if (!property) return;
-    BearTrackUI.toast(`${property.address} selected`, 'success');
-  });
-
-  async function init() {
-    bindNavigation();
-    bindCustomers();
+  async function init(){
+    renderNav();
+    setClock();
+    setInterval(setClock,30000);
     bindRefresh();
-    BearTrackAuth.bind();
-    setView('dashboard');
-
-    const session = await BearTrackAuth.checkSession();
-
-    if (session) {
-      try {
-        await loadCore();
-      } catch (error) {
-        BearTrackUI.toast(error.message || String(error), 'error', 5000);
+    window.BearTrackAuth.bind();
+    showPage('dashboard');
+    const session=await window.BearTrackAuth.checkSession();
+    if(session){
+      try{await loadCore();}catch(error){
+        window.BearTrackUI?.toast?.(error.message||String(error),'error',5000);
       }
     }
   }
