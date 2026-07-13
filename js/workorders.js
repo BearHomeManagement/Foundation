@@ -175,53 +175,48 @@
   function ensureWorkOrderModal() {
     if (document.getElementById('workOrderModal')) return;
 
+    injectWorkOrderStyles();
+
     document.body.insertAdjacentHTML('beforeend', `
-      <div class="modal" id="workOrderModal">
-        <div class="modal-box">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
-            <h3 id="workOrderModalTitle">Edit Work Order</h3>
-            <button class="btn" id="closeWorkOrderModal" type="button">Close</button>
-          </div>
+      <div class="modal bhm-wo-modal" id="workOrderModal" role="dialog" aria-modal="true">
+        <div class="modal-box bhm-wo-shell">
+          <header class="bhm-wo-header">
+            <div class="bhm-wo-brand">
+              <div class="bhm-wo-mark">BHM</div>
+              <div>
+                <p>Bear Home Management</p>
+                <span>Powered by BearTrack™</span>
+              </div>
+            </div>
+            <div class="bhm-wo-heading">
+              <span class="bhm-wo-label">WORK ORDER</span>
+              <strong id="workOrderNumber">New Work Order</strong>
+            </div>
+            <button class="btn bhm-wo-close" id="closeWorkOrderModal" type="button">Close</button>
+          </header>
 
           <input type="hidden" id="modalWorkOrderId">
 
-          <div class="form-grid">
-            <div class="field">
-              <label>Property</label>
-              <select id="modalWorkOrderProperty"></select>
-            </div>
-
-            <div class="field">
-              <label>Title</label>
-              <input id="modalWorkOrderTitle">
-            </div>
-
-            <div class="field">
-              <label>Priority</label>
-              <select id="modalWorkOrderPriority">
-                <option value="normal">Normal</option>
-                <option value="high">High</option>
-                <option value="emergency">Emergency</option>
-              </select>
-            </div>
-
+          <section class="bhm-wo-statusbar">
             <div class="field">
               <label>Status</label>
               <select id="modalWorkOrderStatus">
                 <option value="open">Open</option>
                 <option value="scheduled">Scheduled</option>
+                <option value="in_progress">In Progress</option>
+                <option value="waiting_parts">Waiting on Parts</option>
                 <option value="complete">Complete</option>
               </select>
             </div>
 
             <div class="field">
-              <label>Estimated Hours</label>
-              <input id="modalWorkOrderHours" type="number" step="0.25">
-            </div>
-
-            <div class="field">
-              <label>Estimated Cost</label>
-              <input id="modalWorkOrderCost">
+              <label>Priority</label>
+              <select id="modalWorkOrderPriority">
+                <option value="low">Low</option>
+                <option value="normal">Normal</option>
+                <option value="high">High</option>
+                <option value="emergency">Emergency</option>
+              </select>
             </div>
 
             <div class="field">
@@ -233,58 +228,123 @@
               <label>Scheduled Time</label>
               <input id="modalWorkOrderTime" type="time">
             </div>
+          </section>
 
-            <div class="field" style="grid-column:1/-1">
-              <label>Assigned To</label>
-              <input id="modalWorkOrderAssigned">
-            </div>
+          <div class="bhm-wo-grid">
+            <section class="bhm-wo-card">
+              <h3>Property & Assignment</h3>
+              <div class="form-grid">
+                <div class="field" style="grid-column:1/-1">
+                  <label>Property</label>
+                  <select id="modalWorkOrderProperty"></select>
+                </div>
 
-            <div class="field" style="grid-column:1/-1">
-              <label>Description</label>
-              <textarea id="modalWorkOrderDescription"></textarea>
-            </div>
+                <div class="field" style="grid-column:1/-1">
+                  <label>Assigned Technician</label>
+                  <input id="modalWorkOrderAssigned" placeholder="Technician name">
+                </div>
+              </div>
+            </section>
+
+            <section class="bhm-wo-card">
+              <h3>Service Request</h3>
+              <div class="form-grid">
+                <div class="field" style="grid-column:1/-1">
+                  <label>Work Order Title</label>
+                  <input id="modalWorkOrderTitle" placeholder="Example: Repair leaking kitchen faucet">
+                </div>
+
+                <div class="field" style="grid-column:1/-1">
+                  <label>Customer Complaint / Requested Work</label>
+                  <textarea id="modalWorkOrderDescription" rows="7"
+                    placeholder="Describe the issue, affected area, access notes, and requested service."></textarea>
+                </div>
+              </div>
+            </section>
+
+            <section class="bhm-wo-card">
+              <h3>Estimated Service</h3>
+              <div class="form-grid">
+                <div class="field">
+                  <label>Estimated Hours</label>
+                  <input id="modalWorkOrderHours" type="number" min="0" step="0.25">
+                </div>
+
+                <div class="field">
+                  <label>Estimated Cost</label>
+                  <input id="modalWorkOrderCost" inputmode="decimal" placeholder="$0.00">
+                </div>
+              </div>
+              <p class="bhm-wo-note">
+                Technician findings, materials, labor, photos, signatures, and completion details
+                will be added in the next database-backed work order phase.
+              </p>
+            </section>
           </div>
 
-          <div class="actions">
-            <button class="btn gold" id="saveWorkOrderModal" type="button">Save Changes</button>
+          <footer class="bhm-wo-actions">
             <button class="btn red" id="deleteWorkOrderModal" type="button">Delete Work Order</button>
-          </div>
+            <div>
+              <button class="btn" id="cancelWorkOrderModal" type="button">Cancel</button>
+              <button class="btn gold" id="saveWorkOrderModal" type="button">Save Work Order</button>
+            </div>
+          </footer>
         </div>
       </div>
     `);
 
     const modal = document.getElementById('workOrderModal');
+    const closeModal = () => modal.classList.remove('show');
 
-    document.getElementById('closeWorkOrderModal').onclick = () => {
-      modal.classList.remove('show');
-    };
+    document.getElementById('closeWorkOrderModal').onclick = closeModal;
+    document.getElementById('cancelWorkOrderModal').onclick = closeModal;
 
     modal.addEventListener('click', event => {
-      if (event.target === modal) modal.classList.remove('show');
+      if (event.target === modal) closeModal();
     });
 
     document.getElementById('saveWorkOrderModal').onclick = async () => {
-      const id = document.getElementById('modalWorkOrderId').value;
+      const id = valueOf('modalWorkOrderId');
 
       const payload = {
-        property_id: document.getElementById('modalWorkOrderProperty').value,
-        title: document.getElementById('modalWorkOrderTitle').value,
-        description: document.getElementById('modalWorkOrderDescription').value,
-        priority: document.getElementById('modalWorkOrderPriority').value,
-        status: document.getElementById('modalWorkOrderStatus').value,
-        estimated_hours: document.getElementById('modalWorkOrderHours').value,
-        estimated_cost: document.getElementById('modalWorkOrderCost').value,
-        scheduled_date: document.getElementById('modalWorkOrderDate').value,
-        scheduled_time: document.getElementById('modalWorkOrderTime').value,
-        assigned_to: document.getElementById('modalWorkOrderAssigned').value
+        property_id: valueOf('modalWorkOrderProperty'),
+        title: valueOf('modalWorkOrderTitle'),
+        description: valueOf('modalWorkOrderDescription'),
+        priority: valueOf('modalWorkOrderPriority'),
+        status: valueOf('modalWorkOrderStatus'),
+        estimated_hours: valueOf('modalWorkOrderHours'),
+        estimated_cost: valueOf('modalWorkOrderCost'),
+        scheduled_date: valueOf('modalWorkOrderDate'),
+        scheduled_time: valueOf('modalWorkOrderTime'),
+        assigned_to: valueOf('modalWorkOrderAssigned')
       };
 
+      if (!payload.property_id) {
+        alert('Select a property before saving this work order.');
+        return;
+      }
+
+      if (!payload.title.trim()) {
+        alert('Enter a work order title.');
+        return;
+      }
+
+      if (payload.status === 'scheduled' && !payload.scheduled_date) {
+        alert('A scheduled work order must have a scheduled date.');
+        return;
+      }
+
       try {
-        await update(id, payload);
-        modal.classList.remove('show');
+        if (id) {
+          await update(id, payload);
+        } else {
+          await create(payload);
+        }
+
+        closeModal();
 
         document.dispatchEvent(new CustomEvent('beartrack:toast', {
-          detail: { message: 'Work order updated' }
+          detail: { message: id ? 'Work order updated' : 'Work order created' }
         }));
       } catch (error) {
         alert(error.message || String(error));
@@ -292,12 +352,18 @@
     };
 
     document.getElementById('deleteWorkOrderModal').onclick = async () => {
-      const id = document.getElementById('modalWorkOrderId').value;
+      const id = valueOf('modalWorkOrderId');
+
+      if (!id) {
+        closeModal();
+        return;
+      }
+
       if (!confirm('Delete this work order?')) return;
 
       try {
         await remove(id);
-        modal.classList.remove('show');
+        closeModal();
 
         document.dispatchEvent(new CustomEvent('beartrack:toast', {
           detail: { message: 'Work order deleted' }
@@ -306,6 +372,84 @@
         alert(error.message || String(error));
       }
     };
+  }
+
+  function injectWorkOrderStyles() {
+    if (document.getElementById('bhmWorkOrderStyles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'bhmWorkOrderStyles';
+    style.textContent = `
+      .bhm-wo-modal .bhm-wo-shell {
+        width: min(1040px, calc(100vw - 24px));
+        max-height: calc(100vh - 24px);
+        overflow: auto;
+        padding: 0;
+        border-radius: 18px;
+        background: #f4f7f2;
+      }
+      .bhm-wo-header {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 18px;
+        align-items: center;
+        padding: 20px 22px;
+        background: linear-gradient(135deg, #163f32, #245a47);
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+      }
+      .bhm-wo-brand { display:flex; gap:12px; align-items:center; }
+      .bhm-wo-mark {
+        width:46px; height:46px; display:grid; place-items:center;
+        border-radius:50%; background:#d5a84d; color:#163f32;
+        font-weight:900; letter-spacing:.04em;
+      }
+      .bhm-wo-brand p,.bhm-wo-brand span { display:block; margin:0; }
+      .bhm-wo-brand p { font-weight:800; }
+      .bhm-wo-brand span { font-size:12px; opacity:.82; }
+      .bhm-wo-heading { text-align:center; }
+      .bhm-wo-label { display:block; font-size:12px; letter-spacing:.18em; opacity:.8; }
+      .bhm-wo-heading strong { display:block; margin-top:3px; font-size:18px; }
+      .bhm-wo-close { justify-self:end; }
+      .bhm-wo-statusbar {
+        display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:12px; padding:18px 22px; background:white;
+        border-bottom:1px solid #dfe7dd;
+      }
+      .bhm-wo-grid { display:grid; gap:16px; padding:18px 22px; }
+      .bhm-wo-card {
+        padding:18px; border:1px solid #dfe7dd; border-radius:14px;
+        background:white; box-shadow:0 6px 20px rgba(22,63,50,.06);
+      }
+      .bhm-wo-card h3 { margin:0 0 14px; color:#163f32; font-size:17px; }
+      .bhm-wo-note {
+        margin:14px 0 0; padding:12px; border-radius:10px;
+        background:#f3efe3; color:#64562f; font-size:13px;
+      }
+      .bhm-wo-actions {
+        display:flex; justify-content:space-between; gap:12px;
+        padding:18px 22px 22px;
+      }
+      .bhm-wo-actions > div { display:flex; gap:10px; }
+
+      @media (max-width:760px) {
+        .bhm-wo-header { grid-template-columns:1fr auto; }
+        .bhm-wo-heading { grid-column:1/-1; grid-row:2; text-align:left; }
+        .bhm-wo-statusbar { grid-template-columns:1fr 1fr; }
+        .bhm-wo-actions { flex-direction:column-reverse; }
+        .bhm-wo-actions > div,.bhm-wo-actions button { width:100%; }
+      }
+      @media (max-width:480px) {
+        .bhm-wo-statusbar { grid-template-columns:1fr; }
+        .bhm-wo-header,.bhm-wo-statusbar,.bhm-wo-grid,.bhm-wo-actions {
+          padding-left:14px; padding-right:14px;
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
   }
 
   function populateModalPropertySelect() {
@@ -323,23 +467,46 @@
       .join('');
   }
 
-  function openWorkOrderModal(workOrder) {
-    if (!workOrder) return;
-
+  function openWorkOrderModal(workOrder = null) {
     ensureWorkOrderModal();
     populateModalPropertySelect();
 
-    setValue('modalWorkOrderId', workOrder.id);
-    setValue('modalWorkOrderProperty', workOrder.property_id || '');
-    setValue('modalWorkOrderTitle', workOrder.title || '');
-    setValue('modalWorkOrderDescription', workOrder.description || '');
-    setValue('modalWorkOrderPriority', workOrder.priority || 'normal');
-    setValue('modalWorkOrderStatus', workOrder.status || 'open');
-    setValue('modalWorkOrderHours', workOrder.estimated_hours || 0);
-    setValue('modalWorkOrderCost', workOrder.estimated_cost || '');
-    setValue('modalWorkOrderDate', workOrder.scheduled_date || '');
-    setValue('modalWorkOrderTime', workOrder.scheduled_time || '');
-    setValue('modalWorkOrderAssigned', workOrder.assigned_to || '');
+    const isNew = !workOrder;
+    const current = workOrder || {
+      id: '',
+      property_id: '',
+      title: '',
+      description: '',
+      priority: 'normal',
+      status: 'open',
+      estimated_hours: 0,
+      estimated_cost: '',
+      scheduled_date: '',
+      scheduled_time: '',
+      assigned_to: ''
+    };
+
+    setValue('modalWorkOrderId', current.id || '');
+    setValue('modalWorkOrderProperty', current.property_id || '');
+    setValue('modalWorkOrderTitle', current.title || '');
+    setValue('modalWorkOrderDescription', current.description || '');
+    setValue('modalWorkOrderPriority', current.priority || 'normal');
+    setValue('modalWorkOrderStatus', current.status || 'open');
+    setValue('modalWorkOrderHours', current.estimated_hours || 0);
+    setValue('modalWorkOrderCost', current.estimated_cost || '');
+    setValue('modalWorkOrderDate', current.scheduled_date || '');
+    setValue('modalWorkOrderTime', current.scheduled_time || '');
+    setValue('modalWorkOrderAssigned', current.assigned_to || '');
+
+    const number = document.getElementById('workOrderNumber');
+    if (number) {
+      number.textContent = isNew
+        ? 'New Work Order'
+        : `WO-${String(current.id).slice(0, 8).toUpperCase()}`;
+    }
+
+    const deleteButton = document.getElementById('deleteWorkOrderModal');
+    if (deleteButton) deleteButton.style.display = isNew ? 'none' : '';
 
     document.getElementById('workOrderModal').classList.add('show');
   }
@@ -377,7 +544,7 @@
           <button type="button" class="edit-workorder" data-id="${workOrder.id}">
             Edit
           </button>
-          <button type="button" class="wo-status" data-id="${workOrder.id}" data-status="scheduled">
+          <button type="button" class="schedule-workorder" data-id="${workOrder.id}">
             Schedule
           </button>
           <button type="button" class="wo-status" data-id="${workOrder.id}" data-status="complete">
@@ -395,6 +562,18 @@
       button.addEventListener('click', () => {
         const workOrder = getById(button.dataset.id);
         openWorkOrderModal(workOrder);
+      });
+    });
+
+    container.querySelectorAll('.schedule-workorder').forEach(button => {
+      button.addEventListener('click', () => {
+        const workOrder = getById(button.dataset.id);
+        if (!workOrder) return;
+
+        openWorkOrderModal({
+          ...workOrder,
+          status: 'scheduled'
+        });
       });
     });
 
@@ -549,6 +728,10 @@
     populatePropertySelect();
     ensureWorkOrderModal();
     populateModalPropertySelect();
+  });
+
+  document.addEventListener('beartrack:new-workorder', event => {
+    openWorkOrderModal(event.detail?.defaults || null);
   });
 
   document.addEventListener('beartrack:edit-workorder', event => {
