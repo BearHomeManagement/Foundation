@@ -55,6 +55,11 @@
 
     employees = (rows || []).map(normalize);
     render();
+
+    document.dispatchEvent(new CustomEvent('beartrack:employees-loaded', {
+      detail: { employees: [...employees] }
+    }));
+
     return employees;
   }
 
