@@ -10,7 +10,7 @@
     ['schedule','📅','Schedule'],
     ['assessments','🛡️','Assessments'],
     ['memberships','🧩','Memberships'],
-    ['technicians','👷','Technicians'],
+    ['employees','👷','Employees'],
     ['reports','📊','Reports'],
     ['documents','📄','Documents'],
     ['messages','✉️','Messages'],
@@ -26,7 +26,7 @@
     schedule:['Schedule','Day, week, and month scheduling.'],
     assessments:['Assessments','BearTrack Home Health Assessment workflow.'],
     memberships:['Memberships','Home Care Hours, family accounts, and Recovery.'],
-    technicians:['Technicians','Team status and capacity.'],
+    employees:['Employees','Hire, manage, deactivate, and retain employee history.'],
     reports:['Reports','Company health and performance.'],
     documents:['Documents','Photos, warranties, reports, and files.'],
     messages:['Messages','Customer calls, emails, and follow-ups.'],
@@ -73,7 +73,8 @@
       properties: window.BearTrackProperties,
       workorders: window.BearTrackWorkOrders,
       assessments: window.BearTrackAssessments,
-      memberships: window.BearTrackMemberships
+      memberships: window.BearTrackMemberships,
+      employees: window.BearTrackEmployees
     };
 
     renderers[page]?.render?.();
@@ -120,6 +121,7 @@
     await safeLoad('Work Orders', window.BearTrackWorkOrders);
     await safeLoad('Assessments', window.BearTrackAssessments);
     await safeLoad('Memberships', window.BearTrackMemberships);
+    await safeLoad('Employees', window.BearTrackEmployees);
 
     try {
       if (window.BearTrackDashboard?.refresh) {
