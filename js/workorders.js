@@ -23,6 +23,7 @@
       scheduled_time: workOrder.scheduled_time || null,
       technician_id: workOrder.technician_id || null,
       assigned_to: workOrder.assigned_to || '',
+      employees: workOrder.employees || null,
       created_at: workOrder.created_at || null,
       completed_at: workOrder.completed_at || null,
       properties: workOrder.properties || null
@@ -47,7 +48,7 @@
 
   async function load() {
     const rows = await window.BearTrackDB.select('work_orders', {
-      columns: '*, properties(*)',
+      columns: '*, properties(*), employees:technician_id(id, first_name, last_name, role, employment_status)',
       orderBy: 'created_at',
       ascending: false
     });
@@ -241,7 +242,9 @@
 
                 <div class="field" style="grid-column:1/-1">
                   <label>Assigned Technician</label>
-                  <input id="modalWorkOrderAssigned" placeholder="Technician name">
+                  <select id="modalWorkOrderTechnician">
+                    <option value="">Unassigned</option>
+                  </select>
                 </div>
               </div>
             </section>
@@ -316,7 +319,8 @@
         estimated_cost: valueOf('modalWorkOrderCost'),
         scheduled_date: valueOf('modalWorkOrderDate'),
         scheduled_time: valueOf('modalWorkOrderTime'),
-        assigned_to: valueOf('modalWorkOrderAssigned')
+        technician_id: valueOf('modalWorkOrderTechnician') || null,
+        assigned_to: selectedTechnicianName() || null
       };
 
       if (!payload.property_id) {
@@ -452,6 +456,34 @@
     document.head.appendChild(style);
   }
 
+  function populateTechnicianSelect() {
+    const select = document.getElementById('modalWorkOrderTechnician');
+    if (!select) return;
+
+    const employees = window.BearTrackEmployees?.getActive?.() || [];
+    const technicians = employees.filter(employee =>
+      ['lead_technician', 'technician'].includes(employee.role)
+    );
+
+    select.innerHTML = `
+      <option value="">Unassigned</option>
+      ${technicians.map(employee => `
+        <option value="${escapeHtml(employee.id)}">
+          ${escapeHtml(`${employee.first_name} ${employee.last_name}`.trim())}
+          — ${employee.role === 'lead_technician' ? 'Lead Technician' : 'Technician'}
+        </option>
+      `).join('')}
+    `;
+  }
+
+  function selectedTechnicianName() {
+    const select = document.getElementById('modalWorkOrderTechnician');
+    if (!select || !select.value) return '';
+    return select.options[select.selectedIndex]?.text
+      ?.replace(/\s+—\s+(Lead Technician|Technician)$/, '')
+      ?.trim() || '';
+  }
+
   function populateModalPropertySelect() {
     const select = document.getElementById('modalWorkOrderProperty');
     if (!select || !window.BearTrackProperties) return;
@@ -483,7 +515,8 @@
       estimated_cost: '',
       scheduled_date: '',
       scheduled_time: '',
-      assigned_to: ''
+      assigned_to: '',
+      employees: null
     };
 
     setValue('modalWorkOrderId', current.id || '');
@@ -496,7 +529,8 @@
     setValue('modalWorkOrderCost', current.estimated_cost || '');
     setValue('modalWorkOrderDate', current.scheduled_date || '');
     setValue('modalWorkOrderTime', current.scheduled_time || '');
-    setValue('modalWorkOrderAssigned', current.assigned_to || '');
+    populateTechnicianSelect();
+    setValue('modalWorkOrderTechnician', current.technician_id || '');
 
     const number = document.getElementById('workOrderNumber');
     if (number) {
@@ -723,6 +757,10 @@
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#039;');
   }
+
+  document.addEventListener('beartrack:employees-loaded', () => {
+    populateTechnicianSelect();
+  });
 
   document.addEventListener('beartrack:properties-loaded', () => {
     populatePropertySelect();
