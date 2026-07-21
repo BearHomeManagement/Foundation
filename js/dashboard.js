@@ -270,5 +270,25 @@
   ['beartrack:customers-loaded','beartrack:customer-changed','beartrack:properties-loaded','beartrack:workorders-loaded','beartrack:workorder-changed','beartrack:assessments-loaded','beartrack:assessment-created']
     .forEach(name=>document.addEventListener(name,render));
 
+  document.addEventListener('beartrack:open-scheduler', event => {
+  const detail = event.detail || {};
+
+  const workOrder = detail.itemType === 'workorder'
+    ? window.BearTrackWorkOrders?.getById?.(detail.itemId)
+    : null;
+
+  if (!workOrder) {
+    alert('The selected work order could not be found.');
+    return;
+  }
+
+  window.BearTrackWorkOrders?.openWorkOrderModal?.({
+    ...workOrder,
+    status: 'scheduled',
+    scheduled_date: detail.date || workOrder.scheduled_date || '',
+    scheduled_time: detail.time || workOrder.scheduled_time || '',
+    assigned_to: detail.assigned || workOrder.assigned_to || ''
+  });
+});
   window.BearTrackDashboard={refresh,render,loadAssessments,getAssessments:()=>[...assessments]};
 })();
