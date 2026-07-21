@@ -861,6 +861,165 @@
           grid-template-columns: 1fr;
         }
       }
+         /* BearTrack Schedule compatibility fixes */
+      .bt-dispatch,
+      .bt-dispatch * {
+        box-sizing: border-box;
+      }
+
+      .bt-dispatch {
+        color: #163f32;
+      }
+
+      .bt-dispatch-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        padding: 0;
+      }
+
+      .bt-dispatch-header h2,
+      .bt-panel-heading h3,
+      .bt-tech-header h4,
+      .bt-job-card h4 {
+        color: #163f32 !important;
+      }
+
+      .bt-dispatch-subtitle,
+      .bt-panel-heading p,
+      .bt-tech-header p,
+      .bt-job-card p,
+      .bt-job-meta,
+      .bt-job-card-top time,
+      .bt-summary-card span,
+      .bt-summary-card small {
+        color: #657b72 !important;
+      }
+
+      .bt-dispatch-controls {
+        justify-content: flex-end;
+      }
+
+      .bt-dispatch-controls .btn {
+        min-width: 54px;
+        min-height: 46px;
+        color: #ffffff !important;
+        background: #17344a !important;
+        border: 1px solid #294b62 !important;
+      }
+
+      .bt-dispatch-controls .btn:hover {
+        background: #21475f !important;
+      }
+
+      #btScheduleDate {
+        min-height: 46px;
+        padding: 0 12px;
+        border: 1px solid #cbd6cf;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #163f32 !important;
+        font-weight: 700;
+      }
+
+      .bt-view-tabs {
+        margin-top: 2px;
+      }
+
+      .bt-view-button {
+        color: #163f32 !important;
+        background: #ffffff !important;
+      }
+
+      .bt-view-button.active {
+        color: #ffffff !important;
+        background: #164c39 !important;
+      }
+
+      .bt-summary-card {
+        min-height: 122px;
+      }
+
+      .bt-summary-card strong {
+        color: #164c39 !important;
+      }
+
+      .bt-unscheduled-panel,
+      .bt-schedule-panel {
+        background: #f4f7f3;
+      }
+
+      .bt-panel-heading {
+        min-height: 84px;
+        background: #ffffff;
+      }
+
+      .bt-count-badge {
+        color: #164c39 !important;
+        background: #e7efe9 !important;
+      }
+
+      .bt-job-card {
+        color: #163f32 !important;
+        background: #ffffff !important;
+      }
+
+      .bt-job-card.unscheduled {
+        border-left: 5px solid #d5a84d;
+      }
+
+      .bt-job-card.scheduled {
+        border-left: 5px solid #3f8065;
+      }
+
+      .bt-job-card .btn,
+      .bt-open-workorder {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: auto !important;
+        min-height: 38px;
+        margin-top: 4px;
+        padding: 8px 14px !important;
+        border: 1px solid #164c39 !important;
+        border-radius: 8px;
+        background: #164c39 !important;
+        color: #ffffff !important;
+        font-weight: 800 !important;
+        line-height: 1 !important;
+        opacity: 1 !important;
+        cursor: pointer;
+      }
+
+      .bt-job-card .btn:hover,
+      .bt-open-workorder:hover {
+        background: #206248 !important;
+      }
+
+      .bt-tech-header {
+        color: #163f32 !important;
+        background: #eaf1e9 !important;
+      }
+
+      .bt-tech-avatar {
+        background: #164c39 !important;
+        color: #ffffff !important;
+      }
+
+      .bt-lane-empty,
+      .bt-empty-state {
+        color: #657b72 !important;
+      }
+
+      @media (max-width: 760px) {
+        .bt-dispatch-header {
+          grid-template-columns: 1fr;
+        }
+
+        .bt-dispatch-controls {
+          justify-content: flex-start;
+        }
+      }
     `;
 
     document.head.appendChild(style);
