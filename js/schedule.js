@@ -248,26 +248,8 @@
 
     document.getElementById('btAssignmentModal').classList.add('show');
   }
-
-    document.getElementById('btAssignmentWorkOrderId').value =
-      workOrder.id || '';
-
-    document.getElementById('btAssignmentTitle').textContent =
-      workOrder.title || 'Untitled Work Order';
-
-    document.getElementById('btAssignmentTechnician').value =
-      workOrder.technician_id || '';
-
-    document.getElementById('btAssignmentDate').value =
-      workOrder.scheduled_date || selectedDate;
-
-    document.getElementById('btAssignmentTime').value =
-      workOrder.scheduled_time || '08:00';
-
-    document.getElementById('btAssignmentModal').classList.add('show');
-  }
-
-  async function saveAssignment() {
+  
+async function saveAssignment() {
     const workOrderId =
       document.getElementById('btAssignmentWorkOrderId').value;
 
