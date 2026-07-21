@@ -600,16 +600,22 @@
     });
 
     container.querySelectorAll('.schedule-workorder').forEach(button => {
-      button.addEventListener('click', () => {
-        const workOrder = getById(button.dataset.id);
-        if (!workOrder) return;
+  button.addEventListener('click', () => {
+    const workOrder = getById(button.dataset.id);
+    if (!workOrder) return;
 
-        openWorkOrderModal({
-          ...workOrder,
-          status: 'scheduled'
-        });
-      });
-    });
+    document.dispatchEvent(new CustomEvent('beartrack:open-scheduler', {
+      detail: {
+        itemType: 'workorder',
+        itemId: workOrder.id,
+        propertyId: workOrder.property_id,
+        date: workOrder.scheduled_date || '',
+        time: workOrder.scheduled_time || '',
+        assigned: workOrder.assigned_to || ''
+      }
+    }));
+  });
+});
 
     container.querySelectorAll('.wo-status').forEach(button => {
       button.addEventListener('click', async () => {
