@@ -318,7 +318,9 @@ async function saveAssignment() {
 
       selectedDate = date;
       render();
-
+      
+window.BearTrackDashboard?.render?.();
+      
       window.BearTrackUI?.toast?.(
         `Assigned to ${employeeName(technician)}`,
         'success'
