@@ -137,7 +137,192 @@
         </div>
       </section>
     `;
+  function ensureAssignmentModal() {
+    if (document.getElementById('btAssignmentModal')) return;
 
+    document.body.insertAdjacentHTML('beforeend', `
+      <div class="modal" id="btAssignmentModal">
+        <div class="modal-box" style="width:min(520px,calc(100vw - 24px))">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+            <div>
+              <h3 style="margin:0">Assign Work Order</h3>
+              <p id="btAssignmentTitle" style="margin:4px 0 0;color:var(--muted)"></p>
+            </div>
+
+            <button type="button" class="btn" id="btCloseAssignmentModal">
+              Close
+            </button>
+          </div>
+
+          <input type="hidden" id="btAssignmentWorkOrderId">
+
+          <div class="form-grid" style="margin-top:18px">
+            <div class="field" style="grid-column:1/-1">
+              <label>Technician</label>
+              <select id="btAssignmentTechnician">
+                <option value="">Select technician</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Scheduled Date</label>
+              <input id="btAssignmentDate" type="date">
+            </div>
+
+            <div class="field">
+              <label>Scheduled Time</label>
+              <input id="btAssignmentTime" type="time">
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
+            <button type="button" class="btn" id="btCancelAssignment">
+              Cancel
+            </button>
+
+            <button type="button" class="btn gold" id="btSaveAssignment">
+              Save Assignment
+            </button>
+          </div>
+        </div>
+      </div>
+    `);
+
+    const modal = document.getElementById('btAssignmentModal');
+    const close = () => modal.classList.remove('show');
+
+    document.getElementById('btCloseAssignmentModal').onclick = close;
+    document.getElementById('btCancelAssignment').onclick = close;
+
+    modal.addEventListener('click', event => {
+      if (event.target === modal) close();
+    });
+
+    document.getElementById('btSaveAssignment').onclick = saveAssignment;
+  }
+
+  function openAssignmentModal(workOrder) {
+    if (!workOrder) return;
+
+    ensureAssignmentModal();
+
+    const technicianSelect =
+      document.getElementById('btAssignmentTechnician');
+
+    technicianSelect.innerHTML = `
+      <option value="">Select technician</option>
+      ${technicians.map(technician => `
+        <option value="${escapeHtml(technician.id)}">
+          ${escapeHtml(employeeName(technician))}
+        </option>
+      `).join('')}
+    `;
+
+    document.getElementById('btAssignmentWorkOrderId').value =
+      workOrder.id || '';
+
+    document.getElementById('btAssignmentTitle').textContent =
+      workOrder.title || 'Untitled Work Order';
+
+    document.getElementById('btAssignmentTechnician').value =
+      workOrder.technician_id || '';
+
+    document.getElementById('btAssignmentDate').value =
+      workOrder.scheduled_date || selectedDate;
+
+    document.getElementById('btAssignmentTime').value =
+      workOrder.scheduled_time || '08:00';
+
+    document.getElementById('btAssignmentModal').classList.add('show');
+  }
+
+  async function saveAssignment() {
+    const workOrderId =
+      document.getElementById('btAssignmentWorkOrderId').value;
+
+    const technicianId =
+      document.getElementById('btAssignmentTechnician').value;
+
+    const date =
+      document.getElementById('btAssignmentDate').value;
+
+    const time =
+      document.getElementById('btAssignmentTime').value;
+
+    if (!technicianId) {
+      alert('Select a technician.');
+      return;
+    }
+
+    if (!date) {
+      alert('Select a scheduled date.');
+      return;
+    }
+
+    if (!time) {
+      alert('Select a scheduled time.');
+      return;
+    }
+
+    const technician = technicians.find(item =>
+      item.id === technicianId
+    );
+
+    if (!technician) {
+      alert('The selected technician could not be found.');
+      return;
+    }
+
+    const workOrder =
+      window.BearTrackWorkOrders?.getById?.(workOrderId);
+
+    if (!workOrder) {
+      alert('The work order could not be found.');
+      return;
+    }
+
+    const saveButton = document.getElementById('btSaveAssignment');
+    saveButton.disabled = true;
+    saveButton.textContent = 'Saving...';
+
+    try {
+      await window.BearTrackWorkOrders.update(workOrderId, {
+        property_id: workOrder.property_id,
+        assessment_item_id: workOrder.assessment_item_id,
+        title: workOrder.title,
+        description: workOrder.description,
+        priority: workOrder.priority,
+        status: 'scheduled',
+        estimated_hours: workOrder.estimated_hours,
+        estimated_cost: workOrder.estimated_cost,
+        scheduled_date: date,
+        scheduled_time: time,
+        technician_id: technicianId,
+        assigned_to: employeeName(technician)
+      });
+
+      document.getElementById('btAssignmentModal').classList.remove('show');
+
+      selectedDate = date;
+      render();
+
+      window.BearTrackUI?.toast?.(
+        `Assigned to ${employeeName(technician)}`,
+        'success'
+      );
+
+      document.dispatchEvent(new CustomEvent('beartrack:toast', {
+        detail: {
+          message: `Assigned to ${employeeName(technician)}`
+        }
+      }));
+    } catch (error) {
+      alert(error.message || String(error));
+    } finally {
+      saveButton.disabled = false;
+      saveButton.textContent = 'Save Assignment';
+    }
+  }
     bindActions();
   }
 
@@ -303,13 +488,23 @@
             ${escapeHtml(property?.address || 'Property not assigned')}
           </p>
 
-          <button
-            type="button"
-            class="btn bt-open-workorder"
-            data-id="${escapeHtml(workOrder.id)}"
-          >
-            Open
-          </button>
+                  <div class="bt-job-actions">
+            <button
+              type="button"
+              class="btn bt-assign-workorder"
+              data-id="${escapeHtml(workOrder.id)}"
+            >
+              Assign
+            </button>
+
+            <button
+              type="button"
+              class="btn bt-open-workorder"
+              data-id="${escapeHtml(workOrder.id)}"
+            >
+              Open
+            </button>
+          </div>
         </article>
       `;
     }).join('');
@@ -409,7 +604,16 @@
         render();
       };
     }
+    
+    document.querySelectorAll('.bt-assign-workorder').forEach(button => {
+      button.onclick = () => {
+        const workOrder =
+          window.BearTrackWorkOrders?.getById?.(button.dataset.id);
 
+        openAssignmentModal(workOrder);
+      };
+    });
+    
     document.querySelectorAll('.bt-open-workorder').forEach(button => {
       button.onclick = () => {
         const workOrder =
