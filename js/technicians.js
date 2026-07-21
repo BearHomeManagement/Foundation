@@ -160,10 +160,10 @@ const viewedTechnician = getViewedTechnician();
         <header class="bt-tech-app-header">
           <div>
             <p class="bt-tech-eyebrow">BearTrack Field Operations</p>
-            <h2>My Jobs</h2>
+            <h2>${canManageTeam() ? 'Dispatch Console' : 'My Jobs'}</h2>
             <p>
-             ${escapeHtml(employeeName(viewedTechnician))}
-            ·${escapeHtml(formatRole(viewedTechnician.role))}
+            ${escapeHtml(employeeName(currentTechnician))}
+        ·   ${escapeHtml(formatRole(currentTechnician.role))}
             </p>
           </div>
 
