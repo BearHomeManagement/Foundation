@@ -780,6 +780,11 @@ ${canManageTeam() ? `
         min-height: 40px;
       }
 
+.bt-tech-open {
+  background: #ffffff !important;
+  border: 1px solid #164c39 !important;
+  color: #164c39 !important;
+}
       .bt-tech-start {
         background: #164c39 !important;
         color: #ffffff !important;
