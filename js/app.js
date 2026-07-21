@@ -28,6 +28,7 @@
     assessments:['Assessments','BearTrack Home Health Assessment workflow.'],
     memberships:['Memberships','Home Care Hours, family accounts, and Recovery.'],
     employees:['Employees','Hire, manage, deactivate, and retain employee history.'],
+    technicians:['Technicians','Team status and capacity.'],
     reports:['Reports','Company health and performance.'],
     documents:['Documents','Photos, warranties, reports, and files.'],
     messages:['Messages','Customer calls, emails, and follow-ups.'],
@@ -75,7 +76,8 @@
       workorders: window.BearTrackWorkOrders,
       assessments: window.BearTrackAssessments,
       memberships: window.BearTrackMemberships,
-      employees: window.BearTrackEmployees
+      employees: window.BearTrackEmployees,
+      technicians: window.BearTrackTechnician,
     };
 
     renderers[page]?.render?.();
