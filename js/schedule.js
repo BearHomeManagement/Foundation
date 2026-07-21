@@ -205,9 +205,18 @@
     document.getElementById('btSaveAssignment').onclick = saveAssignment;
   }
 
-  function openAssignmentModal(workOrder) {
+    async function openAssignmentModal(workOrder) {
     if (!workOrder) return;
 
+    try {
+      if (window.BearTrackEmployees?.load) {
+        await window.BearTrackEmployees.load();
+      }
+    } catch (error) {
+      console.warn('Technicians could not be refreshed:', error);
+    }
+
+    refreshData();
     ensureAssignmentModal();
 
     const technicianSelect =
@@ -221,6 +230,24 @@
         </option>
       `).join('')}
     `;
+
+    document.getElementById('btAssignmentWorkOrderId').value =
+      workOrder.id || '';
+
+    document.getElementById('btAssignmentTitle').textContent =
+      workOrder.title || 'Untitled Work Order';
+
+    document.getElementById('btAssignmentTechnician').value =
+      workOrder.technician_id || '';
+
+    document.getElementById('btAssignmentDate').value =
+      workOrder.scheduled_date || selectedDate;
+
+    document.getElementById('btAssignmentTime').value =
+      workOrder.scheduled_time || '08:00';
+
+    document.getElementById('btAssignmentModal').classList.add('show');
+  }
 
     document.getElementById('btAssignmentWorkOrderId').value =
       workOrder.id || '';
