@@ -137,6 +137,10 @@
         </div>
       </section>
     `;
+    
+     bindActions();
+  }
+  
   function ensureAssignmentModal() {
     if (document.getElementById('btAssignmentModal')) return;
 
@@ -323,9 +327,7 @@
       saveButton.textContent = 'Save Assignment';
     }
   }
-    bindActions();
-  }
-
+  
   function renderViewButton(view, label) {
     const activeClass = currentView === view ? ' active' : '';
 
@@ -1214,7 +1216,39 @@
       .bt-empty-state {
         color: #657b72 !important;
       }
+      .bt-job-actions {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+        margin-top: 4px;
+      }
 
+      .bt-job-actions .btn {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+      }
+
+      .bt-assign-workorder {
+        background: #d5a84d !important;
+        border-color: #d5a84d !important;
+        color: #163f32 !important;
+      }
+
+      .bt-assign-workorder:hover {
+        background: #e0b85e !important;
+        border-color: #e0b85e !important;
+      }
+
+      .bt-open-workorder {
+        background: #164c39 !important;
+        border-color: #164c39 !important;
+        color: #ffffff !important;
+      }
       @media (max-width: 760px) {
         .bt-dispatch-header {
           grid-template-columns: 1fr;
