@@ -627,12 +627,109 @@ async function saveAssignment() {
     });
   }
 
-  function renderMonthPlaceholder() {
+    function renderMonthPlaceholder() {
+    const monthData = getMonthData(selectedDate);
+
     return `
-      <div class="bt-empty-state">
-        Month view is ready for the next step.
+      <div class="bt-month-board">
+        <div class="bt-month-weekdays">
+          ${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            .map(day => `<div>${day}</div>`)
+            .join('')}
+        </div>
+
+        <div class="bt-month-grid">
+          ${monthData.days.map(day => renderMonthDay(day)).join('')}
+        </div>
       </div>
     `;
+  }
+
+  function renderMonthDay(day) {
+    const jobs = workOrders
+      .filter(workOrder =>
+        workOrder.scheduled_date === day.iso &&
+        !isComplete(workOrder.status)
+      )
+      .sort((a, b) =>
+        String(a.scheduled_time || '').localeCompare(
+          String(b.scheduled_time || '')
+        )
+      );
+
+    const outsideClass = day.inCurrentMonth ? '' : ' outside-month';
+    const todayClass = day.iso === todayIso() ? ' today' : '';
+
+    return `
+      <section class="bt-month-day${outsideClass}${todayClass}">
+        <header>
+          <span>${day.dayNumber}</span>
+          ${jobs.length
+            ? `<small>${jobs.length} job${jobs.length === 1 ? '' : 's'}</small>`
+            : ''
+          }
+        </header>
+
+        <div class="bt-month-jobs">
+          ${jobs.length
+            ? jobs.map(renderMonthJobCard).join('')
+            : ''
+          }
+        </div>
+      </section>
+    `;
+  }
+
+  function renderMonthJobCard(workOrder) {
+    const technician =
+      technicians.find(item => item.id === workOrder.technician_id);
+
+    return `
+      <article
+        class="bt-month-job ${priorityClass(workOrder.priority)}"
+        data-workorder-id="${escapeHtml(workOrder.id)}"
+      >
+        <strong>${escapeHtml(formatTime(workOrder.scheduled_time))}</strong>
+        <span>${escapeHtml(workOrder.title || 'Untitled Work Order')}</span>
+        <small>
+          ${escapeHtml(
+            technician
+              ? employeeName(technician)
+              : workOrder.assigned_to || 'Unassigned'
+          )}
+        </small>
+      </article>
+    `;
+  }
+
+  function getMonthData(value) {
+    const selected = parseIsoDate(value);
+    const year = selected.getFullYear();
+    const month = selected.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const gridStart = new Date(year, month, 1 - firstDay.getDay());
+
+    const days = Array.from({ length: 42 }, (_, index) => {
+      const date = new Date(gridStart);
+      date.setDate(gridStart.getDate() + index);
+
+      return {
+        iso: dateToIso(date),
+        dayNumber: date.getDate(),
+        inCurrentMonth: date.getMonth() === month
+      };
+    });
+
+    return { days };
+  }
+
+  function dateToIso(date) {
+    const offset = date.getTimezoneOffset();
+
+    return new Date(date.getTime() - offset * 60000)
+      .toISOString()
+      .slice(0, 10);
   }
 
   function getUnscheduledWorkOrders() {
@@ -766,6 +863,22 @@ card.ondblclick = () => {
 };
     });
 
+        document.querySelectorAll('.bt-month-job').forEach(card => {
+      const openWorkOrder = () => {
+        const workOrder =
+          window.BearTrackWorkOrders?.getById?.(
+            card.dataset.workorderId
+          );
+
+        if (workOrder) {
+          window.BearTrackWorkOrders.openWorkOrderModal(workOrder);
+        }
+      };
+
+      card.onclick = openWorkOrder;
+      card.ondblclick = openWorkOrder;
+    });
+    
     }
   function viewTitle() {
     if (currentView === 'week') return 'Weekly Schedule';
@@ -1467,6 +1580,146 @@ card.ondblclick = () => {
 
       #btScheduleBoard {
         overflow-x: auto;
+      }
+
+            /* ===========================
+         MONTH VIEW
+      =========================== */
+
+      .bt-month-board {
+        min-width: 980px;
+        background: #ffffff;
+      }
+
+      .bt-month-weekdays,
+      .bt-month-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(130px, 1fr));
+      }
+
+      .bt-month-weekdays {
+        background: #eef3ec;
+        border-bottom: 1px solid #dfe7dd;
+      }
+
+      .bt-month-weekdays > div {
+        padding: 12px;
+        border-right: 1px solid #dfe7dd;
+        color: #164c39;
+        font-size: 12px;
+        font-weight: 900;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+      }
+
+      .bt-month-day {
+        min-height: 150px;
+        padding: 9px;
+        border-right: 1px solid #dfe7dd;
+        border-bottom: 1px solid #dfe7dd;
+        background: #ffffff;
+      }
+
+      .bt-month-day.outside-month {
+        background: #f5f7f4;
+      }
+
+      .bt-month-day.outside-month > header,
+      .bt-month-day.outside-month .bt-month-job {
+        opacity: .48;
+      }
+
+      .bt-month-day.today {
+        box-shadow: inset 0 0 0 3px #d5a84d;
+        background: #fffaf0;
+      }
+
+      .bt-month-day > header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .bt-month-day > header span {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border-radius: 50%;
+        color: #163f32;
+        font-weight: 900;
+      }
+
+      .bt-month-day.today > header span {
+        background: #d5a84d;
+      }
+
+      .bt-month-day > header small {
+        color: #657b72;
+        font-size: 11px;
+      }
+
+      .bt-month-jobs {
+        display: grid;
+        gap: 6px;
+      }
+
+      .bt-month-job {
+        display: grid;
+        gap: 2px;
+        padding: 7px 8px;
+        border-left: 4px solid #3f8065;
+        border-radius: 7px;
+        background: #eef5ef;
+        cursor: pointer;
+        transition:
+          transform .12s ease,
+          box-shadow .12s ease;
+      }
+
+      .bt-month-job:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 12px rgba(22, 63, 50, .12);
+      }
+
+      .bt-month-job.emergency {
+        border-left-color: #b42318;
+        background: #fff0ef;
+      }
+
+      .bt-month-job.high {
+        border-left-color: #d58a24;
+        background: #fff6e8;
+      }
+
+      .bt-month-job.low {
+        border-left-color: #718096;
+        background: #f1f4f7;
+      }
+
+      .bt-month-job strong {
+        color: #164c39;
+        font-size: 11px;
+      }
+
+      .bt-month-job span {
+        overflow: hidden;
+        color: #163f32;
+        font-size: 12px;
+        font-weight: 800;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .bt-month-job small {
+        overflow: hidden;
+        color: #657b72;
+        font-size: 10px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       
       @media (max-width: 760px) {
