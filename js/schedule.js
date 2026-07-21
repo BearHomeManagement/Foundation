@@ -521,12 +521,110 @@ async function saveAssignment() {
     }).join('');
   }
 
-  function renderWeekPlaceholder() {
+   function renderWeekPlaceholder() {
+    const weekDates = getWeekDates(selectedDate);
+
     return `
-      <div class="bt-empty-state">
-        Week view is ready for the next step.
+      <div class="bt-week-board">
+        <div class="bt-week-header-row">
+          <div class="bt-week-tech-label">Technician</div>
+
+          ${weekDates.map(date => `
+            <div class="bt-week-day-label">
+              <strong>${escapeHtml(formatShortDay(date))}</strong>
+              <span>${escapeHtml(formatShortDate(date))}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        ${technicians.length
+          ? technicians.map(technician =>
+              renderWeekTechnicianRow(technician, weekDates)
+            ).join('')
+          : `
+            <div class="bt-empty-state">
+              No active technicians are available.
+            </div>
+          `
+        }
       </div>
     `;
+  }
+
+  function renderWeekTechnicianRow(technician, weekDates) {
+    const name = employeeName(technician);
+
+    return `
+      <div class="bt-week-row">
+        <div class="bt-week-tech-cell">
+          <div class="bt-tech-avatar">
+            ${escapeHtml(initials(name))}
+          </div>
+
+          <div>
+            <strong>${escapeHtml(name)}</strong>
+            <span>${escapeHtml(formatRole(technician.role))}</span>
+          </div>
+        </div>
+
+        ${weekDates.map(date => {
+          const jobs = getTechnicianJobsForDate(technician.id, date);
+
+          return `
+            <div class="bt-week-day-cell">
+              ${jobs.length
+                ? jobs.map(renderWeekJobCard).join('')
+                : '<div class="bt-week-empty">—</div>'
+              }
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  function renderWeekJobCard(workOrder) {
+    return `
+      <article
+        class="bt-week-job"
+        data-workorder-id="${escapeHtml(workOrder.id)}"
+      >
+        <strong>${escapeHtml(formatTime(workOrder.scheduled_time))}</strong>
+        <span>${escapeHtml(workOrder.title || 'Untitled Work Order')}</span>
+      </article>
+    `;
+  }
+
+  function getWeekDates(value) {
+    const date = parseIsoDate(value);
+    const day = date.getDay();
+    const mondayOffset = day === 0 ? -6 : 1 - day;
+
+    date.setDate(date.getDate() + mondayOffset);
+
+    return Array.from({ length: 7 }, (_, index) => {
+      const current = new Date(date);
+      current.setDate(date.getDate() + index);
+
+      const offset = current.getTimezoneOffset();
+
+      return new Date(current.getTime() - offset * 60000)
+        .toISOString()
+        .slice(0, 10);
+    });
+  }
+
+  function formatShortDay(value) {
+    return parseIsoDate(value).toLocaleDateString(undefined, {
+      weekday: 'short'
+    });
+  }
+
+  function formatShortDate(value) {
+    return parseIsoDate(value).toLocaleDateString(undefined, {
+      month: 'numeric',
+      day: 'numeric'
+    });
   }
 
   function renderMonthPlaceholder() {
@@ -1258,6 +1356,100 @@ async function saveAssignment() {
         border-color: #164c39 !important;
         color: #ffffff !important;
       }
+            .bt-week-board {
+        display: grid;
+        min-width: 980px;
+        overflow-x: auto;
+      }
+
+      .bt-week-header-row,
+      .bt-week-row {
+        display: grid;
+        grid-template-columns: 220px repeat(7, minmax(130px, 1fr));
+      }
+
+      .bt-week-header-row {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #eef3ec;
+        border-bottom: 1px solid #dfe7dd;
+      }
+
+      .bt-week-tech-label,
+      .bt-week-day-label,
+      .bt-week-tech-cell,
+      .bt-week-day-cell {
+        padding: 12px;
+        border-right: 1px solid #dfe7dd;
+        border-bottom: 1px solid #dfe7dd;
+      }
+
+      .bt-week-day-label {
+        display: grid;
+        gap: 2px;
+        text-align: center;
+      }
+
+      .bt-week-day-label span {
+        color: #657b72;
+        font-size: 12px;
+      }
+
+      .bt-week-tech-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f7f9f6;
+      }
+
+      .bt-week-tech-cell strong,
+      .bt-week-tech-cell span {
+        display: block;
+      }
+
+      .bt-week-tech-cell span {
+        color: #657b72;
+        font-size: 12px;
+      }
+
+      .bt-week-day-cell {
+        min-height: 110px;
+        background: #ffffff;
+      }
+
+      .bt-week-job {
+        display: grid;
+        gap: 4px;
+        margin-bottom: 8px;
+        padding: 8px;
+        border-left: 4px solid #3f8065;
+        border-radius: 8px;
+        background: #eef5ef;
+        cursor: pointer;
+      }
+
+      .bt-week-job strong {
+        font-size: 12px;
+        color: #164c39;
+      }
+
+      .bt-week-job span {
+        font-size: 12px;
+        color: #163f32;
+      }
+
+      .bt-week-empty {
+        display: grid;
+        min-height: 70px;
+        place-items: center;
+        color: #9aaaa3;
+      }
+
+      #btScheduleBoard {
+        overflow-x: auto;
+      }
+      
       @media (max-width: 760px) {
         .bt-dispatch-header {
           grid-template-columns: 1fr;
