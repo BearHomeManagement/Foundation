@@ -797,11 +797,16 @@ ${canManageTeam() ? `
         border-left-color: #718096;
       }
 
-      .bt-tech-job-card h3,
-      .bt-tech-job-card p {
-        margin: 0;
-      }
+      .bt-tech-job-card h3 {
+  margin: 0;
+  color: #163f32;
+  font-weight: 700;
+}
 
+.bt-tech-job-card p {
+  margin: 0;
+}
+          
       .bt-tech-job-top {
         display: flex;
         justify-content: space-between;
