@@ -759,8 +759,14 @@ async function saveAssignment() {
         }
       };
 
-      card.onclick = openWorkOrder;
-      card.ondblclick = openWorkOrder;
+      card.onclick = () => {
+  alert(`Opening work order: ${card.dataset.workorderId}`);
+  openWorkOrder();
+};
+
+card.ondblclick = () => {
+  openWorkOrder();
+};
     });
 
     }
