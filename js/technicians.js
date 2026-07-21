@@ -71,20 +71,35 @@ function getViewedTechnician() {
     ) || currentTechnician
   );
 }
-  function refreshJobs() {
-    const allJobs = window.BearTrackWorkOrders?.getAll?.() || [];
+ function refreshJobs() {
+  const allJobs = window.BearTrackWorkOrders?.getAll?.() || [];
 
-    if (!currentTechnician?.id) {
-      technicianJobs = [];
-      return;
-    }
-
-    const viewedTech = getViewedTechnician();
-    
-  technicianJobs = allJobs
-    .filter(job => viewedTech && job.technician_id === viewedTech.id)
-      .sort(sortJobs);
+  if (!currentTechnician?.id) {
+    technicianJobs = [];
+    return;
   }
+
+  if (selectedTechnicianId === 'unassigned') {
+    technicianJobs = allJobs
+      .filter(job =>
+        !job.technician_id ||
+        job.technician_id === '' ||
+        job.technician_id === 'unassigned'
+      )
+      .sort(sortJobs);
+
+    return;
+  }
+
+  const viewedTech = getViewedTechnician();
+
+  technicianJobs = allJobs
+    .filter(job =>
+      viewedTech &&
+      job.technician_id === viewedTech.id
+    )
+    .sort(sortJobs);
+}
 
   async function resolveCurrentTechnician() {
     const session = await window.BearTrackDB?.getSession?.();
@@ -161,6 +176,14 @@ ${canManageTeam() ? `
 <div class="bt-tech-selector">
     <label for="btViewedTechnician">Viewing Technician</label>
     <select id="btViewedTechnician">
+
+    <option
+  value="unassigned"
+  ${selectedTechnicianId === 'unassigned' ? 'selected' : ''}
+>
+  Unassigned Jobs
+</option>
+
         ${getActiveTechnicians().map(employee => `
             <option
                 value="${employee.id}"
