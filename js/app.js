@@ -11,6 +11,7 @@
     ['assessments','🛡️','Assessments'],
     ['memberships','🧩','Memberships'],
     ['employees','👷','Employees'],
+    ['technicians','👷','Technicians'],
     ['reports','📊','Reports'],
     ['documents','📄','Documents'],
     ['messages','✉️','Messages'],
