@@ -9,12 +9,25 @@
   let currentTechnician = null;
   let technicianJobs = [];
   let currentFilter = 'today';
-
+  let selectedTechnicianId = null;
+  
   async function load() {
     try {
       currentTechnician = await resolveCurrentTechnician();
-      refreshJobs();
-      render();
+
+if (canManageTeam()) {
+  const activeTechs = getActiveTechnicians();
+
+  selectedTechnicianId =
+    selectedTechnicianId ||
+    activeTechs[0]?.id ||
+    currentTechnician.id;
+} else {
+  selectedTechnicianId = currentTechnician.id;
+}
+
+refreshJobs();
+render();
 
       document.dispatchEvent(new CustomEvent('beartrack:technician-loaded', {
         detail: {
@@ -34,6 +47,30 @@
     }
   }
 
+  function canManageTeam() {
+  return [
+    'owner_admin',
+    'operations_manager',
+    'operations_staff'
+  ].includes(currentTechnician?.role);
+}
+
+function getActiveTechnicians() {
+  return (window.BearTrackEmployees?.getActive?.() || [])
+    .filter(employee =>
+      ['lead_technician', 'technician'].includes(employee.role)
+    );
+}
+
+function getViewedTechnician() {
+  if (!canManageTeam()) return currentTechnician;
+
+  return (
+    getActiveTechnicians().find(employee =>
+      employee.id === selectedTechnicianId
+    ) || currentTechnician
+  );
+}
   function refreshJobs() {
     const allJobs = window.BearTrackWorkOrders?.getAll?.() || [];
 
@@ -42,8 +79,10 @@
       return;
     }
 
-    technicianJobs = allJobs
-      .filter(job => job.technician_id === currentTechnician.id)
+    const viewedTech = getViewedTechnician();
+    
+  technicianJobs = allJobs
+    .filter(job => viewedTech && job.technician_id === viewedTech.id)
       .sort(sortJobs);
   }
 
