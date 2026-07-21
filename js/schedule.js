@@ -746,8 +746,24 @@ async function saveAssignment() {
         }
       };
     });
-  }
 
+      document.querySelectorAll('.bt-week-job').forEach(card => {
+      const openWorkOrder = () => {
+        const workOrder =
+          window.BearTrackWorkOrders?.getById?.(
+            card.dataset.workorderId
+          );
+
+        if (workOrder) {
+          window.BearTrackWorkOrders.openWorkOrderModal(workOrder);
+        }
+      };
+
+      card.onclick = openWorkOrder;
+      card.ondblclick = openWorkOrder;
+    });
+
+    }
   function viewTitle() {
     if (currentView === 'week') return 'Weekly Schedule';
     if (currentView === 'month') return 'Monthly Schedule';
