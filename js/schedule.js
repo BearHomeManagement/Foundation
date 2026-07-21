@@ -392,42 +392,88 @@ window.BearTrackDashboard?.render?.();
   }
 
   function renderTechnicianLane(technician) {
+
     const jobs = getTechnicianJobsForDate(technician.id, selectedDate);
+
     const name = employeeName(technician);
 
+    const scheduledHours = jobs.reduce((total, job) => {
+        return total + Number(job.estimated_hours || 0);
+    }, 0);
+
+    const utilization = Math.min((scheduledHours / 8) * 100, 100);
+
+    let utilizationClass = 'good';
+
+    if (scheduledHours >= 8) {
+        utilizationClass = 'danger';
+    } else if (scheduledHours >= 6) {
+        utilizationClass = 'warning';
+    }
+
     return `
-      <section
-        class="bt-tech-lane"
-        data-technician-id="${escapeHtml(technician.id)}"
-      >
-        <header class="bt-tech-header">
-          <div class="bt-tech-avatar">
+<section
+    class="bt-tech-lane"
+    data-technician-id="${escapeHtml(technician.id)}">
+
+    <header class="bt-tech-header">
+
+        <div class="bt-tech-avatar">
             ${escapeHtml(initials(name))}
-          </div>
-
-          <div>
-            <h4>${escapeHtml(name)}</h4>
-            <p>${escapeHtml(formatRole(technician.role))}</p>
-          </div>
-
-          <span class="bt-count-badge">
-            ${jobs.length}
-          </span>
-        </header>
-
-        <div class="bt-tech-jobs">
-          ${jobs.length
-            ? jobs.map(renderScheduledCard).join('')
-            : `
-              <div class="bt-lane-empty">
-                No work scheduled
-              </div>
-            `
-          }
         </div>
-      </section>
-    `;
-  }
+
+        <div class="bt-tech-info">
+
+            <h4>${escapeHtml(name)}</h4>
+
+            <p>${escapeHtml(formatRole(technician.role))}</p>
+
+            <div class="bt-tech-utilization">
+
+                <div class="bt-tech-hours">
+
+                    <strong>${scheduledHours.toFixed(1)}</strong>
+
+                    <span>/ 8 hrs</span>
+
+                </div>
+
+                <div class="bt-utilization-bar">
+
+                    <div
+                        class="bt-utilization-fill ${utilizationClass}"
+                        style="width:${utilization}%">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="bt-count-badge">
+            ${jobs.length}
+        </div>
+
+    </header>
+
+    <div class="bt-tech-jobs">
+
+        ${
+            jobs.length
+                ? jobs.map(renderScheduledCard).join('')
+                : `
+                    <div class="bt-lane-empty">
+                        No work scheduled
+                    </div>
+                `
+        }
+
+    </div>
+
+</section>
+`;
+}
 
   function renderScheduledCard(workOrder) {
     const property = getPropertyForWorkOrder(workOrder);
