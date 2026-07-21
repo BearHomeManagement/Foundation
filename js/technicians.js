@@ -173,6 +173,47 @@ ${canManageTeam() ? `
 </div>
 ` : ''}
 
+${canManageTeam() ? `
+  <div class="bt-tech-team-overview">
+    ${getActiveTechnicians().map(employee => {
+      const employeeJobs = (
+        window.BearTrackWorkOrders?.getAll?.() || []
+      ).filter(job =>
+        job.technician_id === employee.id &&
+        job.scheduled_date === todayIso() &&
+        String(job.status || '').toLowerCase() !== 'complete'
+      );
+
+      const scheduledHours = employeeJobs.reduce(
+        (total, job) =>
+          total + Number(job.estimated_hours || 0),
+        0
+      );
+
+      const capacityClass =
+        scheduledHours > 8
+          ? 'over'
+          : scheduledHours >= 6
+            ? 'near'
+            : 'available';
+
+      return `
+        <button
+          type="button"
+          class="bt-tech-team-card ${employee.id === viewedTechnician.id ? 'active' : ''}"
+          data-technician-card-id="${escapeHtml(employee.id)}"
+        >
+          <strong>${escapeHtml(employeeName(employee))}</strong>
+          <span>${employeeJobs.length} jobs today</span>
+          <span class="bt-tech-capacity ${capacityClass}">
+            ${scheduledHours.toFixed(1)} / 8 hrs
+          </span>
+        </button>
+      `;
+    }).join('')}
+  </div>
+` : ''}
+
         <div class="bt-tech-summary">
           ${summaryCard('Today', getTodayJobs().length)}
           ${summaryCard('Upcoming', getUpcomingJobs().length)}
@@ -386,6 +427,14 @@ ${canManageTeam() ? `
       render();
     };
   }
+
+    document.querySelectorAll('.bt-tech-team-card').forEach(card => {
+  card.onclick = () => {
+    selectedTechnicianId = card.dataset.technicianCardId;
+    refreshJobs();
+    render();
+  };
+});
     
     const refreshButton = document.getElementById('btTechRefreshBtn');
 
