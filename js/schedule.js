@@ -759,10 +759,7 @@ async function saveAssignment() {
         }
       };
 
-      card.onclick = () => {
-  alert(`Opening work order: ${card.dataset.workorderId}`);
-  openWorkOrder();
-};
+      card.onclick = openWorkOrder;
 
 card.ondblclick = () => {
   openWorkOrder();
