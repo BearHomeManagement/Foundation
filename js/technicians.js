@@ -128,15 +128,17 @@ function getViewedTechnician() {
     if (!target) return;
 
     injectStyles();
-
-    if (!currentTechnician) {
-      target.innerHTML = `
+    
+const viewedTechnician = getViewedTechnician();
+    
+    if (!viewedTechnician) {
+    target.innerHTML = `
         <div class="bt-tech-empty">
-          No technician profile is connected to this login.
+            No technician profile is available.
         </div>
-      `;
-      return;
-    }
+    `;
+    return;
+}
 
     target.innerHTML = `
       <section class="bt-tech-app">
@@ -145,8 +147,8 @@ function getViewedTechnician() {
             <p class="bt-tech-eyebrow">BearTrack Field Operations</p>
             <h2>My Jobs</h2>
             <p>
-              ${escapeHtml(employeeName(currentTechnician))}
-              · ${escapeHtml(formatRole(currentTechnician.role))}
+             ${escapeHtml(employeeName(viewedTechnician))}
+            ·${escapeHtml(formatRole(viewedTechnician.role))}
             </p>
           </div>
 
@@ -154,6 +156,22 @@ function getViewedTechnician() {
             Refresh
           </button>
         </header>
+
+${canManageTeam() ? `
+<div class="bt-tech-selector">
+    <label for="btViewedTechnician">Viewing Technician</label>
+    <select id="btViewedTechnician">
+        ${getActiveTechnicians().map(employee => `
+            <option
+                value="${employee.id}"
+                ${employee.id === viewedTechnician.id ? 'selected' : ''}
+            >
+                ${escapeHtml(employeeName(employee))}
+            </option>
+        `).join('')}
+    </select>
+</div>
+` : ''}
 
         <div class="bt-tech-summary">
           ${summaryCard('Today', getTodayJobs().length)}
@@ -358,6 +376,17 @@ function getViewedTechnician() {
       };
     });
 
+      const technicianSelect =
+    document.getElementById('btViewedTechnician');
+
+  if (technicianSelect) {
+    technicianSelect.onchange = () => {
+      selectedTechnicianId = technicianSelect.value;
+      refreshJobs();
+      render();
+    };
+  }
+    
     const refreshButton = document.getElementById('btTechRefreshBtn');
 
     if (refreshButton) {
