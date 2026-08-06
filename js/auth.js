@@ -79,6 +79,34 @@
       });
     }
 
+    if (
+  forgotPasswordButton &&
+  !forgotPasswordButton.dataset.boundPasswordReset
+) {
+  forgotPasswordButton.dataset.boundPasswordReset = 'true';
+
+  forgotPasswordButton.addEventListener('click', async () => {
+    try {
+      const email =
+        document.getElementById('loginEmail')?.value || '';
+
+      forgotPasswordButton.disabled = true;
+      forgotPasswordButton.textContent = 'Sending...';
+
+      await window.BearTrackDB.requestPasswordReset(email);
+
+      showMessage(
+        'Password reset email sent. Check your inbox.'
+      );
+    } catch (error) {
+      showMessage(error.message || 'Unable to send reset email.');
+    } finally {
+      forgotPasswordButton.disabled = false;
+      forgotPasswordButton.textContent = 'Forgot Password?';
+    }
+  });
+}
+    
     if (logoutButton && !logoutButton.dataset.boundAuth) {
       logoutButton.dataset.boundAuth = 'true';
 
