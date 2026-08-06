@@ -125,7 +125,8 @@
     await safeLoad('Assessments', window.BearTrackAssessments);
     await safeLoad('Memberships', window.BearTrackMemberships);
     await safeLoad('Employees', window.BearTrackEmployees);
-
+    await safeLoad('Technician', window.BearTrackTechnician);
+    
     try {
       if (window.BearTrackDashboard?.refresh) {
         await window.BearTrackDashboard.refresh();
@@ -136,6 +137,19 @@
       console.error('Dashboard failed to render:', error);
       window.BearTrackDashboard?.render?.();
     }
+    function getLandingPage() {
+  const employee =
+    window.BearTrackTechnician?.getCurrentTechnician?.();
+
+  const technicianRoles = [
+    'technician',
+    'lead_technician'
+  ];
+
+  return technicianRoles.includes(employee?.role)
+    ? 'technicians'
+    : 'dashboard';
+}
   }
 
   function bindRefresh() {
@@ -148,7 +162,7 @@
   document.addEventListener('beartrack:auth', async event => {
     if (event.detail?.state === 'signed-in') {
       await loadCore();
-      showPage('dashboard');
+      showPage(getLandingPage());
     }
   });
 
@@ -171,7 +185,7 @@
 
     if (session) {
       await loadCore();
-      showPage('dashboard');
+     showPage(getLandingPage());
     }
   }
 
