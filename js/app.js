@@ -20,7 +20,7 @@
   ];
 
   const titles = {
-    dashboard:['Good Morning, Harley! 👋',"Here's what's happening with your operations today."],
+    dashboard:['Dashboard',"Here's what's happening with your operations today."],
     customers:['Customers','Manage Bear Home Management customers.'],
     properties:['Homes','Each home has its own BearTrack record.'],
     workorders:['Work Orders','Manage active and completed work.'],
