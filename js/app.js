@@ -170,8 +170,8 @@ function getLandingPage() {
   const employee = getSignedInEmployee();
   if (!employee) return;
 
-  const fullName =
-    `${employee.first_name || ''} ${employee.last_name || ''}`.trim();
+ const fullName =
+  `${employee.first_name || ''} ${employee.last_name || ''}`.trim();
 
   const roleLabels = {
     owner_admin: 'Owner / Administrator',
