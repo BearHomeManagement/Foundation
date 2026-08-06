@@ -167,3 +167,4 @@ async function updatePassword(password) {
   update,
   remove
 };
+})();
