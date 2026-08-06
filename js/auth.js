@@ -56,7 +56,9 @@
   function bind() {
     const loginButton = document.getElementById('loginBtn');
     const logoutButton = document.getElementById('logoutBtn');
-
+    const forgotPasswordButton =
+          document.getElementById('forgotPasswordBtn');
+    
     if (loginButton && !loginButton.dataset.boundAuth) {
       loginButton.dataset.boundAuth = 'true';
 
