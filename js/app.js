@@ -137,31 +137,75 @@
       console.error('Dashboard failed to render:', error);
       window.BearTrackDashboard?.render?.();
     }
-    function getLandingPage() {
-  const employee =
-    window.BearTrackTechnician?.getCurrentTechnician?.();
-
-  const technicianRoles = [
-    'technician',
-    'lead_technician'
-  ];
-
-  return technicianRoles.includes(employee?.role)
-    ? 'technicians'
-    : 'dashboard';
-}
-  }
-
+   
   function bindRefresh() {
     document.getElementById('refreshBtn')?.addEventListener('click', async () => {
       await loadCore();
       window.BearTrackUI?.toast?.('BearTrack refreshed', 'success');
     });
   }
+    
+ function getSignedInEmployee() {
+  const session = window.BearTrackAuth?.getSession?.();
+  const authUserId = session?.user?.id;
 
+  if (!authUserId) return null;
+
+  return window.BearTrackEmployees
+    ?.getAll?.()
+    .find(employee =>
+      employee.auth_user_id === authUserId
+    ) || null;
+}
+
+function getLandingPage() {
+  const employee = getSignedInEmployee();
+
+  return ['technician', 'lead_technician'].includes(employee?.role)
+    ? 'technicians'
+    : 'dashboard';
+}
+    
+    function updateSignedInProfile() {
+  const employee = getSignedInEmployee();
+  if (!employee) return;
+
+  const fullName =
+    `${employee.first_name || ''} ${employee.last_name || ''}`.trim();
+
+  const roleLabels = {
+    owner_admin: 'Owner / Administrator',
+    operations_manager: 'Operations Manager',
+    operations_staff: 'Operations Staff',
+    lead_technician: 'Lead Technician',
+    technician: 'Technician'
+  };
+
+  const avatar = document.querySelector('.avatar');
+  if (avatar) {
+    avatar.textContent = (employee.first_name || '?')
+      .charAt(0)
+      .toUpperCase();
+  }
+
+  const profile = document.querySelector('.profile');
+
+  if (profile) {
+    profile.innerHTML = `
+      <div class="avatar">${(employee.first_name || '?').charAt(0).toUpperCase()}</div>
+      <div>
+        <strong>${fullName}</strong><br>
+        <small style="color:var(--muted)">
+          ${roleLabels[employee.role] || employee.role}
+        </small>
+      </div>
+    `;
+  }
+}
   document.addEventListener('beartrack:auth', async event => {
     if (event.detail?.state === 'signed-in') {
       await loadCore();
+      updateSignedInProfile();
       showPage(getLandingPage());
     }
   });
@@ -184,10 +228,10 @@
     const session = await window.BearTrackAuth.checkSession();
 
     if (session) {
-      await loadCore();
-     showPage(getLandingPage());
-    }
-  }
-
+    await loadCore();
+    updateSignedInProfile();
+    showPage(getLandingPage());
+}
+    
   init();
 })();
