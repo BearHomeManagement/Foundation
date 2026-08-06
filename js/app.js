@@ -233,5 +233,5 @@ function getLandingPage() {
     showPage(getLandingPage());
 }
     
-  init();
+init();
 })();
