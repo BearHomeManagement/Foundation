@@ -137,6 +137,7 @@
       console.error('Dashboard failed to render:', error);
       window.BearTrackDashboard?.render?.();
     }
+    }
    
   function bindRefresh() {
     document.getElementById('refreshBtn')?.addEventListener('click', async () => {
@@ -231,6 +232,7 @@ function getLandingPage() {
     await loadCore();
     updateSignedInProfile();
     showPage(getLandingPage());
+}
 }
     
 init();
