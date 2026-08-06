@@ -116,15 +116,54 @@
     const { error } = await db.auth.signOut();
     if (error) throw error;
   }
+async function requestPasswordReset(email) {
+  const db = await getClient();
+  const cleanEmail = String(email || '').trim();
 
-  window.BearTrackDB = {
-    getClient,
-    getSession,
-    signIn,
-    signOut,
-    select,
-    insert,
-    update,
-    remove
-  };
-})();
+  if (!cleanEmail) {
+    throw new Error('Email is required.');
+  }
+
+  const redirectTo =
+    `${window.location.origin}/app/reset-password.html`;
+
+  const { data, error } =
+    await db.auth.resetPasswordForEmail(cleanEmail, {
+      redirectTo
+    });
+
+  if (error) throw error;
+  return data;
+}
+
+async function updatePassword(password) {
+  const db = await getClient();
+  const cleanPassword = String(password || '');
+
+  if (cleanPassword.length < 8) {
+    throw new Error(
+      'Password must be at least 8 characters.'
+    );
+  }
+
+  const { data, error } =
+    await db.auth.updateUser({
+      password: cleanPassword
+    });
+
+  if (error) throw error;
+  return data;
+}
+  
+ window.BearTrackDB = {
+  getClient,
+  getSession,
+  signIn,
+  signOut,
+  requestPasswordReset,
+  updatePassword,
+  select,
+  insert,
+  update,
+  remove
+};
