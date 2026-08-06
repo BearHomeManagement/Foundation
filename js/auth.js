@@ -146,15 +146,23 @@
     document.getElementById('refreshBtn')?.classList.remove('hidden');
   }
 
-  function showMessage(message) {
-    const target = document.getElementById('loginMsg');
-    if (target) target.textContent = message;
-  }
+ function showMessage(message) {
+  const target = document.getElementById('loginMsg');
 
-  function clearMessage() {
-    const target = document.getElementById('loginMsg');
-    if (target) target.textContent = '';
+  if (target) {
+    target.textContent = message;
+    target.classList.remove('hidden');
   }
+}
+
+function clearMessage() {
+  const target = document.getElementById('loginMsg');
+
+  if (target) {
+    target.textContent = '';
+    target.classList.add('hidden');
+  }
+}
 
   function setLoginBusy(isBusy) {
     const button = document.getElementById('loginBtn');
