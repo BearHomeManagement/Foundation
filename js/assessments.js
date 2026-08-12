@@ -469,10 +469,10 @@ function renderAssessmentTemplate(data) {
           `).join('')}
           
         </div>
-      `;
+      `
     }).join('')}
     
-  `${window.BearTrackPrint?.renderFooter?.() || ''}
+  ${window.BearTrackPrint?.renderFooter?.() || ''}
 `;
 }
 
