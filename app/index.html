@@ -81,7 +81,68 @@
     <section class="page" id="properties"><div class="panel panel-pad"><h3>Homes</h3><div id="propertyList"></div></div></section>
     <section class="page" id="workorders"><div class="panel panel-pad"><h3>Work Orders</h3><div id="workOrderList"></div></div></section>
     <section class="page" id="schedule"><div class="panel panel-pad"><h3>Schedule</h3><div id="scheduleModule"></div></div></section>
-    <section class="page" id="assessments"><div class="panel panel-pad"><h3>Assessments</h3><div id="assessmentList"></div></div></section>
+  <section class="page" id="assessments">
+  <div class="panel panel-pad">
+
+    <div class="panel-head" style="display:flex;justify-content:space-between;align-items:center;gap:16px;">
+      <div>
+        <h3 style="margin:0;">Assessments</h3>
+        <p class="muted" style="margin:6px 0 0;">
+          Review completed assessments and manage the Bear Home Health Assessment.
+        </p>
+      </div>
+
+      <button
+        id="viewAssessmentTemplateBtn"
+        class="btn gold"
+        type="button">
+        View Assessment Template
+      </button>
+    </div>
+
+    <div id="assessmentTemplateManager" style="display:none;margin-top:18px;">
+      <div class="panel panel-pad">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+          <div>
+            <h3 style="margin:0;">Bear Home Health Assessment</h3>
+            <p class="muted" style="margin:6px 0 0;">
+              Active assessment template
+            </p>
+          </div>
+
+          <div style="display:flex;gap:8px;">
+            <button
+              id="printAssessmentTemplateBtn"
+              class="btn"
+              type="button">
+              Print Template
+            </button>
+
+            <button
+              id="editAssessmentTemplateBtn"
+              class="btn"
+              type="button"
+              disabled>
+              Edit Template
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="assessmentTemplateContent"
+          style="margin-top:18px;">
+          <p class="muted">Loading assessment template...</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <h3>Assessment History</h3>
+      <div id="assessmentList"></div>
+    </div>
+
+  </div>
+</section>
     <section class="page" id="memberships"><div class="panel panel-pad"><h3>Memberships</h3><div id="membershipList"></div></div></section>
     <section class="page" id="employees">
       <div class="panel panel-pad">
@@ -117,7 +178,7 @@
 <script src="../js/properties.js?v=20260711-2055"></script>
 <script src="../js/workorders.js?v=20260721-1000"></script>
 <script src="../js/schedule.js?v=20260721-1000"></script>
-<script src="../js/assessments.js?v=20260712-2100"></script>
+<script src="../js/assessments.js?v=20260812-1"></script>
 <script src="../js/memberships.js?v=20260711-2055"></script>
 <script src="../js/employees.js?v=20260713-001"></script>
 <script src="../js/technicians.js?v=20260806-1200"></script>
