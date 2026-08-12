@@ -380,12 +380,17 @@ function renderAssessmentTemplate(data) {
   const { template, categories, items } = data;
 
   target.innerHTML = `
-    <div style="margin-bottom:18px;">
-      <strong>${escapeHtml(template.name)}</strong>
-      <span class="muted">
-        — Version ${escapeHtml(template.version)}
-      </span>
-    </div>
+  ${window.BearTrackPrint?.renderHeader?.(
+    'Bear Home Health Assessment',
+    `Version ${template.version} • ${template.status === 'active' ? 'Active Template' : template.status}`
+  ) || ''}
+
+  <div class="bhm-template-meta">
+    <strong>${escapeHtml(template.name)}</strong>
+    <span class="muted">
+      — Version ${escapeHtml(template.version)}
+    </span>
+  </div>
 
     ${categories.map(category => {
       const categoryItems = items
@@ -462,11 +467,13 @@ function renderAssessmentTemplate(data) {
 
             </div>
           `).join('')}
-
+          
         </div>
       `;
     }).join('')}
-  `;
+    
+  `${window.BearTrackPrint?.renderFooter?.() || ''}
+`;
 }
 
 async function openAssessmentTemplateManager() {
