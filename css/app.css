@@ -1,1 +1,76 @@
 /* BearTrack Styles */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Hide BearTrack app chrome */
+  .side,
+  .top-meta,
+  #refreshBtn,
+  #logoutBtn,
+  #viewAssessmentTemplateBtn,
+  #printAssessmentTemplateBtn,
+  #editAssessmentTemplateBtn,
+  #assessmentList,
+  .panel-head > div + div {
+    display: none !important;
+  }
+
+  /* Only show the assessment template area */
+  .page {
+    display: none !important;
+  }
+
+  #assessments {
+    display: block !important;
+  }
+
+  #assessmentTemplateManager {
+    display: block !important;
+  }
+
+  #assessmentTemplateContent {
+    display: block !important;
+  }
+
+  /* Remove dark UI styling */
+  #assessments,
+  #assessments .panel,
+  #assessmentTemplateManager,
+  #assessmentTemplateManager .panel {
+    background: #fff !important;
+    color: #000 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  #assessmentTemplateContent h3 {
+    color: #000 !important;
+    margin-top: 20px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #000;
+  }
+
+  #assessmentTemplateContent strong,
+  #assessmentTemplateContent p,
+  #assessmentTemplateContent .muted {
+    color: #000 !important;
+  }
+
+  #assessmentTemplateContent > .panel,
+  #assessmentTemplateContent .panel {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #assessmentTemplateContent .panel > div {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  @page {
+    margin: 0.6in;
+  }
+}
