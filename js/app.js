@@ -123,6 +123,7 @@
     await safeLoad('Properties', window.BearTrackProperties);
     await safeLoad('Work Orders', window.BearTrackWorkOrders);
     await safeLoad('Assessments', window.BearTrackAssessments);
+    window.BearTrackAssessments?.bindTemplateManager?.();
     await safeLoad('Memberships', window.BearTrackMemberships);
     await safeLoad('Employees', window.BearTrackEmployees);
     await safeLoad('Technician', window.BearTrackTechnician);
