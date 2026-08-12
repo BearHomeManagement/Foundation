@@ -322,6 +322,204 @@ Cost range: ${item.cost_range || 'TBD'}
       .replaceAll("'", '&#039;');
   }
 
+  async function loadActiveTemplate() {
+  const templates = await window.BearTrackDB.select('assessment_templates', {
+    columns: '*',
+    orderBy: 'version',
+    ascending: false
+  });
+
+  const activeTemplate = (templates || []).find(
+    template => template.status === 'active'
+  );
+
+  if (!activeTemplate) {
+    throw new Error('No active assessment template found.');
+  }
+
+  const categories = await window.BearTrackDB.select(
+    'assessment_template_categories',
+    {
+      columns: '*',
+      orderBy: 'sort_order',
+      ascending: true,
+      filters: {
+        template_id: activeTemplate.id
+      }
+    }
+  );
+
+  const items = await window.BearTrackDB.select(
+    'assessment_template_items',
+    {
+      columns: '*',
+      orderBy: 'sort_order',
+      ascending: true
+    }
+  );
+
+  const categoryIds = new Set(
+    (categories || []).map(category => category.id)
+  );
+
+  return {
+    template: activeTemplate,
+    categories: categories || [],
+    items: (items || []).filter(
+      item => categoryIds.has(item.category_id)
+    )
+  };
+}
+
+function renderAssessmentTemplate(data) {
+  const target =
+    document.getElementById('assessmentTemplateContent');
+
+  if (!target) return;
+
+  const { template, categories, items } = data;
+
+  target.innerHTML = `
+    <div style="margin-bottom:18px;">
+      <strong>${escapeHtml(template.name)}</strong>
+      <span class="muted">
+        — Version ${escapeHtml(template.version)}
+      </span>
+    </div>
+
+    ${categories.map(category => {
+      const categoryItems = items
+        .filter(item => item.category_id === category.id)
+        .sort((a, b) =>
+          (Number(a.sort_order) || 0) -
+          (Number(b.sort_order) || 0)
+        );
+
+      return `
+        <div
+          class="panel"
+          style="margin-bottom:14px;padding:16px;">
+
+          <h3 style="margin-top:0;">
+            ${escapeHtml(category.name)}
+          </h3>
+
+          ${categoryItems.map(item => `
+            <div
+              style="
+                padding:12px 0;
+                border-top:1px solid rgba(255,255,255,.08);
+              ">
+
+              <strong>${escapeHtml(item.title)}</strong>
+
+              ${
+                item.technician_instruction
+                  ? `
+                    <p class="muted">
+                      <strong>Technician:</strong>
+                      ${escapeHtml(item.technician_instruction)}
+                    </p>
+                  `
+                  : ''
+              }
+
+              ${
+                item.homeowner_education
+                  ? `
+                    <p>
+                      <strong>Why it matters:</strong>
+                      ${escapeHtml(item.homeowner_education)}
+                    </p>
+                  `
+                  : ''
+              }
+
+              ${
+                item.default_recommendation
+                  ? `
+                    <p>
+                      <strong>Recommendation:</strong>
+                      ${escapeHtml(item.default_recommendation)}
+                    </p>
+                  `
+                  : ''
+              }
+
+              <p class="muted">
+                ${
+                  item.require_photo_if_deficient
+                    ? 'Photo required when deficient'
+                    : 'Photo optional'
+                }
+                •
+                ${
+                  item.allow_notes
+                    ? 'Notes allowed'
+                    : 'Notes disabled'
+                }
+              </p>
+
+            </div>
+          `).join('')}
+
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+async function openAssessmentTemplateManager() {
+  const manager =
+    document.getElementById('assessmentTemplateManager');
+
+  const target =
+    document.getElementById('assessmentTemplateContent');
+
+  if (!manager || !target) return;
+
+  manager.style.display = 'block';
+
+  target.innerHTML =
+    '<p class="muted">Loading assessment template...</p>';
+
+  try {
+    const data = await loadActiveTemplate();
+    renderAssessmentTemplate(data);
+  } catch (error) {
+    target.innerHTML = `
+      <div class="error-box">
+        ${escapeHtml(error.message || String(error))}
+      </div>
+    `;
+  }
+}
+
+function bindTemplateManager() {
+  const viewButton =
+    document.getElementById('viewAssessmentTemplateBtn');
+
+  if (viewButton && !viewButton.dataset.boundTemplateManager) {
+    viewButton.dataset.boundTemplateManager = 'true';
+
+    viewButton.addEventListener(
+      'click',
+      openAssessmentTemplateManager
+    );
+  }
+
+  const printButton =
+    document.getElementById('printAssessmentTemplateBtn');
+
+  if (printButton && !printButton.dataset.boundTemplatePrint) {
+    printButton.dataset.boundTemplatePrint = 'true';
+
+    printButton.addEventListener('click', () => {
+      window.print();
+    });
+  }
+}
+  
   document.addEventListener('beartrack:properties-loaded', () => {
     populatePropertySelect();
   });
@@ -339,6 +537,9 @@ Cost range: ${item.cost_range || 'TBD'}
     generateReportText,
     getById,
     getByPropertyId,
+    bindTemplateManager,
+    loadActiveTemplate,
+    renderAssessmentTemplate,
     getAll: () => [...assessments]
   };
 })();
