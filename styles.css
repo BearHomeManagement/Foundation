@@ -177,8 +177,10 @@ footer{background:#061727;color:#dceaf0;padding:28px 0}.footer-grid{display:flex
 /* v2.1 safe plan notes - does not change page order */
 .plan-hours-note,
 .startup-assessment-note {
+  position: relative;
+  z-index: 2;
   max-width: 1000px;
-  margin: 22px auto 0;
+  margin: 22px auto 26px;
   padding: 18px 22px;
   border-radius: 16px;
   background: rgba(239, 182, 73, 0.14);
