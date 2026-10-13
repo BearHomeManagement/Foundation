@@ -11,7 +11,8 @@
   }).format(Number(cents || 0) / 100);
 
   let invoices = [];
-
+  let customerNames = {};
+  
   function message(text) {
     const node = document.getElementById('btInvoiceMessage');
     if (node) node.textContent = text;
@@ -73,6 +74,12 @@ async function loadCustomers() {
       ascending: true
     });
 
+   customerNames = {};
+customers.forEach(customer => {
+  customerNames[customer.id] = customer.full_name || 'Unnamed Customer';
+});
+draw();
+    
     dropdown.innerHTML = '<option value="">Select a customer</option>';
 
     customers.forEach(customer => {
@@ -96,9 +103,10 @@ async function loadCustomers() {
     }
     target.innerHTML = `<div style="overflow-x:auto">
       <table class="table">
-        <thead><tr><th>Invoice</th><th>Description</th><th>Amount</th><th>Status</th><th>Due</th></tr></thead>
+        <thead><tr><th>Invoice</th><th>Customer</th><th>Description</th><th>Amount</th><th>Status</th><th>Due</th></tr></thead>
         <tbody>${invoices.map(i => `<tr>
           <td>${esc(i.invoice_number || i.id)}</td>
+          <td>${esc(customerNames[i.customer_id] || 'Unknown Customer')}</td>
           <td>${esc(i.description)}</td>
           <td>${money(i.amount_cents)}</td>
           <td>${esc(i.status)}</td>
@@ -110,7 +118,7 @@ async function loadCustomers() {
   async function load() {
     try {
       invoices = await window.BearTrackDB.select(TABLE, {
-        columns: 'id,invoice_number,description,amount_cents,status,due_date,created_at',
+        columns: 'id,customer_id,invoice_number,description,amount_cents,status,due_date,created_at',
         orderBy: 'created_at',
         ascending: false,
         limit: 100
