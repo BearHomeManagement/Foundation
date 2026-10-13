@@ -78,6 +78,7 @@
       memberships: window.BearTrackMemberships,
       employees: window.BearTrackEmployees,
       technicians: window.BearTrackTechnician,
+      invoices: window.BearTrackInvoices,
     };
 
     renderers[page]?.render?.();
