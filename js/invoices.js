@@ -26,8 +26,10 @@
         <p class="muted">Record invoices now. Online payments will be connected later.</p>
         <div class="form-grid">
           <div class="field">
-            <label>Customer ID</label>
-            <input id="btInvoiceCustomer" placeholder="Customer UUID">
+           <label>Customer</label>
+<select id="btInvoiceCustomer" required>
+  <option value="">Loading customers...</option>
+</select>
           </div>
           <div class="field">
             <label>Amount (USD)</label>
@@ -55,8 +57,35 @@
 
     document.getElementById('btCreateInvoice').addEventListener('click', create);
     document.getElementById('btReloadInvoices').addEventListener('click', load);
+    loadCustomers();
     load();
   }
+
+ 
+async function loadCustomers() {
+  const dropdown = document.getElementById('btInvoiceCustomer');
+  if (!dropdown) return;
+
+  try {
+    const customers = await window.BearTrackDB.select('customers', {
+      columns: 'id,full_name',
+      orderBy: 'full_name',
+      ascending: true
+    });
+
+    dropdown.innerHTML = '<option value="">Select a customer</option>';
+
+    customers.forEach(customer => {
+      const option = document.createElement('option');
+      option.value = customer.id;
+      option.textContent = customer.full_name || 'Unnamed Customer';
+      dropdown.appendChild(option);
+    });
+  } catch (error) {
+    dropdown.innerHTML = '<option value="">Unable to load customers</option>';
+    message('Customer list error: ' + error.message);
+  }
+}
 
   function draw() {
     const target = document.getElementById('btInvoiceList');
