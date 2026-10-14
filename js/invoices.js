@@ -167,15 +167,134 @@ draw();
     <p><strong>Amount:</strong> ${money(invoice.amount_cents)}</p>
     <p><strong>Status:</strong> ${esc(invoice.status)}</p>
     <p><strong>Due:</strong> ${esc(invoice.due_date || 'Not specified')}</p>
-    <div class="actions">
-      <button class="btn gold" id="btCopyInvoice">Copy Invoice</button>
-      <button class="btn" id="btEmailInvoice">Email Invoice</button>
-      <button class="btn" id="btCloseInvoice">Close</button>
-    </div>
+   <div class="actions">
+  <button class="btn gold" id="btPrintInvoice">Print / Save PDF</button>
+  <button class="btn" id="btCopyInvoice">Copy Invoice</button>
+  <button class="btn" id="btEmailInvoice">Email Invoice</button>
+  <button class="btn" id="btCloseInvoice">Close</button>
+</div>
   `;
 
   document.getElementById('btInvoiceList').after(panel);
+document.getElementById('btPrintInvoice').addEventListener('click', () => {
+  const printable = window.open('', '_blank');
 
+  if (!printable) {
+    message('Please allow pop-ups to print invoices.');
+    return;
+  }
+
+  const logoUrl = '/assets/bear-head-hero.png';
+
+  printable.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Invoice ${esc(number)}</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 45px;
+          color: #071f34;
+        }
+        header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 3px solid #d19a4d;
+          padding-bottom: 20px;
+        }
+        header img {
+          width: 110px;
+          height: 110px;
+          object-fit: contain;
+        }
+        h1 { margin-bottom: 5px; }
+        .tagline { font-size: 11px; color: #777; }
+        .details { margin-top: 35px; line-height: 1.8; }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 35px;
+        }
+        th {
+          background: #071f34;
+          color: white;
+          padding: 12px;
+          text-align: left;
+        }
+        td {
+          padding: 12px;
+          border-bottom: 1px solid #ddd;
+        }
+        .total {
+          text-align: right;
+          font-size: 22px;
+          font-weight: bold;
+          margin-top: 30px;
+        }
+        footer {
+          margin-top: 90px;
+          border-top: 2px solid #d19a4d;
+          padding-top: 15px;
+          text-align: center;
+          font-size: 12px;
+        }
+        @media print {
+          body { margin: 25px; }
+        }
+      </style>
+    </head>
+    <body>
+      <header>
+        <div>
+          <h1>BEAR HOME MANAGEMENT</h1>
+          <div class="tagline">
+            YOUR HOME HAS A TO-DO LIST. BHM HAS IT HANDLED.
+          </div>
+        </div>
+        <img src="${esc(logoUrl)}" alt="BHM Logo">
+      </header>
+
+      <h2>INVOICE</h2>
+
+      <div class="details">
+        <strong>Invoice:</strong> ${esc(number)}<br>
+        <strong>Customer:</strong> ${esc(customer)}<br>
+        <strong>Email:</strong> ${esc(email)}<br>
+        <strong>Due Date:</strong> ${esc(invoice.due_date || 'Not specified')}<br>
+        <strong>Status:</strong> ${esc(invoice.status || 'draft')}
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Description</th><th>Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${esc(invoice.description)}</td>
+            <td>${money(invoice.amount_cents)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="total">
+        Total: ${money(invoice.amount_cents)}
+      </div>
+
+      <footer>
+        <strong>Bear Home Management LLC</strong><br>
+        (904) 424-9092 | bearhomemanagement.com<br>
+        Clay • Duval • St. Johns Counties
+      </footer>
+    </body>
+    </html>
+  `);
+
+  printable.document.close();
+  printable.focus();
+});
+    
   document.getElementById('btCopyInvoice').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(invoiceText);
