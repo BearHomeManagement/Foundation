@@ -167,10 +167,12 @@ draw();
     <p><strong>Amount:</strong> ${money(invoice.amount_cents)}</p>
     <p><strong>Status:</strong> ${esc(invoice.status)}</p>
     <p><strong>Due:</strong> ${esc(invoice.due_date || 'Not specified')}</p>
-   <div class="actions">
+  <div class="actions">
   <button class="btn gold" id="btPrintInvoice">Print / Save PDF</button>
   <button class="btn" id="btCopyInvoice">Copy Invoice</button>
   <button class="btn" id="btEmailInvoice">Email Invoice</button>
+  <button class="btn" id="btMarkInvoicePaid">Mark Paid</button>
+  <button class="btn" id="btDeleteInvoice">Delete Draft</button>
   <button class="btn" id="btCloseInvoice">Close</button>
 </div>
   `;
@@ -312,7 +314,65 @@ document.getElementById('btPrintInvoice').addEventListener('click', () => {
 
     window.location.href = mailto;
   });
+// MARK INVOICE PAID
+document.getElementById('btMarkInvoicePaid').addEventListener('click', async () => {
+  if (invoice.status === 'paid') {
+    message('This invoice is already marked paid.');
+    return;
+  }
 
+  if (invoice.status !== 'draft') {
+    message('Only draft invoices can be marked paid here.');
+    return;
+  }
+
+  if (!window.confirm(
+    'Confirm payment has been received for invoice ' + number + '?'
+  )) return;
+
+  const button = document.getElementById('btMarkInvoicePaid');
+  button.disabled = true;
+
+  try {
+    await window.BearTrackDB.update('invoices', invoice.id, {
+      status: 'paid'
+    });
+
+    panel.remove();
+    await load();
+    message('Invoice ' + number + ' marked paid.');
+  } catch (err) {
+    message('Unable to mark invoice paid: ' + err.message);
+    button.disabled = false;
+  }
+});
+
+// DELETE DRAFT INVOICE
+document.getElementById('btDeleteInvoice').addEventListener('click', async () => {
+  if (invoice.status !== 'draft') {
+    message('Only draft invoices can be deleted.');
+    return;
+  }
+
+  if (!window.confirm(
+    'Permanently delete draft invoice ' + number +
+    '? This action cannot be undone.'
+  )) return;
+
+  const button = document.getElementById('btDeleteInvoice');
+  button.disabled = true;
+
+  try {
+    await window.BearTrackDB.remove('invoices', invoice.id);
+
+    panel.remove();
+    await load();
+    message('Draft invoice ' + number + ' deleted.');
+  } catch (err) {
+    message('Unable to delete invoice: ' + err.message);
+    button.disabled = false;
+  }
+});
   document.getElementById('btCloseInvoice').addEventListener('click', () => {
     panel.remove();
   });
