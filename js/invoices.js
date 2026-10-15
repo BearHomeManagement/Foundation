@@ -488,6 +488,6 @@ document.getElementById('btDeleteInvoice').addEventListener('click', async () =>
     }
   }
 
-  window.BearTrackInvoices = { render, load };
+ window.BearTrackInvoices = { render, load, openInvoice };
 })();
   
