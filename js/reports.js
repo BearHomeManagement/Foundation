@@ -30,6 +30,21 @@
         orderBy: "created_at",
         ascending: false
       });
+      const customers = await window.BearTrackDB.select('customers', {
+  columns: 'id,full_name,email'
+}) || [];
+
+const properties = await window.BearTrackDB.select('properties', {
+  columns: 'id,customer_id,address,city,state'
+}) || [];
+
+const customerMap = Object.fromEntries(
+  customers.map(c => [c.id, c])
+);
+
+const propertyMap = Object.fromEntries(
+  properties.map(p => [p.id, p])
+);
 
       const records = Array.isArray(invoices) ? invoices : [];
       const paid = records.filter(i => i.status === "paid");
@@ -121,7 +136,7 @@ const totalPastDue = pastDue.reduce(
           </table>
         </div>
       `;
-          connectSearch(records);
+        connectSearch(records, customerMap, propertyMap);
       
     } catch (error) {
       console.error("BearTrack Reports:", error);
@@ -130,7 +145,7 @@ const totalPastDue = pastDue.reduce(
     }
   }
 
-  function connectSearch(records) {
+ function connectSearch(records, customerMap, propertyMap) {
     const search = document.getElementById("btReportSearch");
     const results = document.getElementById("btReportSearchResults");
     if (!search || !results) return;
@@ -144,10 +159,15 @@ const totalPastDue = pastDue.reduce(
       }
 
       const matches = records.filter(invoice =>
-        [
-          invoice.invoice_number,
-          invoice.description,
-          invoice.status
+  [
+    invoice.invoice_number,
+    invoice.description,
+    invoice.status,
+    customerMap[invoice.customer_id]?.full_name,
+    customerMap[invoice.customer_id]?.email,
+    propertyMap[invoice.property_id]?.address,
+    propertyMap[invoice.property_id]?.city,
+    propertyMap[invoice.property_id]?.state
         ].some(value =>
           String(value ?? "").toLowerCase().includes(term)
         )
