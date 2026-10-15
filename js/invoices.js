@@ -33,6 +33,12 @@
 </select>
           </div>
           <div class="field">
+  <label>Property</label>
+  <select id="btInvoiceProperty" required>
+    <option value="">Select a customer first...</option>
+  </select>
+</div>
+<div class="field">
             <label>Amount (USD)</label>
             <input id="btInvoiceAmount" inputmode="decimal" placeholder="125.00">
           </div>
@@ -58,6 +64,7 @@
 
     document.getElementById('btCreateInvoice').addEventListener('click', create);
     document.getElementById('btReloadInvoices').addEventListener('click', load);
+   document.getElementById('btInvoiceCustomer').addEventListener('change', loadProperties);
     loadCustomers();
     load();
   }
@@ -99,6 +106,49 @@ draw();
   }
 }
 
+  async function loadProperties() {
+  const customerId = document.getElementById('btInvoiceCustomer').value;
+  const dropdown = document.getElementById('btInvoiceProperty');
+  if (!dropdown) return;
+
+  dropdown.innerHTML = '<option value="">Select a property</option>';
+
+  if (!customerId) {
+    dropdown.innerHTML = '<option value="">Select a customer first...</option>';
+    return;
+  }
+
+  try {
+    const properties = await window.BearTrackDB.select('properties', {
+      columns: 'id,customer_id,address,city,state',
+      orderBy: 'address',
+      ascending: true
+    });
+
+    dropdown.innerHTML = '<option value="">Select a property</option>';
+
+    properties
+      .filter(property => property.customer_id === customerId)
+      .forEach(property => {
+        const option = document.createElement('option');
+        option.value = property.id;
+        option.textContent = [
+          property.address,
+          property.city,
+          property.state
+        ].filter(Boolean).join(', ');
+        dropdown.appendChild(option);
+      });
+
+    if (dropdown.options.length === 1) {
+      dropdown.innerHTML = '<option value="">No properties found for this customer</option>';
+    }
+  } catch (error) {
+    dropdown.innerHTML = '<option value="">Unable to load properties</option>';
+    message('Property list error: ' + error.message);
+  }
+}
+  
   function draw() {
     const target = document.getElementById('btInvoiceList');
     if (!target) return;
@@ -397,12 +447,15 @@ document.getElementById('btDeleteInvoice').addEventListener('click', async () =>
 
   async function create() {
     const customer_id = document.getElementById('btInvoiceCustomer').value.trim();
+    const property_id = document.getElementById('btInvoiceProperty').value.trim();
     const amount = document.getElementById('btInvoiceAmount').value.trim();
     const description = document.getElementById('btInvoiceDescription').value.trim();
     const due_date = document.getElementById('btInvoiceDue').value || null;
 
     if (!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(customer_id))
       return message('Enter a valid customer UUID.');
+   if (!property_id)
+   return message('Please select a property before creating an invoice.');
     if (!/^(0|[1-9]\d*)(\.\d{1,2})?$/.test(amount))
       return message('Enter a valid dollar amount, such as 125.00.');
 
@@ -414,9 +467,14 @@ document.getElementById('btDeleteInvoice').addEventListener('click', async () =>
     const button = document.getElementById('btCreateInvoice');
     button.disabled = true;
     try {
-      await window.BearTrackDB.insert(TABLE, {
-        customer_id, amount_cents, description, due_date, status: 'draft'
-      });
+     await window.BearTrackDB.insert(TABLE, {
+  customer_id,
+  property_id,
+  amount_cents,
+  description,
+  due_date,
+  status: 'draft'
+});
       message('Draft invoice created. No payment was charged.');
       await load();
     } catch (err) {
