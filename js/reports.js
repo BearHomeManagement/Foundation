@@ -149,7 +149,12 @@
             <tbody>
               ${matches.length ? matches.map(i => `
                 <tr>
-                  <td>${escapeHTML(i.invoice_number || "—")}</td>
+                  <td>
+  <button type="button" class="btn"
+    data-report-invoice-id="${escapeHTML(i.id)}">
+    ${escapeHTML(i.invoice_number || "—")}
+  </button>
+</td>
                   <td>${escapeHTML(i.description || "—")}</td>
                   <td>${money(i.amount_cents)}</td>
                   <td>${escapeHTML(i.status || "—")}</td>
@@ -161,6 +166,18 @@
           </table>
         </div>
       `;
+      results.addEventListener("click", event => {
+  const button = event.target.closest("[data-report-invoice-id]");
+  if (!button) return;
+
+  const invoice = records.find(
+    i => String(i.id) === button.dataset.reportInvoiceId
+  );
+
+  if (invoice) {
+    window.BearTrackInvoices.openInvoice(invoice);
+  }
+});
     });
   }
 
