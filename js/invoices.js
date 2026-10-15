@@ -58,7 +58,7 @@
         <p id="btInvoiceMessage" class="muted" role="status"></p>
       </div>
       <div class="panel panel-pad" style="margin-top:14px">
-        <h3>Invoice History</h3>
+        <h3>Active Invoices</h3>
         <div id="btInvoiceList"></div>
       </div>`;
 
@@ -149,17 +149,21 @@ draw();
   }
 }
   
-  function draw() {
-    const target = document.getElementById('btInvoiceList');
-    if (!target) return;
-    if (!invoices.length) {
-      target.textContent = 'No invoices found.';
-      return;
-    }
+function draw() {
+  const target = document.getElementById('btInvoiceList');
+  if (!target) return;
+
+  const activeInvoices = invoices.filter(i => i.status !== 'paid');
+
+  if (!activeInvoices.length) {
+    target.textContent = 'No active invoices found.';
+    return;
+  }
+  
     target.innerHTML = `<div style="overflow-x:auto">
       <table class="table">
         <thead><tr><th>Invoice</th><th>Customer</th><th>Description</th><th>Amount</th><th>Status</th><th>Due</th></tr></thead>
-        <tbody>${invoices.map(i => `<tr>
+       <tbody>${activeInvoices.map(i => `<tr>
          <td>
   <button type="button"
     class="btn"
