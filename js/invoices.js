@@ -231,7 +231,8 @@ function draw() {
 </div>
   `;
 
-  document.getElementById('btInvoiceList').after(panel);
+ const location = document.querySelector('.page.active');
+(location || document.getElementById('btInvoiceList')).appendChild(panel);
 document.getElementById('btPrintInvoice').addEventListener('click', () => {
   const printable = window.open('', '_blank');
 
