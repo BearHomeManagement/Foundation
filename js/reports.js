@@ -79,6 +79,26 @@ const totalPastDue = pastDue.reduce(
   >
 </div>
 <div id="btReportSearchResults" style="margin-bottom:18px;"></div>
+
+<div class="record-card" style="margin:18px 0;">
+  <h3>Print & Statement Options</h3>
+
+  <label for="btStatementType">Report Type</label>
+  <select id="btStatementType" style="width:100%;padding:12px;margin:8px 0 14px;">
+    <option value="single">Individual Invoice</option>
+    <option value="customer">Customer Statement - All Properties</option>
+    <option value="property">Property Statement - One Address</option>
+    <option value="selected">Selected Invoices - Custom Statement</option>
+  </select>
+
+  <label for="btStatementStatus">Include Invoices</label>
+  <select id="btStatementStatus" style="width:100%;padding:12px;margin:8px 0 14px;">
+    <option value="all">All Invoices - Paid and Unpaid</option>
+    <option value="unpaid">Unpaid Only</option>
+    <option value="paid">Paid Only</option>
+  </select>
+</div>
+
         <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:18px 0;">
           <div class="record-card">
             <span>Paid Invoice Total</span>
