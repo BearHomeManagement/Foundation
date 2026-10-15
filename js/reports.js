@@ -52,6 +52,7 @@
     style="width:100%;padding:12px;margin-top:10px;"
   >
 </div>
+<div id="btReportSearchResults" style="margin-bottom:18px;"></div>
         <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:18px 0;">
           <div class="record-card">
             <span>Paid Invoice Total</span>
