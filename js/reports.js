@@ -34,6 +34,17 @@
       const records = Array.isArray(invoices) ? invoices : [];
       const paid = records.filter(i => i.status === "paid");
       const outstanding = records.filter(i => i.status !== "paid");
+      const today = new Date().toLocaleDateString('en-CA');
+
+const pastDue = outstanding.filter(i =>
+  i.due_date &&
+  i.status !== 'draft' &&
+  i.due_date < today
+);
+
+const totalPastDue = pastDue.reduce(
+  (sum, i) => sum + Number(i.amount_cents || 0), 0
+);
 
       const totalPaid = paid.reduce(
         (sum, i) => sum + Number(i.amount_cents || 0), 0
@@ -70,6 +81,14 @@
             <span>Unpaid Invoices</span>
             <h2>${outstanding.length}</h2>
           </div>
+          <div class="record-card">
+  <span>Past Due Total</span>
+  <h2>${money(totalPastDue)}</h2>
+</div>
+<div class="record-card">
+  <span>Past Due Invoices</span>
+  <h2>${pastDue.length}</h2>
+</div>
         </div>
 
         <h3 style="margin-top:24px;">Paid Invoice History</h3>
