@@ -102,11 +102,66 @@
           </table>
         </div>
       `;
+          connectSearch(records);
+      
     } catch (error) {
       console.error("BearTrack Reports:", error);
       root.textContent = "Unable to load financial reports: " +
         (error?.message || "Unknown error");
     }
+  }
+
+  function connectSearch(records) {
+    const search = document.getElementById("btReportSearch");
+    const results = document.getElementById("btReportSearchResults");
+    if (!search || !results) return;
+
+    search.addEventListener("input", () => {
+      const term = search.value.trim().toLowerCase();
+
+      if (!term) {
+        results.innerHTML = "";
+        return;
+      }
+
+      const matches = records.filter(invoice =>
+        [
+          invoice.invoice_number,
+          invoice.description,
+          invoice.status
+        ].some(value =>
+          String(value ?? "").toLowerCase().includes(term)
+        )
+      );
+
+      results.innerHTML = `
+        <h3>Search Results (${matches.length})</h3>
+        <div style="overflow-x:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${matches.length ? matches.map(i => `
+                <tr>
+                  <td>${escapeHTML(i.invoice_number || "—")}</td>
+                  <td>${escapeHTML(i.description || "—")}</td>
+                  <td>${money(i.amount_cents)}</td>
+                  <td>${escapeHTML(i.status || "—")}</td>
+                </tr>
+              `).join("") : `
+                <tr><td colspan="4">No matching invoices found.</td></tr>
+              `}
+            </tbody>
+          </table>
+        </div>
+      `;
+    });
   }
 
   window.BearTrackReports = { render, load: render };
