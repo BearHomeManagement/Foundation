@@ -79,6 +79,7 @@
       employees: window.BearTrackEmployees,
       technicians: window.BearTrackTechnician,
       invoices: window.BearTrackInvoices,
+      reports: window.BearTrackReports,
     };
 
     renderers[page]?.render?.();
