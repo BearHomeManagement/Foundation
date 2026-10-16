@@ -405,7 +405,7 @@ printWindow.document.write(`
    <header>
   <div style="display:flex;align-items:center;gap:20px;">
     <img
-      src="https://bearhomemanagement.com/assets/bear-head-hero.png"
+      src="/app/assets/bear-head-header.png"
       alt="Bear Home Management Logo"
       style="width:100px;height:100px;object-fit:contain;"
     >
