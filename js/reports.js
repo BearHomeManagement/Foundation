@@ -477,8 +477,20 @@ printWindow.document.write(`
 `);
 
 printWindow.document.close();
-printWindow.focus();
-printWindow.print();
+
+const logo = printWindow.document.querySelector("header img");
+
+const printStatement = () => {
+  printWindow.focus();
+  printWindow.print();
+};
+
+if (logo && !logo.complete) {
+  logo.addEventListener("load", printStatement, { once: true });
+  logo.addEventListener("error", printStatement, { once: true });
+} else {
+  printStatement();
+}
 });
     const emailButton = document.getElementById("btEmailStatement");
 
