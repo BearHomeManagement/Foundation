@@ -348,6 +348,13 @@ status.addEventListener("change", refreshInvoiceList);
     const printButton = document.getElementById("btPrintStatement");
 
 printButton?.addEventListener("click", () => {
+  const customerMap = Object.fromEntries(
+  customers.map(c => [c.id, c])
+);
+
+const propertyMap = Object.fromEntries(
+  properties.map(p => [p.id, p])
+);
   const selectedIds = Array.from(
     document.querySelectorAll(".btStatementInvoice:checked")
   ).map(box => box.value);
@@ -360,6 +367,21 @@ printButton?.addEventListener("click", () => {
   const selectedInvoices = records.filter(invoice =>
     selectedIds.includes(String(invoice.id))
   );
+  const statementCustomers = [
+  ...new Set(selectedInvoices.map(i => i.customer_id))
+];
+
+const statementProperties = [
+  ...new Set(selectedInvoices.map(i => i.property_id).filter(Boolean))
+];
+
+const billTo = statementCustomers.length === 1
+  ? customerMap[statementCustomers[0]]
+  : null;
+
+const statementProperty = statementProperties.length === 1
+  ? propertyMap[statementProperties[0]]
+  : null;
 
  const printWindow = window.open("", "_blank");
 
@@ -418,6 +440,27 @@ printWindow.document.write(`
 </header>
     <h2>Invoice Statement</h2>
     <p>Generated: ${new Date().toLocaleDateString()}</p>
+    <div style="display:flex;gap:40px;margin:24px 0;">
+  <div style="flex:1;">
+    <strong>Bill To:</strong>
+    <p>${escapeHTML(billTo?.full_name || "Multiple Customers")}</p>
+    <p>${escapeHTML(billTo?.email || "")}</p>
+  </div>
+  <div style="flex:1;">
+    <strong>Property:</strong>
+    <p>${
+      statementProperty
+        ? escapeHTML([
+            statementProperty.address,
+            statementProperty.city,
+            statementProperty.state
+          ].filter(Boolean).join(", "))
+        : statementProperties.length > 1
+          ? "Multiple Properties"
+          : "No Property Listed"
+    }</p>
+  </div>
+</div>
     <table>
       <thead>
         <tr><th>Invoice</th><th>Description</th><th>Status</th><th>Amount</th></tr>
