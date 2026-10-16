@@ -100,7 +100,7 @@ const totalPastDue = pastDue.reduce(
     placeholder="Search invoice number or description..."
     style="width:100%;padding:12px;margin-top:10px;"
   >
-</div>
+
 <div id="btReportSearchResults" style="margin-bottom:18px;"></div>
 
 <div class="record-card" style="margin:18px 0;">
