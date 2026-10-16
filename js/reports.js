@@ -54,8 +54,8 @@
       const records = Array.isArray(invoices) ? invoices : [];
       const paid = records.filter(i => i.status === "paid");
       const drafts = records.filter(i => i.status === "draft");
-      const outstanding = records.filter(i =>
-        i.status !== "paid" && i.status !== "draft"
+     const outstanding = records.filter(i =>
+      i.status !== "paid"
       );
 
       const today = new Date().toLocaleDateString('en-CA');
