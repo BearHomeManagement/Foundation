@@ -159,8 +159,17 @@ const filteredCustomers = searchTerm
       <p><strong>Preferred Contact:</strong> ${escapeHtml(customer.preferred_contact)}</p>
       <p><strong>Status:</strong> ${escapeHtml(customer.status)}</p>
       <p><strong>Notes:</strong> ${escapeHtml(customer.notes)}</p>
+      <button type="button" id="editCustomerAccount" class="btn">
+  Edit Customer
+</button>
     `;
+  const editButton = accountContent.querySelector('#editCustomerAccount');
 
+editButton?.addEventListener('click', () => {
+  document.dispatchEvent(new CustomEvent('beartrack:edit-customer', {
+    detail: { customer }
+  }));
+});
     searchView.style.display = 'none';
     accountView.style.display = 'block';
   });
