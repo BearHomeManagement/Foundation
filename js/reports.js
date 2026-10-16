@@ -268,6 +268,23 @@ const totalPastDue = pastDue.reduce(
       `;
         connectSearch(records, customerMap, propertyMap);
       const reportCategory = document.getElementById('btReportCategory');
+      
+const propertyFilter = document.getElementById('btWorkOrderProperty');
+
+if (propertyFilter) {
+  properties.forEach(property => {
+    const option = document.createElement('option');
+    option.value = property.id;
+    option.textContent = [
+      property.address,
+      property.city,
+      property.state
+    ].filter(Boolean).join(', ');
+
+    propertyFilter.appendChild(option);
+  });
+}
+
 const financialReports = document.getElementById('btFinancialReports');
 const workOrderReports = document.getElementById('btWorkOrderReports');
 
