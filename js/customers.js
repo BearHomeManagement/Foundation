@@ -97,8 +97,32 @@
     const list = document.getElementById('customerList');
     if (!list) return;
 
-    list.innerHTML = customers.length
-      ? customers.map(customer => `
+    const searchInput = document.getElementById('customerSearchInput');
+
+if (searchInput && !searchInput.dataset.connected) {
+  searchInput.dataset.connected = 'true';
+
+  searchInput.addEventListener('input', () => {
+    render();
+  });
+}
+
+const searchTerm = (searchInput?.value || '').trim().toLowerCase();
+
+const filteredCustomers = searchTerm
+  ? customers.filter(customer =>
+      [
+        customer.full_name,
+        customer.email,
+        customer.phone
+      ].some(value =>
+        String(value || '').toLowerCase().includes(searchTerm)
+      )
+    )
+  : [];
+
+   list.innerHTML = filteredCustomers.length
+  ? filteredCustomers.map(customer => `
           <div class="row" data-customer-id="${customer.id}">
             <h3>${escapeHtml(customer.full_name)}</h3>
             <div>
@@ -107,24 +131,52 @@
               <span class="muted">${escapeHtml(customer.notes)}</span>
             </div>
             <div class="actions">
-              <button type="button" class="edit-customer" data-id="${customer.id}">
-                Edit
-              </button>
+             <button type="button" class="edit-customer" data-id="${customer.id}">
+             Open Account
+             </button>
             </div>
           </div>
         `).join('')
-      : '<p>No customers yet.</p>';
+     : searchTerm
+  ? '<p>No matching customers found.</p>'
+  : '<p>Search for a customer to get started.</p>';
 
-    list.querySelectorAll('.edit-customer').forEach(button => {
-      button.addEventListener('click', () => {
-        const customer = getById(button.dataset.id);
+   list.querySelectorAll('.edit-customer').forEach(button => {
+  button.addEventListener('click', () => {
+    const customer = getById(button.dataset.id);
+    if (!customer) return;
 
-        document.dispatchEvent(new CustomEvent('beartrack:edit-customer', {
-          detail: { customer }
-        }));
-      });
-    });
-  }
+    const searchView = document.getElementById('customerSearchView');
+    const accountView = document.getElementById('customerAccountView');
+    const accountContent = document.getElementById('customerAccountContent');
+
+    if (!searchView || !accountView || !accountContent) return;
+
+    accountContent.innerHTML = `
+      <h2>${escapeHtml(customer.full_name)}</h2>
+      <p><strong>Email:</strong> ${escapeHtml(customer.email)}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(customer.phone)}</p>
+      <p><strong>Preferred Contact:</strong> ${escapeHtml(customer.preferred_contact)}</p>
+      <p><strong>Status:</strong> ${escapeHtml(customer.status)}</p>
+      <p><strong>Notes:</strong> ${escapeHtml(customer.notes)}</p>
+    `;
+
+    searchView.style.display = 'none';
+    accountView.style.display = 'block';
+  });
+});
+
+const backButton = document.getElementById('backToCustomerSearch');
+
+if (backButton && !backButton.dataset.connected) {
+  backButton.dataset.connected = 'true';
+
+  backButton.addEventListener('click', () => {
+    document.getElementById('customerAccountView').style.display = 'none';
+    document.getElementById('customerSearchView').style.display = 'block';
+  });
+}
+}    
 
   function escapeHtml(value) {
     return String(value ?? '')
@@ -134,6 +186,7 @@
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#039;');
   }
+
 
   window.BearTrackCustomers = {
     load,
