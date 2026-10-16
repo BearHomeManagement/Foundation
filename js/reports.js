@@ -89,11 +89,11 @@ const totalPastDue = pastDue.reduce(
   <select id="btReportCategory"
           style="width:100%;padding:12px;box-sizing:border-box;">
     <option value="financial">Invoices & Payments</option>
-    <option value="workorders">Work Order Reports</option>
+   <option value="workorders">Work Orders</option>
   </select>
 </div>
 <div id="btFinancialReports">
-  <h3>Search & Custom Reports</h3>
+ <h3>Find Invoices</h3>
   <input
     id="btReportSearch"
     type="search"
