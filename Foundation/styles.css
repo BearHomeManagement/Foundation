@@ -37,3 +37,37 @@
     border-bottom: 1px solid rgba(255,255,255,.12);
   }
 }
+/* BHM mobile header and navigation correction */
+@media (max-width: 980px) {
+  .site-header .container.nav {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .site-header .brand {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .site-header .menu-toggle {
+    flex-shrink: 0;
+  }
+
+  .site-header .site-nav.open {
+    width: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .site-header .site-nav.open a {
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    box-sizing: border-box;
+  }
+}
