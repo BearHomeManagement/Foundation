@@ -345,6 +345,25 @@ const totalPastDue = pastDue.reduce(
  
     selection.addEventListener("change", refreshInvoiceList);
 status.addEventListener("change", refreshInvoiceList);
+    const printButton = document.getElementById("btPrintStatement");
+
+printButton?.addEventListener("click", () => {
+  const selectedIds = Array.from(
+    document.querySelectorAll(".btStatementInvoice:checked")
+  ).map(box => box.value);
+
+  if (!selectedIds.length) {
+    alert("Please select at least one invoice.");
+    return;
+  }
+
+  const selectedInvoices = records.filter(invoice =>
+    selectedIds.includes(String(invoice.id))
+  );
+
+  console.log("Invoices selected for printing:", selectedInvoices);
+  alert(`${selectedInvoices.length} invoice(s) ready for printing.`);
+});
 
   refreshOptions();
 }
