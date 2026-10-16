@@ -480,6 +480,68 @@ printWindow.document.close();
 printWindow.focus();
 printWindow.print();
 });
+    const emailButton = document.getElementById("btEmailStatement");
+
+emailButton?.addEventListener("click", () => {
+  const selectedIds = Array.from(
+    document.querySelectorAll(".btStatementInvoice:checked")
+  ).map(box => box.value);
+
+  if (!selectedIds.length) {
+    alert("Please select at least one invoice.");
+    return;
+  }
+
+  const selectedInvoices = records.filter(invoice =>
+    selectedIds.includes(String(invoice.id))
+  );
+
+  const customerIds = [...new Set(
+    selectedInvoices.map(invoice => invoice.customer_id)
+  )];
+
+  if (customerIds.length !== 1) {
+    alert("Please select invoices belonging to one customer.");
+    return;
+  }
+
+  const customer = customers.find(c => c.id === customerIds[0]);
+
+  if (!customer?.email) {
+    alert("This customer does not have an email address.");
+    return;
+  }
+
+  const total = selectedInvoices.reduce(
+    (sum, invoice) => sum + Number(invoice.amount_cents || 0), 0
+  );
+
+  const balance = selectedInvoices
+    .filter(invoice => invoice.status !== "paid")
+    .reduce((sum, invoice) => sum + Number(invoice.amount_cents || 0), 0);
+
+  const subject = "Bear Home Management - Invoice Statement";
+
+  const body = [
+    `Hello ${customer.full_name || "Customer"},`,
+    "",
+    "Please find your invoice statement details below:",
+    "",
+    ...selectedInvoices.map(invoice =>
+      `${invoice.invoice_number || "Invoice"} - ${invoice.description || ""} - ${money(invoice.amount_cents)} (${invoice.status || "draft"})`
+    ),
+    "",
+    `Total Invoiced: ${money(total)}`,
+    `Balance Due: ${money(balance)}`,
+    "",
+    "Thank you,",
+    "Bear Home Management",
+    "bearhomemanagement.com"
+  ].join("\n");
+
+  window.location.href =
+    `mailto:${customer.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+});
 
   refreshOptions();
 }
