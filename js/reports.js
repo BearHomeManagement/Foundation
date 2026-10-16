@@ -99,6 +99,27 @@ const totalPastDue = pastDue.reduce(
   </select>
 </div>
 
+<div style="margin-top:16px;">
+  <label for="btStatementSelection">Select Customer, Property, or Invoice</label>
+  <select
+    id="btStatementSelection"
+    style="width:100%;padding:12px;margin-top:8px;"
+  >
+    <option value="">Choose an option...</option>
+  </select>
+</div>
+
+<div id="btStatementInvoiceList" style="margin-top:14px;"></div>
+
+<div style="margin-top:16px;">
+  <button type="button" class="btn gold" id="btPrintStatement">
+    Print / Save PDF
+  </button>
+  <button type="button" class="btn" id="btEmailStatement">
+    Email Statement
+  </button>
+</div>
+</div>
         <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:18px 0;">
           <div class="record-card">
             <span>Paid Invoice Total</span>
