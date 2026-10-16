@@ -22,7 +22,7 @@
     const root = document.getElementById("reportsModule");
     if (!root) return;
 
-    root.innerHTML = '<p class="muted">Loading financial reports...</p>';
+   root.innerHTML = '<p class="muted">Loading BearTrack reports...</p>';
 
     try {
       const invoices = await window.BearTrackDB.select(TABLE, {
@@ -36,7 +36,12 @@
 
 const properties = await window.BearTrackDB.select('properties', {
   columns: 'id,customer_id,address,city,state'
+}) || []
+      
+const workOrders = await window.BearTrackDB.select('work_orders', {
+  columns: '*'
 }) || [];
+
 
 const customerMap = Object.fromEntries(
   customers.map(c => [c.id, c])
@@ -79,12 +84,11 @@ const totalPastDue = pastDue.reduce(
       <div style="margin-bottom:24px;">
   <label for="btReportCategory"
          style="display:block;font-weight:600;margin-bottom:10px;">
-    Report Category
-  </label>
+   What would you like to report on?
 
   <select id="btReportCategory"
           style="width:100%;padding:12px;box-sizing:border-box;">
-    <option value="financial">Financial Reports</option>
+    <option value="financial">Invoices & Payments</option>
     <option value="workorders">Work Order Reports</option>
   </select>
 </div>
@@ -208,6 +212,57 @@ const totalPastDue = pastDue.reduce(
          <div id="btWorkOrderReports" style="display:none;">
   <h3>Work Order Reports</h3>
   <p class="muted">Search and filter work orders by property, owner, and status.</p>
+  <input
+  type="search"
+  id="btWorkOrderReportSearch"
+  placeholder="Search by work order, property, or owner..."
+  style="width:100%;padding:12px;box-sizing:border-box;margin-top:12px;"
+>
+<div style="margin-top:20px;">
+  <label for="btWorkOrderStatus">Work Order Status</label>
+  <select
+    id="btWorkOrderStatus"
+    style="width:100%;padding:12px;box-sizing:border-box;margin-top:8px;"
+  >
+    <option value="all">All Work Orders</option>
+    <option value="open">Open</option>
+    <option value="in_progress">In Progress</option>
+    <option value="complete">Completed</option>
+  </select>
+</div>
+<div style="margin-top:20px;">
+  <label for="btWorkOrderProperty">Property</label>
+  <select
+    id="btWorkOrderProperty"
+    style="width:100%;padding:12px;box-sizing:border-box;margin-top:8px;"
+  >
+    <option value="all">All Properties</option>
+  </select>
+</div>
+<div style="margin-top:20px;">
+  <label for="btWorkOrderOwner">Customer / Owner</label>
+  <select
+    id="btWorkOrderOwner"
+    style="width:100%;padding:12px;box-sizing:border-box;margin-top:8px;"
+  >
+    <option value="all">All Customers / Owners</option>
+  </select>
+</div>
+<div style="margin-top:24px;">
+  <button
+    type="button"
+    id="btGenerateWorkOrderReport"
+    class="btn"
+  >
+    Generate Report
+  </button>
+</div>
+<div
+  id="btWorkOrderReportResults"
+  style="margin-top:24px;"
+>
+  <p class="muted">Select your filters to generate a work order report.</p>
+</div>
 </div>
               
       `;
