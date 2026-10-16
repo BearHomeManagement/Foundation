@@ -163,12 +163,99 @@ const filteredCustomers = searchTerm
   Edit Customer
 </button>
     `;
-  const editButton = accountContent.querySelector('#editCustomerAccount');
+ const editButton = accountContent;
 
-editButton?.addEventListener('click', () => {
-  document.dispatchEvent(new CustomEvent('beartrack:edit-customer', {
-    detail: { customer }
-  }));
+editButton.addEventListener('click', (event) => {
+  if (event.target.id !== 'editCustomerAccount') return;
+  const content = document.getElementById('customerAccountContent');
+  if (!content) return;
+
+  content.innerHTML = `
+    <h2>Edit Customer</h2>
+
+    <label>Name</label>
+    <input id="editName" value="${escapeHtml(customer.full_name)}">
+
+    <label>Email</label>
+    <input id="editEmail" value="${escapeHtml(customer.email)}">
+
+    <label>Phone</label>
+    <input id="editPhone" value="${escapeHtml(customer.phone)}">
+
+    <label>Preferred Contact</label>
+    <select id="editContact">
+      <option value="Text">Text</option>
+      <option value="Call">Call</option>
+      <option value="Email">Email</option>
+    </select>
+
+    <label>Status</label>
+    <select id="editStatus">
+      <option value="Lead">Lead</option>
+      <option value="Active">Active</option>
+      <option value="Inactive">Inactive</option>
+    </select>
+
+    <label>Notes</label>
+    <textarea id="editNotes">${escapeHtml(customer.notes)}</textarea>
+
+    <div class="actions">
+      <button type="button" id="saveCustomerEdit" class="btn">Save Changes</button>
+      <button type="button" id="cancelCustomerEdit" class="btn">Cancel</button>
+    </div>
+  `;
+
+  content.querySelector('#editContact').value = customer.preferred_contact;
+  content.querySelector('#editStatus').value = customer.status;
+  content.querySelector('#saveCustomerEdit').addEventListener('click', async () => {
+  const saveButton = content.querySelector('#saveCustomerEdit');
+
+  const payload = {
+    full_name: content.querySelector('#editName').value.trim(),
+    email: content.querySelector('#editEmail').value.trim(),
+    phone: content.querySelector('#editPhone').value.trim(),
+    preferred_contact: content.querySelector('#editContact').value,
+    status: content.querySelector('#editStatus').value,
+    notes: content.querySelector('#editNotes').value.trim()
+  };
+
+  if (!payload.full_name) {
+    alert('Customer name is required.');
+    return;
+  }
+
+  saveButton.disabled = true;
+
+  try {
+    await update(customer.id, payload);
+    alert('Customer updated successfully.');
+
+    accountContent.innerHTML = `
+      <h2>${escapeHtml(payload.full_name)}</h2>
+      <p><strong>Email:</strong> ${escapeHtml(payload.email)}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(payload.phone)}</p>
+      <p><strong>Preferred Contact:</strong> ${escapeHtml(payload.preferred_contact)}</p>
+      <p><strong>Status:</strong> ${escapeHtml(payload.status)}</p>
+      <p><strong>Notes:</strong> ${escapeHtml(payload.notes)}</p>
+    `;
+  } catch (error) {
+    alert('Unable to save customer: ' + error.message);
+    saveButton.disabled = false;
+  }
+});
+  content.querySelector('#cancelCustomerEdit').addEventListener('click', () => {
+  accountContent.innerHTML = `
+    <h2>${escapeHtml(customer.full_name)}</h2>
+    <p><strong>Email:</strong> ${escapeHtml(customer.email)}</p>
+    <p><strong>Phone:</strong> ${escapeHtml(customer.phone)}</p>
+    <p><strong>Preferred Contact:</strong> ${escapeHtml(customer.preferred_contact)}</p>
+    <p><strong>Status:</strong> ${escapeHtml(customer.status)}</p>
+    <p><strong>Notes:</strong> ${escapeHtml(customer.notes)}</p>
+    <button type="button" id="editCustomerAccount" class="btn">
+      Edit Customer
+    </button>
+  `;
+});
 });
     searchView.style.display = 'none';
     accountView.style.display = 'block';
