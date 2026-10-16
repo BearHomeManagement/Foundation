@@ -574,17 +574,21 @@
             : ''}
           <span class="muted">${escapeHtml(workOrder.description)}</span>
         </div>
-        <div class="actions">
-          <button type="button" class="edit-workorder" data-id="${workOrder.id}">
-            Edit
-          </button>
-          <button type="button" class="schedule-workorder" data-id="${workOrder.id}">
-            Schedule
-          </button>
-          <button type="button" class="wo-status" data-id="${workOrder.id}" data-status="complete">
-            Complete
-          </button>
-        </div>
+       <div class="actions">
+  <button type="button" class="edit-workorder" data-id="${workOrder.id}">
+    Edit
+  </button>
+
+  <button type="button" class="schedule-workorder" data-id="${workOrder.id}">
+    Schedule
+  </button>
+
+  ${!isComplete(workOrder.status) ? `
+    <button type="button" class="wo-status" data-id="${workOrder.id}" data-status="complete">
+      Complete
+    </button>
+  ` : ''}
+</div>
       </div>
     `).join('');
   }
