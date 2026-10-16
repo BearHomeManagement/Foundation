@@ -98,6 +98,39 @@
       grid-template-columns: 1fr;
     }
   }
+/* BearTrack Reports - Compact Dropdown Layout */
+
+#btReportCategory {
+  width: 100% !important;
+  max-width: 350px;
+}
+
+.bt-statement-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: end;
+}
+
+.bt-statement-grid > div {
+  min-width: 0;
+}
+
+.bt-statement-grid select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#btStatementSelection {
+  width: 100% !important;
+  max-width: 450px;
+}
+
+@media (max-width: 800px) {
+  .bt-statement-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
       <div style="margin:0 0 20px;">
         <div style="margin-bottom:24px;">
