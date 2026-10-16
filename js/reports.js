@@ -80,6 +80,25 @@
       );
 
       root.innerHTML = `
+      <style>
+  .bt-report-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: end;
+  }
+
+  .bt-report-filter-grid > div {
+    margin-top: 12px !important;
+    min-width: 0;
+  }
+
+  @media (max-width: 800px) {
+    .bt-report-filter-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
       <div style="margin:0 0 20px;">
         <div style="margin-bottom:24px;">
           <label for="btReportCategory"
@@ -94,56 +113,7 @@
         </div>
 
         <div id="btFinancialReports">
-          <h3>Find Invoices</h3>
-          <input
-            id="btReportSearch"
-            type="search"
-            placeholder="Search invoice number or description..."
-            style="width:100%;padding:12px;margin-top:10px;"
-          >
-
-          <div id="btReportSearchResults" style="margin-bottom:18px;"></div>
-
-          <div class="record-card" style="margin:18px 0;">
-            <h3>Print & Statement Options</h3>
-
-            <label for="btStatementType">Report Type</label>
-            <select id="btStatementType" style="width:100%;padding:12px;margin:8px 0 14px;">
-              <option value="single">Individual Invoice</option>
-              <option value="customer">Customer Statement - All Properties</option>
-              <option value="property">Property Statement - One Address</option>
-              <option value="selected">Selected Invoices - Custom Statement</option>
-            </select>
-
-            <label for="btStatementStatus">Include Invoices</label>
-            <select id="btStatementStatus" style="width:100%;padding:12px;margin:8px 0 14px;">
-              <option value="all">All Issued Invoices - Paid and Unpaid</option>
-              <option value="unpaid">Unpaid Only</option>
-              <option value="paid">Paid Only</option>
-              <option value="draft">Draft Only - Internal Use</option>
-            </select>
-          </div>
-
-          <div style="margin-top:16px;">
-            <label for="btStatementSelection">Select Customer, Property, or Invoice</label>
-            <select id="btStatementSelection"
-                    style="width:100%;padding:12px;margin-top:8px;">
-              <option value="">Choose an option...</option>
-            </select>
-          </div>
-
-          <div id="btStatementInvoiceList" style="margin-top:14px;"></div>
-
-          <div style="margin-top:16px;">
-            <button type="button" class="btn gold" id="btPrintStatement">
-              Print / Save PDF
-            </button>
-            <button type="button" class="btn" id="btEmailStatement">
-              Email Statement
-            </button>
-          </div>
-
-          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:18px 0;">
+         <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:18px 0;">
             <div class="record-card">
               <span>Paid Invoice Total</span>
               <h2>${money(totalPaid)}</h2>
@@ -176,6 +146,61 @@
               <span>Past Due Invoices</span>
               <h2>${pastDue.length}</h2>
             </div>
+          </div>
+          <h3>Find Invoices</h3>
+          <input
+            id="btReportSearch"
+            type="search"
+            placeholder="Search invoice number or description..."
+            style="width:100%;padding:12px;margin-top:10px;"
+          >
+
+          <div id="btReportSearchResults" style="margin-bottom:18px;"></div>
+
+          <div class="record-card" style="margin:18px 0;">
+            <h3>Print & Statement Options</h3>
+
+            <div class="bt-statement-grid">
+            <div>
+  
+
+            <label for="btStatementType">Report Type</label>
+            <select id="btStatementType" style="width:100%;padding:12px;margin:8px 0 14px;">
+              <option value="single">Individual Invoice</option>
+              <option value="customer">Customer Statement - All Properties</option>
+              <option value="property">Property Statement - One Address</option>
+              <option value="selected">Selected Invoices - Custom Statement</option>
+            </select>
+            </div>
+            <div>
+
+            <label for="btStatementStatus">Include Invoices</label>
+            <select id="btStatementStatus" style="width:100%;padding:12px;margin:8px 0 14px;">
+              <option value="all">All Issued Invoices - Paid and Unpaid</option>
+              <option value="unpaid">Unpaid Only</option>
+              <option value="paid">Paid Only</option>
+              <option value="draft">Draft Only - Internal Use</option>
+            </select>
+          </div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <label for="btStatementSelection">Select Customer, Property, or Invoice</label>
+            <select id="btStatementSelection"
+                    style="width:100%;padding:12px;margin-top:8px;">
+              <option value="">Choose an option...</option>
+            </select>
+          </div>
+
+          <div id="btStatementInvoiceList" style="margin-top:14px;"></div>
+
+          <div style="margin-top:16px;">
+            <button type="button" class="btn gold" id="btPrintStatement">
+              Print / Save PDF
+            </button>
+            <button type="button" class="btn" id="btEmailStatement">
+              Email Statement
+            </button>
           </div>
 
           <h3 style="margin-top:24px;">Paid Invoice History</h3>
@@ -219,6 +244,7 @@
             placeholder="Search by work order, property, or owner..."
             style="width:100%;padding:12px;box-sizing:border-box;margin-top:12px;"
           >
+          <div class="bt-report-filter-grid">
 
           <div style="margin-top:20px;">
             <label for="btWorkOrderStatus">Work Order Status</label>
@@ -238,6 +264,7 @@
               <option value="all">All Properties</option>
             </select>
           </div>
+        
 
           <div style="margin-top:20px;">
             <label for="btWorkOrderOwner">Customer / Owner</label>
@@ -246,6 +273,7 @@
               <option value="all">All Customers / Owners</option>
             </select>
           </div>
+            </div>
 
           <div style="margin-top:24px;">
             <button type="button" id="btGenerateWorkOrderReport" class="btn">
@@ -263,6 +291,12 @@
       connectSearch(records, customerMap, propertyMap);
 
       const reportCategory = document.getElementById('btReportCategory');
+     const reportsHeading = Array.from(
+  document.querySelectorAll('h2, h3')
+).find(heading =>
+  heading.textContent.trim() === 'Financial Reports' &&
+  !document.getElementById('reportsModule')?.contains(heading)
+);
       const propertyFilter = document.getElementById('btWorkOrderProperty');
       const ownerFilter = document.getElementById('btWorkOrderOwner');
 
@@ -300,6 +334,11 @@
 
       reportCategory?.addEventListener('change', () => {
         const showWorkOrders = reportCategory.value === 'workorders';
+        if (reportsHeading) {
+  reportsHeading.textContent = showWorkOrders
+    ? 'Work Order Reports'
+    : 'Financial Reports';
+}
         if (financialReports) {
           financialReports.style.display = showWorkOrders ? 'none' : '';
         }
