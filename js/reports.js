@@ -301,6 +301,16 @@ reportCategory?.addEventListener('change', () => {
 });
       reportCategory?.dispatchEvent(new Event('change'));
       connectStatementOptions(records, customers, properties);
+
+      const generateButton = document.getElementById('btGenerateWorkOrderReport');
+
+generateButton?.addEventListener('click', () => {
+  const results = document.getElementById('btWorkOrderReportResults');
+
+  if (!results) return;
+
+  results.innerHTML = '<p>Generate Report button is working.</p>';
+});
       
     } catch (error) {
       console.error("BearTrack Reports:", error);
