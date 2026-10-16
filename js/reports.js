@@ -178,6 +178,7 @@ const totalPastDue = pastDue.reduce(
         </div>
       `;
         connectSearch(records, customerMap, propertyMap);
+      connectStatementOptions(records, customers, properties);
       
     } catch (error) {
       console.error("BearTrack Reports:", error);
@@ -260,6 +261,93 @@ const totalPastDue = pastDue.reduce(
 });
     });
   }
+  function connectStatementOptions(records, customers, properties) {
+  const type = document.getElementById("btStatementType");
+  const selection = document.getElementById("btStatementSelection");
+  const status = document.getElementById("btStatementStatus");
+  const invoiceList = document.getElementById("btStatementInvoiceList");
+
+  if (!type || !selection || !status || !invoiceList) return;
+
+  function refreshOptions() {
+    const mode = type.value;
+    let options = [];
+
+    if (mode === "customer") {
+      options = customers.map(c => ({
+        id: c.id,
+        label: c.full_name || c.email || "Unnamed Customer"
+      }));
+    } else if (mode === "property") {
+      options = properties.map(p => ({
+        id: p.id,
+        label: [p.address, p.city, p.state].filter(Boolean).join(", ")
+      }));
+    } else if (mode === "single") {
+      options = records.map(i => ({
+        id: i.id,
+        label: `${i.invoice_number || "Invoice"} - ${i.description || ""}`
+      }));
+    }
+
+    selection.innerHTML =
+      '<option value="">Choose an option...</option>' +
+      options.map(o =>
+        `<option value="${escapeHTML(o.id)}">${escapeHTML(o.label)}</option>`
+      ).join("");
+
+    invoiceList.innerHTML = "";
+  }
+    function refreshInvoiceList() {
+  const mode = type.value;
+  const selectedId = selection.value;
+
+  if (!selectedId) {
+    invoiceList.innerHTML = "";
+    return;
+  }
+
+  const matches = records.filter(invoice => {
+    if (mode === "single") return invoice.id === selectedId;
+    if (mode === "customer") return invoice.customer_id === selectedId;
+    if (mode === "property") return invoice.property_id === selectedId;
+    return false;
+  }).filter(invoice => {
+    if (status.value === "paid") return invoice.status === "paid";
+    if (status.value === "unpaid") return invoice.status !== "paid";
+    return true;
+  });
+
+  invoiceList.innerHTML = matches.length
+    ? `<p><strong>${matches.length} invoice(s) selected</strong></p>` +
+     matches.map(invoice => `
+  <label class="record-card" style="display:flex;align-items:center;gap:12px;margin:8px 0;cursor:pointer;">
+    <input
+      type="checkbox"
+      class="btStatementInvoice"
+      value="${escapeHTML(invoice.id)}"
+      checked
+    >
+    <span>
+      <strong>${escapeHTML(invoice.invoice_number || "Invoice")}</strong>
+      – ${escapeHTML(invoice.description || "")}
+      – ${money(invoice.amount_cents)}
+      (${escapeHTML(invoice.status || "draft")})
+    </span>
+  </label>
+`).join("")
+    
+  
+    : '<p class="muted">No matching invoices found.</p>';
+}
+
+  type.addEventListener("change", refreshOptions);
+ 
+    selection.addEventListener("change", refreshInvoiceList);
+status.addEventListener("change", refreshInvoiceList);
+
+  refreshOptions();
+}
 
   window.BearTrackReports = { render, load: render };
 })();
