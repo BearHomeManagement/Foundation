@@ -483,6 +483,8 @@ printWindow.print();
     const emailButton = document.getElementById("btEmailStatement");
 
 emailButton?.addEventListener("click", () => {
+  alert("Reminder: Save the invoice statement using Print / Save PDF, then attach the PDF to your email before sending.");
+
   const selectedIds = Array.from(
     document.querySelectorAll(".btStatementInvoice:checked")
   ).map(box => box.value);
