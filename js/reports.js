@@ -1,3 +1,4 @@
+
 (() => {
   "use strict";
 
@@ -131,8 +132,44 @@
     grid-template-columns: 1fr;
   }
 }
+/* Consistent compact report controls */
+#reportsModule #btReportCategory,
+#reportsModule #btStatementType,
+#reportsModule #btStatementStatus,
+#reportsModule #btStatementSelection,
+#reportsModule #btWorkOrderStatus,
+#reportsModule #btWorkOrderProperty,
+#reportsModule #btWorkOrderOwner {
+  width: 100% !important;
+  max-width: 360px;
+  min-height: 38px;
+  padding: 7px 10px !important;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+#reportsModule #btReportSearch,
+#reportsModule #btWorkOrderReportSearch {
+  width: 100% !important;
+  max-width: 520px;
+  padding: 9px 11px !important;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+#reportsModule .bt-statement-grid {
+  grid-template-columns: repeat(2, minmax(0, 360px));
+  justify-content: start;
+}
+#reportsModule .bt-report-filter-grid {
+  grid-template-columns: repeat(3, minmax(0, 360px));
+  justify-content: start;
+}
+@media (max-width: 800px) {
+  #reportsModule .bt-statement-grid,
+  #reportsModule .bt-report-filter-grid { grid-template-columns: 1fr; }
+}
 </style>
       <div style="margin:0 0 20px;">
+
         <div style="margin-bottom:24px;">
           <label for="btReportCategory"
                  style="display:block;font-weight:600;margin-bottom:10px;">
@@ -180,11 +217,12 @@
               <h2>${pastDue.length}</h2>
             </div>
           </div>
+
           <h3>Find Invoices</h3>
           <input
             id="btReportSearch"
             type="search"
-            placeholder="Search invoice number or description..."
+            placeholder="Search invoice, customer, property, description, or status..."
             style="width:100%;padding:12px;margin-top:10px;"
           >
 
@@ -195,81 +233,83 @@
 
             <div class="bt-statement-grid">
             <div>
-  
-
-            <label for="btStatementType">Report Type</label>
-            <select id="btStatementType" style="width:100%;padding:12px;margin:8px 0 14px;">
-              <option value="single">Individual Invoice</option>
-              <option value="customer">Customer Statement - All Properties</option>
-              <option value="property">Property Statement - One Address</option>
-              <option value="selected">Selected Invoices - Custom Statement</option>
-            </select>
+              <label for="btStatementType">Report Type</label>
+              <select id="btStatementType" style="width:100%;padding:12px;margin:8px 0 14px;">
+                <option value="single">Individual Invoice</option>
+                <option value="customer">Customer Statement - All Properties</option>
+                <option value="property">Property Statement - One Address</option>
+                <option value="selected">Selected Invoices - Custom Statement</option>
+              </select>
             </div>
             <div>
+              <label for="btStatementStatus">Include Invoices</label>
+              <select id="btStatementStatus" style="width:100%;padding:12px;margin:8px 0 14px;">
+                <option value="all">All Issued Invoices - Paid and Unpaid</option>
+                <option value="unpaid">Unpaid Only</option>
+                <option value="paid">Paid Only</option>
+                <option value="draft">Draft Only - Internal Use</option>
+              </select>
+            </div>
+            </div>
 
-            <label for="btStatementStatus">Include Invoices</label>
-            <select id="btStatementStatus" style="width:100%;padding:12px;margin:8px 0 14px;">
-              <option value="all">All Issued Invoices - Paid and Unpaid</option>
-              <option value="unpaid">Unpaid Only</option>
-              <option value="paid">Paid Only</option>
-              <option value="draft">Draft Only - Internal Use</option>
-            </select>
-          </div>
-          </div>
+            <div style="margin-top:16px;">
+              <label for="btStatementSelection">Select Customer, Property, or Invoice</label>
+              <select id="btStatementSelection"
+                      style="width:100%;padding:12px;margin-top:8px;">
+                <option value="">Choose an option...</option>
+              </select>
+            </div>
 
-          <div style="margin-top:16px;">
-            <label for="btStatementSelection">Select Customer, Property, or Invoice</label>
-            <select id="btStatementSelection"
-                    style="width:100%;padding:12px;margin-top:8px;">
-              <option value="">Choose an option...</option>
-            </select>
-          </div>
+            <div id="btStatementInvoiceList" style="margin-top:14px;"></div>
 
-          <div id="btStatementInvoiceList" style="margin-top:14px;"></div>
+            <div style="margin-top:16px;">
+              <button type="button" class="btn gold" id="btPrintStatement">
+                Print / Save PDF
+              </button>
+              <button type="button" class="btn" id="btEmailStatement">
+                Email Statement
+              </button>
+            </div>
 
-          <div style="margin-top:16px;">
-            <button type="button" class="btn gold" id="btPrintStatement">
-              Print / Save PDF
-            </button>
-            <button type="button" class="btn" id="btEmailStatement">
-              Email Statement
-            </button>
-          </div>
-
-          <h3 style="margin-top:24px;">Paid Invoice History</h3>
-          <div style="overflow-x:auto;">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Invoice</th>
-                  <th>Description</th>
-                  <th>Amount</th>
-                  <th>Created</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${paid.length ? paid.map(i => `
+            <h3 style="margin-top:24px;">Paid Invoice History</h3>
+            <div style="overflow-x:auto;">
+              <table class="table">
+                <thead>
                   <tr>
-                    <td>${escapeHTML(i.invoice_number || "—")}</td>
-                    <td>${escapeHTML(i.description || "—")}</td>
-                    <td>${money(i.amount_cents)}</td>
-                    <td>${escapeHTML(i.created_at
-                      ? new Date(i.created_at).toLocaleDateString()
-                      : "—")}</td>
-                    <td><span class="status InProgress">Paid</span></td>
+                    <th>Invoice</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Created</th>
+                    <th>Status</th>
                   </tr>
-                `).join("") : `
-                  <tr><td colspan="5">No paid invoices yet.</td></tr>
-                `}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  ${paid.length ? paid.map(i => `
+                    <tr>
+                      <td>${escapeHTML(i.invoice_number || "—")}</td>
+                      <td>${escapeHTML(i.description || "—")}</td>
+                      <td>${money(i.amount_cents)}</td>
+                      <td>${escapeHTML(i.created_at
+                        ? new Date(i.created_at).toLocaleDateString()
+                        : "—")}</td>
+                      <td><span class="status InProgress">Paid</span></td>
+                    </tr>
+                  `).join("") : `
+                    <tr><td colspan="5">No paid invoices yet.</td></tr>
+                  `}
+                </tbody>
+              </table>
+            </div>
           </div>
+
         </div>
+        <!-- End Financial Reports -->
 
         <div id="btWorkOrderReports" style="display:none;">
           <h3>Work Order Reports</h3>
-          <p class="muted">Search and filter work orders by property, owner, and status.</p>
+          <p class="muted">
+            Search and filter work orders by property, owner, and status.
+          </p>
 
           <input
             type="search"
@@ -277,45 +317,50 @@
             placeholder="Search by work order, property, or owner..."
             style="width:100%;padding:12px;box-sizing:border-box;margin-top:12px;"
           >
+
           <div class="bt-report-filter-grid">
 
-          <div style="margin-top:20px;">
-            <label for="btWorkOrderStatus">Work Order Status</label>
-            <select id="btWorkOrderStatus"
-                    style="width:100%;padding:12px;box-sizing:border-box;margin-top:8px;">
-              <option value="all">All Work Orders</option>
-              <option value="open">Open</option>
-              <option value="in_progress">In Progress</option>
-              <option value="complete">Completed</option>
-            </select>
-          </div>
-
-          <div style="margin-top:20px;">
-            <label for="btWorkOrderProperty">Property</label>
-            <select id="btWorkOrderProperty"
-                    style="width:100%;padding:12px;box-sizing:border-box;margin-top:8px;">
-              <option value="all">All Properties</option>
-            </select>
-          </div>
-        
-
-          <div style="margin-top:20px;">
-            <label for="btWorkOrderOwner">Customer / Owner</label>
-            <select id="btWorkOrderOwner"
-                    style="width:100%;padding:12px;box-sizing:border-box;margin-top:8px;">
-              <option value="all">All Customers / Owners</option>
-            </select>
-          </div>
+            <div style="margin-top:20px;">
+              <label for="btWorkOrderStatus">Work Order Status</label>
+              <select id="btWorkOrderStatus"
+                      style="width:100%;padding:12px;box-sizing:border-box;margin-top:8px;">
+                <option value="all">All Work Orders</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="complete">Completed</option>
+              </select>
             </div>
 
+            <div style="margin-top:20px;">
+              <label for="btWorkOrderProperty">Property</label>
+              <select id="btWorkOrderProperty"
+                      style="width:100%;padding:12px;box-sizing:border-box;margin-top:8px;">
+                <option value="all">All Properties</option>
+              </select>
+            </div>
+
+            <div style="margin-top:20px;">
+              <label for="btWorkOrderOwner">Customer / Owner</label>
+              <select id="btWorkOrderOwner"
+                      style="width:100%;padding:12px;box-sizing:border-box;margin-top:8px;">
+                <option value="all">All Customers / Owners</option>
+              </select>
+            </div>
+
+          </div>
+
           <div style="margin-top:24px;">
-            <button type="button" id="btGenerateWorkOrderReport" class="btn">
+            <button type="button"
+                    id="btGenerateWorkOrderReport"
+                    class="btn">
               Generate Report
             </button>
           </div>
 
           <div id="btWorkOrderReportResults" style="margin-top:24px;">
-            <p class="muted">Select your filters to generate a work order report.</p>
+            <p class="muted">
+              Select your filters to generate a work order report.
+            </p>
           </div>
         </div>
       </div>
@@ -324,12 +369,14 @@
       connectSearch(records, customerMap, propertyMap);
 
       const reportCategory = document.getElementById('btReportCategory');
-     const reportsHeading = Array.from(
-  document.querySelectorAll('h2, h3')
-).find(heading =>
-  heading.textContent.trim() === 'Financial Reports' &&
-  !document.getElementById('reportsModule')?.contains(heading)
-);
+
+      const reportsHeading = Array.from(
+        document.querySelectorAll('h2, h3')
+      ).find(heading =>
+        heading.textContent.trim() === 'Financial Reports' &&
+        !document.getElementById('reportsModule')?.contains(heading)
+      );
+
       const propertyFilter = document.getElementById('btWorkOrderProperty');
       const ownerFilter = document.getElementById('btWorkOrderOwner');
 
@@ -367,14 +414,17 @@
 
       reportCategory?.addEventListener('change', () => {
         const showWorkOrders = reportCategory.value === 'workorders';
+
         if (reportsHeading) {
-  reportsHeading.textContent = showWorkOrders
-    ? 'Work Order Reports'
-    : 'Financial Reports';
-}
+          reportsHeading.textContent = showWorkOrders
+            ? 'Work Order Reports'
+            : 'Financial Reports';
+        }
+
         if (financialReports) {
           financialReports.style.display = showWorkOrders ? 'none' : '';
         }
+
         if (workOrderReports) {
           workOrderReports.style.display = showWorkOrders ? '' : 'none';
         }
@@ -589,7 +639,8 @@
           print();
         }
       });
-          } catch (error) {
+
+    } catch (error) {
       console.error("BearTrack Reports:", error);
       root.textContent = "Unable to load reports: " +
         (error?.message || "Unknown error");
@@ -601,13 +652,8 @@
     const results = document.getElementById("btReportSearchResults");
     if (!search || !results) return;
 
-    search.addEventListener("input", () => {
+    function refreshSearch() {
       const term = search.value.trim().toLowerCase();
-
-      if (!term) {
-        results.innerHTML = "";
-        return;
-      }
 
       const matches = records.filter(invoice =>
         [
@@ -625,7 +671,7 @@
       );
 
       results.innerHTML = `
-        <h3>Search Results (${matches.length})</h3>
+        <h3>Invoice Results (${matches.length})</h3>
         <div style="overflow-x:auto;">
           <table class="table">
             <thead>
@@ -656,7 +702,10 @@
           </table>
         </div>
       `;
-    });
+    }
+
+    search.addEventListener("input", refreshSearch);
+    refreshSearch();
 
     results.addEventListener("click", event => {
       const button = event.target.closest("[data-report-invoice-id]");
@@ -712,11 +761,7 @@
       selection.parentElement.style.display =
         mode === "selected" ? "none" : "";
 
-      if (mode === "selected") {
-        refreshInvoiceList();
-      } else {
-        invoiceList.innerHTML = "";
-      }
+      refreshInvoiceList();
     }
 
     function refreshInvoiceList() {
@@ -730,15 +775,26 @@
 
       const matches = records.filter(invoice => {
         if (mode === "selected") return true;
-        if (mode === "single") return invoice.id === selectedId;
-        if (mode === "customer") return invoice.customer_id === selectedId;
-        if (mode === "property") return invoice.property_id === selectedId;
+        if (mode === "single") {
+          return String(invoice.id) === String(selectedId);
+        }
+        if (mode === "customer") {
+          return String(invoice.customer_id) === String(selectedId);
+        }
+        if (mode === "property") {
+          return String(invoice.property_id) === String(selectedId);
+        }
         return false;
       }).filter(invoice => {
-        if (status.value === "paid") return invoice.status === "paid";
-        if (status.value === "unpaid") return invoice.status === "unpaid";
-        if (status.value === "draft") return invoice.status === "draft";
-        return invoice.status === "paid" || invoice.status === "unpaid";
+        const invoiceStatus = String(invoice.status || "").toLowerCase();
+
+        if (status.value === "paid") return invoiceStatus === "paid";
+        if (status.value === "unpaid") {
+          return invoiceStatus !== "paid" && invoiceStatus !== "draft";
+        }
+        if (status.value === "draft") return invoiceStatus === "draft";
+
+        return invoiceStatus !== "draft";
       });
 
       invoiceList.innerHTML = matches.length
@@ -849,35 +905,35 @@
           <title>BHM Invoice Statement</title>
           <style>
             body {
-              font-family:Arial,sans-serif;
-              padding:40px;
-              color:#071f34;
+              font-family: Arial, sans-serif;
+              padding: 40px;
+              color: #071f34;
             }
             header {
-              border-bottom:3px solid #d19a4d;
-              padding-bottom:18px;
+              border-bottom: 3px solid #d19a4d;
+              padding-bottom: 18px;
             }
-            h1 { margin-bottom:4px; }
+            h1 { margin-bottom: 4px; }
             table {
-              width:100%;
-              border-collapse:collapse;
-              margin-top:30px;
+              width: 100%;
+              border-collapse: collapse;
+              margin-top: 30px;
             }
-            th,td {
-              padding:12px;
-              border-bottom:1px solid #ddd;
-              text-align:left;
+            th, td {
+              padding: 12px;
+              border-bottom: 1px solid #ddd;
+              text-align: left;
             }
             th {
-              background:#071f34;
-              color:white;
+              background: #071f34;
+              color: white;
             }
             .totals {
-              margin-top:25px;
-              text-align:right;
+              margin-top: 25px;
+              text-align: right;
             }
             @media print {
-              body { padding:15px; }
+              body { padding: 15px; }
             }
           </style>
         </head>
@@ -963,10 +1019,6 @@
     const emailButton = document.getElementById("btEmailStatement");
 
     emailButton?.addEventListener("click", () => {
-      alert(
-        "Reminder: Save the invoice statement using Print / Save PDF, then attach the PDF to your email before sending."
-      );
-
       const selectedIds = Array.from(
         document.querySelectorAll(".btStatementInvoice:checked")
       ).map(box => box.value);
@@ -980,7 +1032,7 @@
         selectedIds.includes(String(invoice.id))
       );
 
-          if (selectedInvoices.some(invoice => invoice.status === "draft")) {
+      if (selectedInvoices.some(invoice => invoice.status === "draft")) {
         alert(
           "Draft invoices have not been issued and cannot be emailed to customers. Please issue the invoice before sending."
         );
@@ -996,7 +1048,9 @@
         return;
       }
 
-      const customer = customers.find(c => c.id === customerIds[0]);
+      const customer = customers.find(
+        c => String(c.id) === String(customerIds[0])
+      );
 
       if (!customer?.email) {
         alert("This customer does not have an email address.");
@@ -1034,8 +1088,12 @@
         "bearhomemanagement.com"
       ].join("\n");
 
+      alert(
+        "Your email application will open with the statement details. To attach a PDF, first use Print / Save PDF, then attach the saved file to your email."
+      );
+
       window.location.href =
-        `mailto:${customer.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        `mailto:${encodeURIComponent(customer.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     });
 
     refreshOptions();
