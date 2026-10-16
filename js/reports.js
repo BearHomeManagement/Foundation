@@ -402,11 +402,20 @@ printWindow.document.write(`
     </style>
   </head>
   <body>
-    <header>
-      <h1>BEAR HOME MANAGEMENT</h1>
+   <header>
+  <div style="display:flex;align-items:center;gap:20px;">
+    <img
+      src="https://bearhomemanagement.com/assets/bear-head-hero.png"
+      alt="Bear Home Management Logo"
+      style="width:100px;height:100px;object-fit:contain;"
+    >
+    <div>
+      <h1 style="margin:0 0 6px;">BEAR HOME MANAGEMENT</h1>
       <div>YOUR HOME HAS A TO-DO LIST. BHM HAS IT HANDLED.</div>
       <p>bearhomemanagement.com | (904) 424-9092</p>
-    </header>
+    </div>
+  </div>
+</header>
     <h2>Invoice Statement</h2>
     <p>Generated: ${new Date().toLocaleDateString()}</p>
     <table>
