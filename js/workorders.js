@@ -550,7 +550,57 @@
     const dashboard = document.getElementById('dashboardWorkOrders');
     const html = renderRows();
 
-    if (list) list.innerHTML = html;
+  if (list) list.innerHTML = `
+  <div style="margin-bottom:20px;">
+    <h3>Find a Work Order</h3>
+    <input
+      type="search"
+      id="workOrderSearch"
+      placeholder="Search by work order, property, or description..."
+      style="width:100%;padding:12px;box-sizing:border-box;margin-top:10px;"
+    >
+    <div id="workOrderSearchResults" style="margin-top:20px;"></div>
+  </div>
+`;
+    if (list) {
+  const search = list.querySelector('#workOrderSearch');
+  const results = list.querySelector('#workOrderSearchResults');
+
+  search.addEventListener('input', () => {
+    const term = search.value.trim().toLowerCase();
+
+    if (!term) {
+      results.innerHTML = '';
+      return;
+    }
+
+    const matches = workOrders.filter(workOrder =>
+      [
+        workOrder.title,
+        workOrder.description,
+        workOrder.properties?.address,
+        workOrder.status
+      ].some(value =>
+        String(value ?? '').toLowerCase().includes(term)
+      )
+    );
+
+    results.innerHTML = matches.length
+      ? matches.map(workOrder => `
+          <div class="row">
+            <h3>${escapeHtml(workOrder.title)}</h3>
+            <p>Property: ${escapeHtml(workOrder.properties?.address || '-')}</p>
+            <p>Status: ${escapeHtml(formatStatus(workOrder.status))}</p>
+            <button type="button" class="edit-workorder" data-id="${workOrder.id}">
+              Open Work Order
+            </button>
+          </div>
+        `).join('')
+      : '<p>No matching work orders found.</p>';
+
+    bindRowActions(results);
+  });
+}
     if (dashboard) dashboard.innerHTML = html;
 
     bindRowActions(list);
