@@ -76,6 +76,19 @@ const totalPastDue = pastDue.reduce(
 
       root.innerHTML = `
       <div style="margin:0 0 20px;">
+      <div style="margin-bottom:24px;">
+  <label for="btReportCategory"
+         style="display:block;font-weight:600;margin-bottom:10px;">
+    Report Category
+  </label>
+
+  <select id="btReportCategory"
+          style="width:100%;padding:12px;box-sizing:border-box;">
+    <option value="financial">Financial Reports</option>
+    <option value="workorders">Work Order Reports</option>
+  </select>
+</div>
+<div id="btFinancialReports">
   <h3>Search & Custom Reports</h3>
   <input
     id="btReportSearch"
@@ -191,8 +204,29 @@ const totalPastDue = pastDue.reduce(
             </tbody>
           </table>
         </div>
+         </div>
+         <div id="btWorkOrderReports" style="display:none;">
+  <h3>Work Order Reports</h3>
+  <p class="muted">Search and filter work orders by property, owner, and status.</p>
+</div>
+              
       `;
         connectSearch(records, customerMap, propertyMap);
+      const reportCategory = document.getElementById('btReportCategory');
+const financialReports = document.getElementById('btFinancialReports');
+const workOrderReports = document.getElementById('btWorkOrderReports');
+
+reportCategory?.addEventListener('change', () => {
+  const showWorkOrders = reportCategory.value === 'workorders';
+
+  if (financialReports) {
+    financialReports.style.display = showWorkOrders ? 'none' : '';
+  }
+
+  if (workOrderReports) {
+    workOrderReports.style.display = showWorkOrders ? '' : 'none';
+  }
+});
       connectStatementOptions(records, customers, properties);
       
     } catch (error) {
