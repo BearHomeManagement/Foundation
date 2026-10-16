@@ -361,8 +361,72 @@ printButton?.addEventListener("click", () => {
     selectedIds.includes(String(invoice.id))
   );
 
-  console.log("Invoices selected for printing:", selectedInvoices);
-  alert(`${selectedInvoices.length} invoice(s) ready for printing.`);
+ const printWindow = window.open("", "_blank");
+
+if (!printWindow) {
+  alert("Please allow pop-ups for BearTrack to print statements.");
+  return;
+}
+
+const rows = selectedInvoices.map(invoice => `
+  <tr>
+    <td>${escapeHTML(invoice.invoice_number || "")}</td>
+    <td>${escapeHTML(invoice.description || "")}</td>
+    <td>${escapeHTML(invoice.status || "")}</td>
+    <td style="text-align:right">${money(invoice.amount_cents)}</td>
+  </tr>
+`).join("");
+
+const total = selectedInvoices.reduce(
+  (sum, invoice) => sum + Number(invoice.amount_cents || 0), 0
+);
+
+const balance = selectedInvoices
+  .filter(invoice => invoice.status !== "paid")
+  .reduce((sum, invoice) => sum + Number(invoice.amount_cents || 0), 0);
+
+printWindow.document.write(`
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>BHM Invoice Statement</title>
+    <style>
+      body { font-family:Arial,sans-serif; padding:40px; color:#071f34; }
+      header { border-bottom:3px solid #d19a4d; padding-bottom:18px; }
+      h1 { margin-bottom:4px; }
+      table { width:100%; border-collapse:collapse; margin-top:30px; }
+      th,td { padding:12px; border-bottom:1px solid #ddd; text-align:left; }
+      th { background:#071f34; color:white; }
+      .totals { margin-top:25px; text-align:right; }
+      @media print { body { padding:15px; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>BEAR HOME MANAGEMENT</h1>
+      <div>YOUR HOME HAS A TO-DO LIST. BHM HAS IT HANDLED.</div>
+      <p>bearhomemanagement.com | (904) 424-9092</p>
+    </header>
+    <h2>Invoice Statement</h2>
+    <p>Generated: ${new Date().toLocaleDateString()}</p>
+    <table>
+      <thead>
+        <tr><th>Invoice</th><th>Description</th><th>Status</th><th>Amount</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="totals">
+      <p>Total Invoiced: <strong>${money(total)}</strong></p>
+      <p>Paid: <strong>${money(total - balance)}</strong></p>
+      <h2>Balance Due: ${money(balance)}</h2>
+    </div>
+  </body>
+  </html>
+`);
+
+printWindow.document.close();
+printWindow.focus();
+printWindow.print();
 });
 
   refreshOptions();
