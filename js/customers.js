@@ -172,32 +172,70 @@ editButton.addEventListener('click', (event) => {
 
   content.innerHTML = `
     <h2>Edit Customer</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:24px;">
 
-    <label>Name</label>
-    <input id="editName" value="${escapeHtml(customer.full_name)}">
+<div style="display:flex;flex-direction:column;gap:8px;">
+  <label for="editName">Customer Name</label>
+  <input
+    id="editName"
+    value="${escapeHtml(customer.full_name)}"
+    style="width:100%;box-sizing:border-box;padding:12px;"
+  >
+</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+  <label for="editEmail">Email Address</label>
+  <input
+    type="email"
+    id="editEmail"
+    value="${escapeHtml(customer.email)}"
+    style="width:100%;box-sizing:border-box;padding:12px;"
+  >
+</div>
 
-    <label>Email</label>
-    <input id="editEmail" value="${escapeHtml(customer.email)}">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+  <label for="editPhone">Phone Number</label>
+  <input
+    type="tel"
+    id="editPhone"
+    value="${escapeHtml(customer.phone)}"
+    style="width:100%;box-sizing:border-box;padding:12px;"
+  >
+</div>
 
-    <label>Phone</label>
-    <input id="editPhone" value="${escapeHtml(customer.phone)}">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+  <label for="editContact">Preferred Contact Method</label>
+  <select
+    id="editContact"
+    style="width:100%;box-sizing:border-box;padding:12px;"
+  >
+    <option value="Text">Text</option>
+    <option value="Call">Call</option>
+    <option value="Email">Email</option>
+  </select>
+</div>
 
-    <label>Preferred Contact</label>
-    <select id="editContact">
-      <option value="Text">Text</option>
-      <option value="Call">Call</option>
-      <option value="Email">Email</option>
-    </select>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+  <label for="editStatus">Customer Status</label>
+  <select
+    id="editStatus"
+    style="width:100%;box-sizing:border-box;padding:12px;"
+  >
+    <option value="Lead">Lead</option>
+    <option value="Active">Active</option>
+    <option value="Inactive">Inactive</option>
+  </select>
+</div>
+   </div>
 
-    <label>Status</label>
-    <select id="editStatus">
-      <option value="Lead">Lead</option>
-      <option value="Active">Active</option>
-      <option value="Inactive">Inactive</option>
-    </select>
-
-    <label>Notes</label>
-    <textarea id="editNotes">${escapeHtml(customer.notes)}</textarea>
+<div style="margin-top:28px;display:flex;flex-direction:column;gap:10px;">
+  <label for="editNotes" style="font-weight:600;">Customer Notes</label>
+  <textarea
+    id="editNotes"
+    rows="5"
+    placeholder="Enter customer notes, service preferences, or important account information..."
+    style="width:100%;box-sizing:border-box;padding:14px;resize:vertical;min-height:120px;"
+  >${escapeHtml(customer.notes)}</textarea>
+</div>
 
     <div class="actions">
       <button type="button" id="saveCustomerEdit" class="btn">Save Changes</button>
