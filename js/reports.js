@@ -299,6 +299,7 @@ reportCategory?.addEventListener('change', () => {
     workOrderReports.style.display = showWorkOrders ? '' : 'none';
   }
 });
+      reportCategory?.dispatchEvent(new Event('change'));
       connectStatementOptions(records, customers, properties);
       
     } catch (error) {
