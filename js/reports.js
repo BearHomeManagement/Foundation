@@ -45,15 +45,17 @@ const customerMap = Object.fromEntries(
 const propertyMap = Object.fromEntries(
   properties.map(p => [p.id, p])
 );
-
-      const records = Array.isArray(invoices) ? invoices : [];
-      const paid = records.filter(i => i.status === "paid");
-      const outstanding = records.filter(i => i.status !== "paid");
+      
+const records = Array.isArray(invoices) ? invoices : [];
+const paid = records.filter(i => i.status === "paid");
+const drafts = records.filter(i => i.status === "draft");
+const outstanding = records.filter(i =>
+  i.status !== "paid" && i.status !== "draft"
+);
       const today = new Date().toLocaleDateString('en-CA');
 
 const pastDue = outstanding.filter(i =>
   i.due_date &&
-  i.status !== 'draft' &&
   i.due_date < today
 );
 
@@ -61,6 +63,10 @@ const totalPastDue = pastDue.reduce(
   (sum, i) => sum + Number(i.amount_cents || 0), 0
 );
 
+      const totalDrafts = drafts.reduce(
+  (sum, i) => sum + Number(i.amount_cents || 0), 0
+);
+      
       const totalPaid = paid.reduce(
         (sum, i) => sum + Number(i.amount_cents || 0), 0
       );
@@ -93,9 +99,10 @@ const totalPastDue = pastDue.reduce(
 
   <label for="btStatementStatus">Include Invoices</label>
   <select id="btStatementStatus" style="width:100%;padding:12px;margin:8px 0 14px;">
-    <option value="all">All Invoices - Paid and Unpaid</option>
-    <option value="unpaid">Unpaid Only</option>
-    <option value="paid">Paid Only</option>
+   <option value="all">All Issued Invoices - Paid and Unpaid</option>
+<option value="unpaid">Unpaid Only</option>
+<option value="paid">Paid Only</option>
+<option value="draft">Draft Only - Internal Use</option>
   </select>
 </div>
 
@@ -129,6 +136,14 @@ const totalPastDue = pastDue.reduce(
             <span>Outstanding Invoice Total</span>
             <h2>${money(totalOutstanding)}</h2>
           </div>
+          <div class="record-card">
+  <span>Draft Invoice Total</span>
+  <h2>${money(totalDrafts)}</h2>
+</div>
+<div class="record-card">
+  <span>Draft Invoices</span>
+  <h2>${drafts.length}</h2>
+</div>
           <div class="record-card">
             <span>Paid Invoices</span>
             <h2>${paid.length}</h2>
@@ -312,11 +327,12 @@ const totalPastDue = pastDue.reduce(
     if (mode === "customer") return invoice.customer_id === selectedId;
     if (mode === "property") return invoice.property_id === selectedId;
     return false;
-  }).filter(invoice => {
-    if (status.value === "paid") return invoice.status === "paid";
-    if (status.value === "unpaid") return invoice.status !== "paid";
-    return true;
-  });
+ }).filter(invoice => {
+  if (status.value === "paid") return invoice.status === "paid";
+  if (status.value === "unpaid") return invoice.status === "unpaid";
+  if (status.value === "draft") return invoice.status === "draft";
+  return invoice.status === "paid" || invoice.status === "unpaid";
+});
 
   invoiceList.innerHTML = matches.length
     ? `<p><strong>${matches.length} invoice(s) selected</strong></p>` +
@@ -367,6 +383,13 @@ const propertyMap = Object.fromEntries(
   const selectedInvoices = records.filter(invoice =>
     selectedIds.includes(String(invoice.id))
   );
+  if (selectedInvoices.some(invoice => invoice.status === "draft")) {
+  const confirmed = confirm(
+    "WARNING: This statement contains draft invoices that have not been issued. Continue printing for internal review only?"
+  );
+
+  if (!confirmed) return;
+}
   const statementCustomers = [
   ...new Set(selectedInvoices.map(i => i.customer_id))
 ];
@@ -509,6 +532,10 @@ emailButton?.addEventListener("click", () => {
   const selectedInvoices = records.filter(invoice =>
     selectedIds.includes(String(invoice.id))
   );
+  if (selectedInvoices.some(invoice => invoice.status === "draft")) {
+  alert("Draft invoices have not been issued and cannot be emailed to customers. Please issue the invoice before sending.");
+  return;
+}
 
   const customerIds = [...new Set(
     selectedInvoices.map(invoice => invoice.customer_id)
