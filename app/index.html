@@ -80,7 +80,44 @@
     </div>
 
     <section class="page active" id="dashboard"></section>
-    <section class="page" id="customers"><div class="panel panel-pad"><h3>Customers</h3><div id="customerList"></div></div></section>
+   <section class="page" id="customers">
+  <div class="panel panel-pad">
+
+    <div class="panel-head">
+      <div>
+        <h3>Customer Account Management</h3>
+        <p class="muted">Search and manage customer accounts.</p>
+      </div>
+    </div>
+
+    <div id="customerSearchView">
+
+      <div style="margin:20px 0;">
+        <input
+          type="search"
+          id="customerSearchInput"
+          placeholder="Search by name, email, phone, or property address..."
+          style="width:100%;padding:14px;"
+        >
+      </div>
+
+      <div id="customerList"></div>
+
+    </div>
+
+    <div id="customerAccountView" style="display:none;">
+      <button
+        type="button"
+        class="btn"
+        id="backToCustomerSearch">
+        ← Back to Search
+      </button>
+
+      <div id="customerAccountContent" style="margin-top:20px;"></div>
+    </div>
+
+  </div>
+</section>
     <section class="page" id="properties"><div class="panel panel-pad"><h3>Homes</h3><div id="propertyList"></div></div></section>
     <section class="page" id="workorders"><div class="panel panel-pad"><h3>Work Orders</h3><div id="workOrderList"></div></div></section>
     <section class="page" id="schedule"><div class="panel panel-pad"><h3>Schedule</h3><div id="scheduleModule"></div></div></section>
