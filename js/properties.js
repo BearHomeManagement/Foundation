@@ -13,8 +13,6 @@
   let activeHomeTab = 'details';
 
   function normalize(property) {
-
-  function normalize(property) {
     return {
       id: property.id,
       customer_id: property.customer_id || null,
