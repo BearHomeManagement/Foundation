@@ -1,1 +1,128 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#071f34"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="stylesheet" href="field.css"><title>BHM Field | BearTrack</title></head><body><header class="header"><div class="brand"><img src="bear-head-header.png" alt="BHM bear logo"><div><strong>BHM Field</strong><small>Powered by BearTrack™</small></div></div><button id="logout" class="quiet" hidden>Sign out</button></header><main><section id="login" class="panel"><h1>Technician sign in</h1><p>Use your BearTrack employee login.</p><form id="loginForm"><label>Email<input id="email" type="email" autocomplete="username" required></label><label>Password<input id="password" type="password" autocomplete="current-password" required></label><button type="submit">Sign in</button></form></section><section id="app" hidden><div id="notice" role="status" aria-live="polite"></div><section id="dashboard"><div class="headline"><div><p class="eyebrow">FIELD OPERATIONS</p><h1 id="greeting">My schedule</h1><p id="dateLine"></p></div><button class="quiet" id="refresh">Refresh</button></div><div class="metrics"><div><strong id="remaining">—</strong><small>Remaining</small></div><div><strong id="completed">—</strong><small>Completed</small></div><div><strong id="rescheduled">—</strong><small>Rescheduled</small></div></div><nav class="tabs"><button id="upcomingTab" class="active">Scheduled</button><button id="historyTab">History</button></nav><div id="jobList"></div></section><section id="detail" hidden><button id="back" class="quiet">← Back to schedule</button><p class="eyebrow" id="jobTime"></p><h1 id="jobTitle"></h1><p id="jobAddress"></p><div class="actions"><button id="directions" class="secondary">↗ Directions</button><button id="openJob">Open job</button></div><div class="panel"><h2>Instructions</h2><p id="jobDescription"></p></div></section><section id="editor" hidden><button id="editorBack" class="quiet">← Assignment details</button><h1 id="editorTitle"></h1><p id="editorSub"></p><form id="jobForm"><label>Work performed / inspection findings<textarea id="notes" rows="5" required></textarea></label><div class="split"><label>Labor hours<input id="hours" type="number" min="0" step="0.25" value="0"></label><label>Materials / supplies<textarea id="materials" rows="2"></textarea></label></div><div class="panel"><h2>Job photos</h2><p>Take photos with the camera or select existing pictures.</p><label class="filebutton">📷 Take photo<input id="camera" type="file" accept="image/*" capture="environment" multiple></label><label class="filebutton">Choose photos<input id="gallery" type="file" accept="image/*" multiple></label><div id="photos"></div></div><div class="actions"><button type="button" class="secondary" id="saveProgress">Save progress</button><button type="submit" id="complete">Complete job</button></div><button type="button" class="quiet" id="requestReschedule">Request reschedule instead</button></form></section></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../config.js"></script><script src="field.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071f34">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="stylesheet" href="field.css">
+  <title>BHM Field | BearTrack</title>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <img src="bear-head-header.png" alt="BHM bear logo">
+      <div>
+        <strong>BHM Field</strong>
+        <small>Powered by BearTrack™</small>
+      </div>
+    </div>
+    <button id="logout" class="quiet" hidden>Sign out</button>
+  </header>
+
+  <main>
+    <section id="login" class="panel">
+      <h1>Technician sign in</h1>
+      <p>Use your BearTrack employee login.</p>
+      <form id="loginForm">
+        <label>
+          Email
+          <input id="email" type="email" autocomplete="username" required>
+        </label>
+        <label>
+          Password
+          <input id="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button type="submit">Sign in</button>
+      </form>
+    </section>
+
+    <section id="app" hidden>
+      <div id="notice" role="status" aria-live="polite"></div>
+
+      <section id="dashboard">
+        <div class="headline">
+          <div>
+            <p class="eyebrow">FIELD OPERATIONS</p>
+            <h1 id="greeting">My schedule</h1>
+            <p id="dateLine"></p>
+          </div>
+          <button class="quiet" id="refresh">Refresh</button>
+        </div>
+        <div class="metrics">
+          <div><strong id="remaining">—</strong><small>Remaining</small></div>
+          <div><strong id="completed">—</strong><small>Completed</small></div>
+          <div><strong id="rescheduled">—</strong><small>Rescheduled</small></div>
+        </div>
+        <nav class="tabs">
+          <button id="upcomingTab" class="active">Scheduled</button>
+          <button id="historyTab">History</button>
+        </nav>
+        <div id="jobList"></div>
+      </section>
+
+      <section id="detail" hidden>
+        <button id="back" class="quiet">← Back to schedule</button>
+        <p class="eyebrow" id="jobTime"></p>
+        <h1 id="jobTitle"></h1>
+        <p id="jobAddress"></p>
+        <div class="actions">
+          <button id="directions" class="secondary">↗ Directions</button>
+          <button id="openJob">Open job</button>
+        </div>
+        <div class="panel">
+          <h2>Instructions</h2>
+          <p id="jobDescription"></p>
+        </div>
+      </section>
+
+      <section id="editor" hidden>
+        <button id="editorBack" class="quiet">← Assignment details</button>
+        <h1 id="editorTitle"></h1>
+        <p id="editorSub"></p>
+        <form id="jobForm">
+          <label>
+            Work performed / inspection findings
+            <textarea id="notes" rows="5" required></textarea>
+          </label>
+          <div class="split">
+            <label>
+              Labor hours
+              <input id="hours" type="number" min="0" step="0.25" value="0">
+            </label>
+            <label>
+              Materials / supplies
+              <textarea id="materials" rows="2"></textarea>
+            </label>
+          </div>
+          <div class="panel">
+            <h2>Job photos</h2>
+            <p>Take photos with the camera or select existing pictures.</p>
+            <label class="filebutton">
+              📷 Take photo
+              <input id="camera" type="file" accept="image/*" capture="environment" multiple>
+            </label>
+            <label class="filebutton">
+              Choose photos
+              <input id="gallery" type="file" accept="image/*" multiple>
+            </label>
+            <div id="photos"></div>
+          </div>
+          <div class="actions">
+            <button type="button" class="secondary" id="saveProgress">Save progress</button>
+            <button type="submit" id="complete">Complete job</button>
+          </div>
+          <button type="button" class="quiet" id="requestReschedule">
+            Request reschedule instead
+          </button>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../config.js"></script>
+  <script src="field.js"></script>
+</body>
+</html>
