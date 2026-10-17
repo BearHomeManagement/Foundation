@@ -550,10 +550,55 @@
     const dashboard = document.getElementById('dashboardWorkOrders');
     const html = renderRows();
 
+  
   if (list) list.innerHTML = `
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px;">
+
+    <div class="stat">
+      <div>
+        <span>Open</span>
+        <strong>${workOrders.filter(item =>
+          ['open', 'scheduled', 'in_progress', 'waiting_parts'].includes(
+            String(item.status || '').toLowerCase()
+          )
+        ).length}</strong>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div>
+        <span>Draft</span>
+        <strong>${workOrders.filter(item =>
+          String(item.status || '').toLowerCase() === 'draft'
+        ).length}</strong>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div>
+        <span>Closed</span>
+        <strong>${workOrders.filter(item =>
+          ['closed', 'cancelled', 'canceled'].includes(
+            String(item.status || '').toLowerCase()
+          )
+        ).length}</strong>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div>
+        <span>Completed</span>
+        <strong>${workOrders.filter(item =>
+          String(item.status || '').toLowerCase() === 'complete'
+        ).length}</strong>
+      </div>
+    </div>
+
+  </div>
+
   <div style="margin-bottom:20px;">
     <h3>Find a Work Order</h3>
-    <input
+
       type="search"
       id="workOrderSearch"
       placeholder="Search by work order, property, or description..."
