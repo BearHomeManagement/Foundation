@@ -14,10 +14,8 @@
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
-  function getClient() {
-    return window.BearTrackSupabase?.client
-      || window.BearTrackSupabase?.getClient?.()
-      || null;
+ async function getClient() {
+  return await window.BearTrackDB.getClient();
   }
 
   function getHomes() {
@@ -30,7 +28,7 @@
   }
 
   async function load() {
-    const client = getClient();
+   const client = await getClient();
     if (!client) {
       console.warn('Documents: Supabase client unavailable.');
       render();
@@ -167,7 +165,7 @@
   }
 
   async function upload() {
-    const client = getClient();
+   const client = await getClient();
     const propertyId = document.getElementById('docHome')?.value;
     const title = document.getElementById('docTitle')?.value.trim();
     const type = document.getElementById('docType')?.value;
@@ -229,7 +227,7 @@
 
   async function openDocument(id, print = false) {
     const doc = documents.find(item => String(item.id) === String(id));
-    const client = getClient();
+    const client = await getClient();
     if (!doc || !client) return;
 
     const { data, error } = await client.storage
