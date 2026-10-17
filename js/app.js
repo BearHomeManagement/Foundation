@@ -80,6 +80,7 @@
       technicians: window.BearTrackTechnician,
       invoices: window.BearTrackInvoices,
       reports: window.BearTrackReports,
+      documents: window.BearTrackDocuments,
     };
 
     renderers[page]?.render?.();
