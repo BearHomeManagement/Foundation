@@ -543,7 +543,7 @@ input,textarea {
 }
 
 /* Header structure: .nav is the container; .site-nav holds the links. */
-.site-header .container.nav {
+.site-header .container.header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -567,7 +567,7 @@ input,textarea {
     z-index: 50;
   }
 
-  .site-header .container.nav {
+ .site-header .container.header-inner {
     display: flex;
     flex-direction: row;
     align-items: center;
