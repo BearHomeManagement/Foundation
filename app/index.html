@@ -118,7 +118,99 @@
 
   </div>
 </section>
-    <section class="page" id="properties"><div class="panel panel-pad"><h3>Homes</h3><div id="propertyList"></div></div></section>
+    <section class="page" id="properties">
+  <div class="panel panel-pad">
+
+    <div class="panel-head">
+      <div>
+        <h3>Homes</h3>
+        <p class="muted">
+          Property details, work orders, inspections, and service memberships.
+        </p>
+      </div>
+    </div>
+
+    <!-- HOMES DASHBOARD -->
+    <div id="homesDashboard">
+
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin:20px 0;">
+
+        <div class="stat">
+          <div>
+            <span>Total Homes</span>
+            <strong id="homesTotal">0</strong>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div>
+            <span>Open Work Orders</span>
+            <strong id="homesOpenWorkOrders">0</strong>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div>
+            <span>Inspections</span>
+            <strong id="homesInspections">0</strong>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div>
+            <span>Active Memberships</span>
+            <strong id="homesMemberships">0</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="field" style="margin:20px 0;">
+        <label for="homesSearch">Search Homes</label>
+        <input
+          type="search"
+          id="homesSearch"
+          placeholder="Search address, owner, city, ZIP, or property ID..."
+        >
+      </div>
+
+      <div id="propertyList"></div>
+
+    </div>
+
+    <!-- INDIVIDUAL PROPERTY FILE -->
+    <div id="homePropertyFile" class="hidden">
+
+      <button type="button" class="btn" id="backToHomes">
+        ← Back to Homes
+      </button>
+
+      <div id="homePropertyHeader" style="margin:24px 0;"></div>
+
+      <div class="tabs" id="homeFileTabs" style="margin-bottom:20px;flex-wrap:wrap;">
+        <button type="button" class="active" data-home-tab="details">
+          Home Details
+        </button>
+        <button type="button" data-home-tab="workorders">
+          Work Orders
+        </button>
+        <button type="button" data-home-tab="inspections">
+          Inspections
+        </button>
+        <button type="button" data-home-tab="membership">
+          Service Tier
+        </button>
+      </div>
+
+      <div id="homeDetailsContent"></div>
+      <div id="homeWorkOrdersContent" class="hidden"></div>
+      <div id="homeInspectionsContent" class="hidden"></div>
+      <div id="homeMembershipContent" class="hidden"></div>
+
+    </div>
+
+  </div>
+</section>
     <section class="page" id="workorders"><div class="panel panel-pad"><h3>Work Orders</h3><div id="workOrderList"></div></div></section>
     <section class="page" id="schedule"><div class="panel panel-pad"><h3>Schedule</h3><div id="scheduleModule"></div></div></section>
   <section class="page" id="assessments">
