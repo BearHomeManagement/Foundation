@@ -126,12 +126,165 @@
     const dashboard = document.getElementById('dashboardAssessments');
     const html = renderRows();
 
-    if (list) list.innerHTML = html;
-    if (dashboard) dashboard.innerHTML = html;
+    const count = statuses => assessments.filter(item =>
+      statuses.includes(String(item.status || '').toLowerCase())
+    ).length;
 
-    bindActions(list);
+    if (list) {
+      list.innerHTML = `
+        <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px;">
+          <div class="stat"><div>
+            <span>Draft</span>
+            <strong>${count(['draft'])}</strong>
+          </div></div>
+
+          <div class="stat"><div>
+            <span>In Progress</span>
+            <strong>${count(['in_progress', 'in progress'])}</strong>
+          </div></div>
+
+          <div class="stat"><div>
+            <span>Completed</span>
+            <strong>${count(['complete', 'completed'])}</strong>
+          </div></div>
+
+          <div class="stat"><div>
+            <span>Total Assessments</span>
+            <strong>${assessments.length}</strong>
+          </div></div>
+        </div>
+
+        <h3>Find an Assessment</h3>
+
+        <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0;">
+          <div class="field">
+            <label for="assessmentStatusFilter">View by Status</label>
+            <select id="assessmentStatusFilter">
+              <option value="all">All Statuses</option>
+              <option value="draft">Draft</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="in_progress">In Progress</option>
+              <option value="complete">Completed</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="assessmentPropertyFilter">View by Property</label>
+            <select id="assessmentPropertyFilter">
+              <option value="all">All Properties</option>
+              ${(window.BearTrackProperties?.getAll?.() || []).map(property => `
+                <option value="${escapeHtml(property.id)}">
+                  ${escapeHtml(property.address)}
+                </option>
+              `).join('')}
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="assessmentTechnicianFilter">View by Technician</label>
+            <select id="assessmentTechnicianFilter">
+              <option value="all">All Technicians</option>
+              ${[...new Set(assessments.map(item => item.technician).filter(Boolean))]
+                .sort((a, b) => a.localeCompare(b))
+                .map(name => `
+                  <option value="${escapeHtml(name)}">
+                    ${escapeHtml(name)}
+                  </option>
+                `).join('')}
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="assessmentSearch">Search Assessments</label>
+          <input type="search" id="assessmentSearch"
+            placeholder="Search address, assessment, technician, or summary..."
+            style="width:100%;padding:12px;box-sizing:border-box;margin-top:10px;">
+        </div>
+
+        <div id="assessmentSearchResults" style="margin-top:20px;"></div>
+      `;
+
+      const search = list.querySelector('#assessmentSearch');
+      const statusFilter = list.querySelector('#assessmentStatusFilter');
+      const propertyFilter = list.querySelector('#assessmentPropertyFilter');
+      const technicianFilter = list.querySelector('#assessmentTechnicianFilter');
+      const results = list.querySelector('#assessmentSearchResults');
+
+      const updateResults = () => {
+        const term = search.value.trim().toLowerCase();
+        const status = statusFilter.value;
+        const propertyId = propertyFilter.value;
+        const technician = technicianFilter.value;
+
+        const matches = assessments.filter(item => {
+          const currentStatus = String(item.status || '').toLowerCase();
+
+          const statusMatches =
+            status === 'all' ||
+            (status === 'complete'
+              ? ['complete', 'completed'].includes(currentStatus)
+              : status === 'in_progress'
+                ? ['in_progress', 'in progress'].includes(currentStatus)
+                : currentStatus === status);
+
+          const propertyMatches =
+            propertyId === 'all' || item.property_id === propertyId;
+
+          const technicianMatches =
+            technician === 'all' || item.technician === technician;
+
+          const textMatches = !term || [
+            item.assessment_type,
+            item.properties?.address,
+            item.technician,
+            item.summary,
+            item.status,
+            item.id
+          ].some(value =>
+            String(value ?? '').toLowerCase().includes(term)
+          );
+
+          return statusMatches && propertyMatches &&
+            technicianMatches && textMatches;
+        });
+
+        results.innerHTML = matches.length
+          ? matches.map(item => `
+              <div class="assessment-row" data-assessment-id="${escapeHtml(item.id)}">
+                <h3>${escapeHtml(item.properties?.address || 'No address')}</h3>
+                <p>${escapeHtml(item.assessment_type)}</p>
+                <p>
+                  Status: ${escapeHtml(item.status)}
+                  | Technician: ${escapeHtml(item.technician || 'Unassigned')}
+                </p>
+                <p>
+                  Home Health Score: ${escapeHtml(item.home_health_score)}
+                  | Risk: ${escapeHtml(item.risk_index)}
+                </p>
+                <button type="button" class="open-assessment"
+                  data-id="${escapeHtml(item.id)}">
+                  Open Assessment
+                </button>
+              </div>
+            `).join('')
+          : '<p class="muted">No matching assessments found.</p>';
+
+        bindActions(results);
+      };
+
+      search.addEventListener('input', updateResults);
+      statusFilter.addEventListener('change', updateResults);
+      propertyFilter.addEventListener('change', updateResults);
+      technicianFilter.addEventListener('change', updateResults);
+
+      updateResults();
+    }
+
+    if (dashboard) dashboard.innerHTML = html;
     bindActions(dashboard);
   }
+
 
   function renderRows() {
     if (!assessments.length) return '<p>No assessments yet.</p>';
