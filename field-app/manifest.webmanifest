@@ -1,6 +1,6 @@
 {
   "name": "BHM Field \u2014 Powered by BearTrack",
-  "short_name": "BHM Field",
+  "short_name": "BHM Field", 
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
