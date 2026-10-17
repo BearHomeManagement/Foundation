@@ -598,6 +598,7 @@
 
   <div style="margin-bottom:20px;">
     <h3>Find a Work Order</h3>
+        <input
 
       type="search"
       id="workOrderSearch"
