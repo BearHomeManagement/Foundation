@@ -43,22 +43,28 @@
     )].sort();
 
     target.innerHTML = `
-      <div class="dashboard-stats">
-        <div class="record-card">
-          <h4>Active</h4>
-          <h2>${count('active')}</h2>
-        </div>
-        <div class="record-card">
-          <h4>Pending</h4>
-          <h2>${count('pending')}</h2>
-        </div>
-        <div class="record-card">
-          <h4>Cancelled</h4>
-          <h2>${count('cancelled') + count('canceled')}</h2>
-        </div>
-      </div>
+    
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px;">
 
-      <div class="record-card">
+  <div class="record-card" style="margin:0;min-width:0;">
+    <h4>Active</h4>
+    <h2 style="color:#4ade80;">${count('active')}</h2>
+  </div>
+
+  <div class="record-card" style="margin:0;min-width:0;">
+    <h4>Pending</h4>
+    <h2 style="color:#fbbf24;">${count('pending')}</h2>
+  </div>
+
+  <div class="record-card" style="margin:0;min-width:0;">
+    <h4>Cancelled</h4>
+    <h2 style="color:#fb7185;">${count('cancelled') + count('canceled')}</h2>
+  </div>
+
+</div>
+
+
+     <div class="record-card" style="padding:18px;">
         <h3>Find a Membership</h3>
 
         <label for="membershipStatusFilter">View by Status</label>
