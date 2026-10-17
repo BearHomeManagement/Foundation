@@ -8,4 +8,4 @@ window.BEAROPS_SUPABASE_URL =
   "https://opxktpeyioalnxxivuna.supabase.co";
 
 window.BEAROPS_SUPABASE_ANON_KEY =
-  "sb_publishable_SUz_MeBQLJnvsipICezCbQ_uQeb0LYF";
+  "sb_publishable_SUz_MeBQLJnvsiPlCEzCbQ_uQeb0LYF";
