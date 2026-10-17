@@ -627,6 +627,35 @@
       </div>
 
     </div>
+    
+      <div class="field">
+        <label for="workOrderTechnicianFilter">View by Technician</label>
+        <select id="workOrderTechnicianFilter">
+          <option value="all">All Technicians</option>
+          <option value="unassigned">Unassigned</option>
+          ${Array.from(
+            new Map(
+              workOrders
+                .filter(item => item.technician_id)
+                .map(item => [
+                  item.technician_id,
+                  {
+                    id: item.technician_id,
+                    name: item.employees
+                      ? `${item.employees.first_name || ''} ${item.employees.last_name || ''}`.trim()
+                      : item.assigned_to || 'Technician'
+                  }
+                ])
+            ).values()
+          ).sort((a, b) => a.name.localeCompare(b.name))
+            .map(technician => `
+              <option value="${escapeHtml(technician.id)}">
+                ${escapeHtml(technician.name)}
+              </option>
+            `).join('')}
+        </select>
+      </div>
+
 
     <div class="field">
       <label for="workOrderSearch">Search Work Orders</label>
@@ -647,11 +676,13 @@
       const search = list.querySelector('#workOrderSearch');
       const results = list.querySelector('#workOrderSearchResults');
       const statusFilter = list.querySelector('#workOrderStatusFilter');
+      const technicianFilter = list.querySelector('#workOrderTechnicianFilter');
       const propertyFilter = list.querySelector('#workOrderPropertyFilter');
 
       const updateResults = () => {
         const term = search.value.trim().toLowerCase();
         const status = statusFilter.value;
+        const technicianId = technicianFilter.value;
         const propertyId = propertyFilter.value;
 
         const matches = workOrders.filter(workOrder => {
@@ -684,7 +715,13 @@
               String(value ?? '').toLowerCase().includes(term)
             );
 
-          return statusMatches && propertyMatches && textMatches;
+         const technicianMatches =
+  technicianId === 'all' ||
+  (technicianId === 'unassigned' && !workOrder.technician_id) ||
+  workOrder.technician_id === technicianId;
+
+return statusMatches && propertyMatches &&
+  technicianMatches && textMatches;
         });
 
         results.innerHTML = matches.length
@@ -712,6 +749,7 @@
       search.addEventListener('input', updateResults);
       statusFilter.addEventListener('change', updateResults);
       propertyFilter.addEventListener('change', updateResults);
+      technicianFilter.addEventListener('change', updateResults);
 
       updateResults();
     }
