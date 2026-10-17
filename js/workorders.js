@@ -598,55 +598,124 @@
 
   <div style="margin-bottom:20px;">
     <h3>Find a Work Order</h3>
-        <input
 
-      type="search"
-      id="workOrderSearch"
-      placeholder="Search by work order, property, or description..."
-      style="width:100%;padding:12px;box-sizing:border-box;margin-top:10px;"
-    >
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0;">
+
+      <div class="field">
+        <label for="workOrderStatusFilter">View by Status</label>
+        <select id="workOrderStatusFilter">
+          <option value="all">All Statuses</option>
+          <option value="draft">Draft</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+          <option value="complete">Completed</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="workOrderPropertyFilter">View by Property</label>
+        <select id="workOrderPropertyFilter">
+          <option value="all">All Properties</option>
+          ${(
+            window.BearTrackProperties?.getAll?.() || []
+          ).map(property => `
+            <option value="${escapeHtml(property.id)}">
+              ${escapeHtml(property.address)}
+            </option>
+          `).join('')}
+        </select>
+      </div>
+
+    </div>
+
+    <div class="field">
+      <label for="workOrderSearch">Search Work Orders</label>
+      <input
+        type="search"
+        id="workOrderSearch"
+        placeholder="Search by work order, property, or description..."
+        style="width:100%;padding:12px;box-sizing:border-box;margin-top:10px;"
+      >
+    </div>
+
     <div id="workOrderSearchResults" style="margin-top:20px;"></div>
   </div>
+
 `;
+   
     if (list) {
-  const search = list.querySelector('#workOrderSearch');
-  const results = list.querySelector('#workOrderSearchResults');
+      const search = list.querySelector('#workOrderSearch');
+      const results = list.querySelector('#workOrderSearchResults');
+      const statusFilter = list.querySelector('#workOrderStatusFilter');
+      const propertyFilter = list.querySelector('#workOrderPropertyFilter');
 
-  search.addEventListener('input', () => {
-    const term = search.value.trim().toLowerCase();
+      const updateResults = () => {
+        const term = search.value.trim().toLowerCase();
+        const status = statusFilter.value;
+        const propertyId = propertyFilter.value;
 
-    if (!term) {
-      results.innerHTML = '';
-      return;
+        const matches = workOrders.filter(workOrder => {
+          const currentStatus = String(workOrder.status || '').toLowerCase();
+
+          const statusMatches =
+            status === 'all' ||
+            (status === 'open' &&
+              ['open', 'scheduled', 'in_progress', 'waiting_parts']
+                .includes(currentStatus)) ||
+            (status === 'closed' &&
+              ['closed', 'cancelled', 'canceled']
+                .includes(currentStatus)) ||
+            (status === 'complete' && currentStatus === 'complete') ||
+            (status === 'draft' && currentStatus === 'draft');
+
+          const propertyMatches =
+            propertyId === 'all' ||
+            workOrder.property_id === propertyId;
+
+          const textMatches =
+            !term ||
+            [
+              workOrder.title,
+              workOrder.description,
+              workOrder.properties?.address,
+              workOrder.status,
+              workOrder.id
+            ].some(value =>
+              String(value ?? '').toLowerCase().includes(term)
+            );
+
+          return statusMatches && propertyMatches && textMatches;
+        });
+
+        results.innerHTML = matches.length
+          ? matches.map(workOrder => `
+              <div class="row">
+                <h3>${escapeHtml(workOrder.title)}</h3>
+                <p>
+                  Property: ${escapeHtml(workOrder.properties?.address || '—')}
+                </p>
+                <p>
+                  Status: ${escapeHtml(formatStatus(workOrder.status))}
+                  | Priority: ${escapeHtml(formatStatus(workOrder.priority))}
+                </p>
+                <button type="button" class="edit-workorder"
+                  data-id="${escapeHtml(workOrder.id)}">
+                  Open Work Order
+                </button>
+              </div>
+            `).join('')
+          : '<p class="muted">No matching work orders found.</p>';
+
+        bindRowActions(results);
+      };
+
+      search.addEventListener('input', updateResults);
+      statusFilter.addEventListener('change', updateResults);
+      propertyFilter.addEventListener('change', updateResults);
+
+      updateResults();
     }
 
-    const matches = workOrders.filter(workOrder =>
-      [
-        workOrder.title,
-        workOrder.description,
-        workOrder.properties?.address,
-        workOrder.status
-      ].some(value =>
-        String(value ?? '').toLowerCase().includes(term)
-      )
-    );
-
-    results.innerHTML = matches.length
-      ? matches.map(workOrder => `
-          <div class="row">
-            <h3>${escapeHtml(workOrder.title)}</h3>
-            <p>Property: ${escapeHtml(workOrder.properties?.address || '-')}</p>
-            <p>Status: ${escapeHtml(formatStatus(workOrder.status))}</p>
-            <button type="button" class="edit-workorder" data-id="${workOrder.id}">
-              Open Work Order
-            </button>
-          </div>
-        `).join('')
-      : '<p>No matching work orders found.</p>';
-
-    bindRowActions(results);
-  });
-}
     if (dashboard) dashboard.innerHTML = html;
 
     bindRowActions(list);
