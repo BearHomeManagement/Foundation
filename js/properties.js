@@ -8,6 +8,12 @@
 
   let properties = [];
 
+  let homesSearchTerm = '';
+  let activePropertyId = null;
+  let activeHomeTab = 'details';
+
+  function normalize(property) {
+
   function normalize(property) {
     return {
       id: property.id,
