@@ -339,14 +339,6 @@
     });
   }
 
-
-
-    target.querySelectorAll('[data-doc-print]').forEach(button => {
-      button.addEventListener('click', () =>
-        openDocument(button.dataset.docPrint, true));
-    });
-  }
-
   async function upload() {
    const client = await getClient();
     const propertyId = document.getElementById('docHome')?.value;
