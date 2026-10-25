@@ -19,6 +19,32 @@
     ['settings','⚙️','Settings']
   ];
 
+    const rolePermissions = {
+    owner_admin: navItems.map(([id]) => id),
+
+    operations_manager: [
+      'dashboard', 'customers', 'properties',
+      'workorders', 'schedule', 'assessments',
+      'memberships', 'employees', 'technicians',
+      'reports', 'documents', 'messages', 'invoices'
+    ],
+
+    operations_staff: [
+      'dashboard', 'customers', 'properties',
+      'workorders', 'schedule', 'assessments',
+      'documents', 'messages'
+    ],
+
+    lead_technician: [
+      'technicians', 'workorders', 'schedule',
+      'assessments', 'documents'
+    ],
+
+    technician: [
+      'technicians', 'workorders', 'schedule',
+      'assessments', 'documents'
+    ]
+  };
   const titles = {
     dashboard:['Dashboard',"Here's what's happening with your operations today."],
     customers:['Customers','Manage Bear Home Management customers.'],
@@ -37,16 +63,51 @@
   };
 
   let currentPage = 'dashboard';
+  let signedInProfile = null;
+  
+ async function loadSignedInProfile() {
+    signedInProfile = null;
 
-  function renderNav() {
+    const session = window.BearTrackAuth?.getSession?.();
+    if (!session?.user?.id) return null;
+
+    const db = await window.BearTrackDB.getClient();
+    const { data, error } = await db.rpc('beartrack_my_profile');
+
+    if (error) throw error;
+
+    const profile = Array.isArray(data) ? data[0] : data;
+
+    if (!profile || profile.employment_status !== 'active') {
+      return null;
+    }
+
+    signedInProfile = {
+      id: profile.employee_id,
+      first_name: profile.first_name,
+      last_name: profile.last_name,
+      role: profile.role,
+      employment_status: profile.employment_status
+    };
+
+    return signedInProfile;
+  }
+    function renderNav() {
+        let signedInProfile = null;
+
     const nav = document.getElementById('nav');
     if (!nav) return;
 
-    nav.innerHTML = navItems.map(([id, ico, label]) => `
-      <button class="${id === currentPage ? 'active' : ''}" data-page="${id}">
-        <span class="ico">${ico}</span>${label}
-      </button>
-    `).join('');
+    const employee = getSignedInEmployee();
+    const allowedPages = rolePermissions[employee?.role] || [];
+
+    nav.innerHTML = navItems
+      .filter(([id]) => allowedPages.includes(id))
+      .map(([id, ico, label]) => `
+        <button class="${id === currentPage ? 'active' : ''}" data-page="${id}">
+          <span class="ico">${ico}</span>${label}
+        </button>
+      `).join('');
 
     nav.querySelectorAll('button').forEach(button => {
       button.addEventListener('click', () => showPage(button.dataset.page));
@@ -54,6 +115,13 @@
   }
 
   function showPage(page) {
+        const employee = getSignedInEmployee();
+    const allowedPages = rolePermissions[employee?.role] || [];
+
+    if (!allowedPages.includes(page)) {
+      console.warn(`Access denied to page: ${page}`);
+      return;
+    }
     currentPage = page;
 
     document.querySelectorAll('.page').forEach(el => {
@@ -128,7 +196,9 @@
     await safeLoad('Assessments', window.BearTrackAssessments);
     window.BearTrackAssessments?.bindTemplateManager?.();
     await safeLoad('Memberships', window.BearTrackMemberships);
-    await safeLoad('Employees', window.BearTrackEmployees);
+   if (['owner_admin', 'operations_manager'].includes(getSignedInEmployee()?.role)) {
+  await safeLoad('Employees', window.BearTrackEmployees);
+}
     await safeLoad('Technician', window.BearTrackTechnician);
     
     try {
@@ -151,16 +221,7 @@
   }
     
  function getSignedInEmployee() {
-  const session = window.BearTrackAuth?.getSession?.();
-  const authUserId = session?.user?.id;
-
-  if (!authUserId) return null;
-
-  return window.BearTrackEmployees
-    ?.getAll?.()
-    .find(employee =>
-      employee.auth_user_id === authUserId
-    ) || null;
+  return signedInProfile;
 }
 
 function getLandingPage() {
@@ -207,25 +268,23 @@ function getLandingPage() {
     `;
   }
 }
-  document.addEventListener('beartrack:auth', async event => {
-    if (event.detail?.state === 'signed-in') {
-      await loadCore();
-      updateSignedInProfile();
-      showPage(getLandingPage());
-    }
-  });
-
-  async function init() {
+ document.addEventListener('beartrack:auth', async event => {
+  if (event.detail?.state === 'signed-in') {
+    await loadSignedInProfile();
+    await loadCore();
     renderNav();
+    updateSignedInProfile();
+    showPage(getLandingPage());
+  }
+});
+  async function init() {
     setClock();
     setInterval(setClock, 30000);
     bindRefresh();
-    showPage('dashboard');
 
     if (!window.BearTrackAuth) {
       console.error('Auth module is not available.');
-      document.getElementById('appView')?.classList.remove('hidden');
-      await loadCore();
+      window.BearTrackUI?.toast?.('Login system unavailable.', 'error');
       return;
     }
 
@@ -233,11 +292,13 @@ function getLandingPage() {
     const session = await window.BearTrackAuth.checkSession();
 
     if (session) {
-    await loadCore();
-    updateSignedInProfile();
-    showPage(getLandingPage());
-}
-}
+      await loadSignedInProfile();
+      await loadCore();
+      renderNav();
+      updateSignedInProfile();
+      showPage(getLandingPage());
+    }
+  }
     
 init();
 })();
