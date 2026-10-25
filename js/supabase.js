@@ -79,17 +79,24 @@
   }
 
   async function update(table, id, payload, idColumn = 'id') {
-    const db = await getClient();
-    const { data, error } = await db
-      .from(table)
-      .update(payload)
-      .eq(idColumn, id)
-      .select('*')
-      .single();
+  const db = await getClient();
 
-    if (error) throw error;
-    return data;
+  const { data, error } = await db
+    .from(table)
+    .update(payload)
+    .eq(idColumn, id)
+    .select('*');
+
+  if (error) throw error;
+
+  if (!Array.isArray(data) || data.length !== 1) {
+    throw new Error(
+      `Update could not be confirmed for ${table}. Expected 1 record, received ${data?.length ?? 0}. Check permissions and record ID.`
+    );
   }
+
+  return data[0];
+}
 
   async function remove(table, id, idColumn = 'id') {
     const db = await getClient();
