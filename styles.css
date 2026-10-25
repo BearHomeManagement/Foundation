@@ -254,3 +254,40 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .membership-startup { margin-top: 28px; }
 .startup-inner .button { margin-top: 12px; }
 @media(max-width:1300px){ .site-nav{gap:9px;font-size:10px}.nav-button{padding:10px 12px}.call-now{padding:7px 10px}.brand{min-width:250px}.brand strong{font-size:34px}}
+
+
+/* BHM January 2027 Launch Announcement */
+.launch-announcement {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0 24px;
+  padding: 20px 22px;
+  background: #10243b;
+  border: 2px solid #d6b66b;
+  border-radius: 12px;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.launch-announcement strong {
+  color: #d6b66b;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+.launch-announcement span {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.launch-announcement small {
+  color: #f0d18a;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
